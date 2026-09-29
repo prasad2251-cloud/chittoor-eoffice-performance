@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chittoor Police — E-Office Performance Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+
+<header class="hero">
+  <div class="brand">
+    <div class="image-row">
+      <div class="header-image logo-img"><img src="2222.png" alt="AP Police"></div>
+      <div class="header-image"><img src="3333.png" alt="Police Officer"></div>
+      <div class="header-image"><img src="4444.png" alt="Police Officer"></div>
+    </div>
+    <div class="title-block">
+      <div class="eyebrow">ANDHRA PRADESH POLICE</div>
+      <h1>Chittoor Police — E-Office Performance Dashboard</h1>
+      <p>E-Office Files • Disposal Monitoring • Pendency • Response Performance</p>
+      <span class="period" id="period">Loading...</span>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div><strong id="unitCount">0</strong><span>RECORDS</span></div>
+    <div><strong id="disposedHero">0</strong><span>DISPOSED</span></div>
+    <div><strong id="pendencyHero">0</strong><span>PENDING</span></div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-target="rankings">🏆 Rankings</button>
+  <button class="tab" data-target="performance">🔥 Performance</button>
+  <button class="tab" data-target="trends">📈 Trends</button>
+  <button class="tab" data-target="details">🔎 Police Station / Employee Detail</button>
+  <button class="tab" data-target="reports">📋 Reports</button>
+</nav>
+
+<main>
+<section id="rankings" class="section active-section">
+  <div class="section-title">
+    <div><span class="section-icon">🏆</span><h2>Rankings</h2></div>
+    <span class="subtext">Composite E-Office performance based on disposal and pendency indicators</span>
+  </div>
+
+  <div class="cards">
+    <article class="metric-card"><span>📁 Total Files Disposed</span><strong id="disposedTotal">0</strong><small>Closed + Forwarded</small></article>
+    <article class="metric-card"><span>📥 Total Files Received</span><strong id="receivedTotal">0</strong><small>Created + received during period</small></article>
+    <article class="metric-card"><span>⏳ Total Pendency</span><strong id="pendencyTotal">0</strong><small>At the end of the reporting period</small></article>
+    <article class="metric-card"><span>🕐 Avg. Pending Days</span><strong id="avgPending">0</strong><small>Weighted by current pendency</small></article>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-head"><h3>🥇 Top 5 Performers</h3><span>Higher score</span></div>
+      <div id="topList" class="rank-list"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h3>⚠️ Bottom 5 — Need Attention</h3><span>Lower score</span></div>
+      <div id="bottomList" class="rank-list"></div>
+    </div>
+  </div>
+
+  <div class="panel chart-panel">
+    <div class="panel-head"><h3>Composite Score — All E-Office Records</h3><span id="chartNote"></span></div>
+    <div id="barChart" class="bar-chart"></div>
+  </div>
+
+  <!-- FULL E-OFFICE TABLE IS HERE ON THE RANKINGS PAGE -->
+  <div class="panel full-data-panel">
+    <div class="panel-head">
+      <h3>📊 Full E-Office Data</h3>
+      <span id="tableCount">0 records</span>
+    </div>
+    <div class="toolbar">
+      <input id="searchRank" type="search" placeholder="🔎 Search employee, police station or designation...">
+      <button id="refreshRank" class="refresh">↻ Refresh</button>
+    </div>
+    <div class="table-wrap">
+      <table class="wide-table">
+        <thead>
+          <tr>
+            <th>S.No</th><th>Employee</th><th>Police Station / Designation</th>
+            <th>Opening</th><th>Created</th><th>Received</th><th>Closed</th><th>Forwarded</th>
+            <th>Disposed</th><th>Parked</th><th>Merged</th>
+            <th>0–7 Days</th><th>8–15 Days</th><th>16–30 Days</th><th>31–60 Days</th><th>&gt;60 Days</th>
+            <th>Total Pendency</th><th>Avg. Pending Days</th><th>Score</th>
+          </tr>
+        </thead>
+        <tbody id="rankingTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="performance" class="section">
+  <div class="section-title"><div><span class="section-icon">🔥</span><h2>Performance</h2></div><span class="subtext">Disposal rate and current pendency indicators</span></div>
+  <div class="panel"><div class="performance-grid" id="performanceGrid"></div></div>
+</section>
+
+<section id="trends" class="section">
+  <div class="section-title"><div><span class="section-icon">📈</span><h2>Trends & Summary</h2></div><span class="subtext">Reporting-period summary from the uploaded E-Office data</span></div>
+  <div class="two-col">
+    <div class="panel"><div class="panel-head"><h3>File Movement</h3></div><div id="movementBars" class="summary-bars"></div></div>
+    <div class="panel"><div class="panel-head"><h3>Pendency Age</h3></div><div id="pendencyBars" class="summary-bars"></div></div>
+  </div>
+</section>
+
+<section id="details" class="section">
+  <div class="section-title"><div><span class="section-icon">🔎</span><h2>Police Station / Employee Detail</h2></div><span class="subtext">Search and review every E-Office record</span></div>
+  <div class="panel full-data-panel">
+    <div class="toolbar">
+      <input id="searchDetail" type="search" placeholder="🔎 Search employee, police station or designation...">
+      <button id="refreshDetail" class="refresh">↻ Refresh</button>
+    </div>
+    <div class="table-wrap">
+      <table class="wide-table">
+        <thead>
+          <tr>
+            <th>S.No</th><th>Employee</th><th>Police Station / Designation</th>
+            <th>Opening</th><th>Created</th><th>Received</th><th>Closed</th><th>Forwarded</th>
+            <th>Disposed</th><th>Parked</th><th>Merged</th>
+            <th>0–7 Days</th><th>8–15 Days</th><th>16–30 Days</th><th>31–60 Days</th><th>&gt;60 Days</th>
+            <th>Total Pendency</th><th>Avg. Pending Days</th><th>Score</th>
+          </tr>
+        </thead>
+        <tbody id="detailTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="reports" class="section">
+  <div class="section-title"><div><span class="section-icon">📋</span><h2>Reports</h2></div><span class="subtext">District-level figures calculated from the uploaded E-Office data</span></div>
+  <div class="panel report-box" id="reportBox"></div>
+</section>
+</main>
+
+<footer>
+  <span>Chittoor District Police • E-Office Performance Dashboard</span>
+  <span id="lastLoaded"></span>
+</footer>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
