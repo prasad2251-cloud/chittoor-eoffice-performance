@@ -19,12 +19,28 @@
     <div class="brand">
 
       <div class="logo-row">
-        <div class="logo-circle">AP</div>
-        <div class="logo-circle">⚜</div>
-        <div class="logo-circle">✦</div>
+
+        <img
+          src="2222.png"
+          class="header-logo"
+          alt="AP Police Logo"
+        >
+
+        <img
+          src="3333.png"
+          class="header-photo"
+          alt="SP Sir"
+        >
+
+        <img
+          src="4444.png"
+          class="header-photo"
+          alt="DGP Sir"
+        >
+
       </div>
 
-      <div>
+      <div class="title-area">
 
         <div class="eyebrow">
           ANDHRA PRADESH POLICE
@@ -84,7 +100,7 @@
     </button>
 
     <button class="tab" data-target="details">
-      🔎 Employee / Unit Detail
+      🔎 Detail
     </button>
 
     <button class="tab" data-target="reports">
@@ -155,7 +171,7 @@
           </strong>
 
           <small>
-            At the end of the reporting period
+            At the end of reporting period
           </small>
 
         </article>
@@ -230,7 +246,9 @@
             Composite Performance — All Records
           </h3>
 
-          <span id="chartNote"></span>
+          <span id="chartNote">
+            0 records
+          </span>
 
         </div>
 
@@ -239,7 +257,7 @@
       </div>
 
 
-      <!-- FULL DATA TABLE -->
+      <!-- FULL TABLE -->
       <div class="panel full-data-panel">
 
         <div class="panel-head">
@@ -273,9 +291,15 @@
         </div>
 
 
+        <div class="sort-help">
+          Click a column heading to sort.
+          Hold <b>Shift</b> and click another heading for multi-column sorting.
+        </div>
+
+
         <div class="table-wrap">
 
-          <table class="wide-table">
+          <table class="wide-table sortable-table">
 
             <thead>
 
@@ -332,12 +356,7 @@
           <h2>Performance</h2>
         </div>
 
-        <span class="subtext">
-          Disposal rate and current pendency indicators
-        </span>
-
       </div>
-
 
       <div class="panel">
 
@@ -361,12 +380,7 @@
           <h2>Trends & Summary</h2>
         </div>
 
-        <span class="subtext">
-          Reporting-period summary from the uploaded E-Office data
-        </span>
-
       </div>
-
 
       <div class="two-col">
 
@@ -412,19 +426,14 @@
           <h2>Employee / Unit Detail</h2>
         </div>
 
-        <span class="subtext">
-          Search and review every record
-        </span>
-
       </div>
-
 
       <div class="toolbar">
 
         <input
           id="search"
           type="search"
-          placeholder="🔎 Search employee, police station or designation..."
+          placeholder="🔎 Search employee or designation..."
         >
 
         <button
@@ -440,7 +449,7 @@
 
         <div class="table-wrap">
 
-          <table class="wide-table">
+          <table class="wide-table sortable-table">
 
             <thead>
 
@@ -497,12 +506,7 @@
           <h2>Reports</h2>
         </div>
 
-        <span class="subtext">
-          District-level figures from the E-Office data
-        </span>
-
       </div>
-
 
       <div
         class="panel report-box"
