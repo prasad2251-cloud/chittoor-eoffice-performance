@@ -1,26 +1,38 @@
 let DATA = null;
 
+let sortColumns = [];
+
 const $ = id => document.getElementById(id);
 
-const fmt = n =>
-  Number(n || 0).toLocaleString("en-IN");
 
-const esc = s =>
-  String(s ?? "").replace(
-    /[&<>"']/g,
-    m => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;"
-    }[m])
-  );
+function fmt(n) {
+
+  return Number(n || 0)
+    .toLocaleString("en-IN");
+
+}
 
 
-/* --------------------------------------------------
+function esc(s) {
+
+  return String(s ?? "")
+    .replace(
+      /[&<>"']/g,
+      m => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[m])
+    );
+
+}
+
+
+/* =========================
    SCORE
--------------------------------------------------- */
+========================= */
 
 function score(r) {
 
@@ -37,13 +49,20 @@ function score(r) {
 
   const disposalRate =
     available > 0
-      ? Math.min(100, disposed / available * 100)
+      ? Math.min(
+          100,
+          disposed / available * 100
+        )
       : 0;
 
   const pendPenalty =
     Math.min(
       35,
-      pend / Math.max(1, disposed + pend) * 100
+      pend /
+      Math.max(
+        1,
+        disposed + pend
+      ) * 100
     );
 
   return Math.max(
@@ -54,12 +73,13 @@ function score(r) {
       (100 - pendPenalty) * 0.2
     )
   );
+
 }
 
 
-/* --------------------------------------------------
-   ENRICH DATA
--------------------------------------------------- */
+/* =========================
+   DATA
+========================= */
 
 function enriched() {
 
@@ -71,56 +91,71 @@ function enriched() {
 }
 
 
-/* --------------------------------------------------
+/* =========================
    TOTALS
--------------------------------------------------- */
+========================= */
 
 function totals(rows) {
 
   const total = field =>
     rows.reduce(
-      (a, r) => a + Number(r[field] || 0),
+      (a, r) =>
+        a + Number(r[field] || 0),
       0
     );
 
   return {
 
-    openingBalance: total("openingBalance"),
+    openingBalance:
+      total("openingBalance"),
 
-    created: total("created"),
+    created:
+      total("created"),
 
-    received: total("received"),
+    received:
+      total("received"),
 
-    closed: total("closed"),
+    closed:
+      total("closed"),
 
-    forwarded: total("forwarded"),
+    forwarded:
+      total("forwarded"),
 
-    disposedTotal: total("disposedTotal"),
+    disposedTotal:
+      total("disposedTotal"),
 
-    parked: total("parked"),
+    parked:
+      total("parked"),
 
-    merged: total("merged"),
+    merged:
+      total("merged"),
 
-    pendency0to7: total("pendency0to7"),
+    pendency0to7:
+      total("pendency0to7"),
 
-    pendency8to15: total("pendency8to15"),
+    pendency8to15:
+      total("pendency8to15"),
 
-    pendency16to30: total("pendency16to30"),
+    pendency16to30:
+      total("pendency16to30"),
 
-    pendency31to60: total("pendency31to60"),
+    pendency31to60:
+      total("pendency31to60"),
 
-    pendencyOver60: total("pendencyOver60"),
+    pendencyOver60:
+      total("pendencyOver60"),
 
-    totalPendency: total("totalPendency")
+    totalPendency:
+      total("totalPendency")
 
   };
 
 }
 
 
-/* --------------------------------------------------
-   WEIGHTED AVG PENDING DAYS
--------------------------------------------------- */
+/* =========================
+   AVG PENDING
+========================= */
 
 function avgWeighted(rows) {
 
@@ -131,7 +166,8 @@ function avgWeighted(rows) {
       0
     );
 
-  if (!totalPend) return 0;
+  if (!totalPend)
+    return 0;
 
   return rows.reduce(
     (a, r) =>
@@ -144,24 +180,24 @@ function avgWeighted(rows) {
 }
 
 
-/* --------------------------------------------------
+/* =========================
    NAME
--------------------------------------------------- */
+========================= */
 
 function nameOf(r) {
 
   return (
-    r.designation ||
     r.employee ||
+    r.designation ||
     "Unknown"
   );
 
 }
 
 
-/* --------------------------------------------------
+/* =========================
    TABS
--------------------------------------------------- */
+========================= */
 
 function setupTabs() {
 
@@ -169,72 +205,104 @@ function setupTabs() {
     .querySelectorAll(".tab")
     .forEach(btn => {
 
-      btn.addEventListener("click", () => {
+      btn.addEventListener(
+        "click",
+        () => {
 
-        document
-          .querySelectorAll(".tab")
-          .forEach(b =>
-            b.classList.remove("active")
-          );
+          document
+            .querySelectorAll(".tab")
+            .forEach(b =>
+              b.classList.remove(
+                "active"
+              )
+            );
 
-        document
-          .querySelectorAll(".section")
-          .forEach(s =>
-            s.classList.remove("active-section")
-          );
+          document
+            .querySelectorAll(".section")
+            .forEach(s =>
+              s.classList.remove(
+                "active-section"
+              )
+            );
 
-        btn.classList.add("active");
+          btn.classList.add("active");
 
-        $(btn.dataset.target)
-          .classList.add("active-section");
+          const target =
+            document.getElementById(
+              btn.dataset.target
+            );
 
-      });
+          if (target)
+            target.classList.add(
+              "active-section"
+            );
+
+        }
+      );
 
     });
 
 }
 
 
-/* --------------------------------------------------
-   MAIN RENDER
--------------------------------------------------- */
+/* =========================
+   RENDER
+========================= */
 
 function render() {
 
-  const rows = enriched();
+  const rows =
+    enriched();
 
-  const t = totals(rows);
+  const t =
+    totals(rows);
+
 
   $("period").textContent =
     "Reporting Period: " +
     DATA.period;
 
+
   $("unitCount").textContent =
     fmt(rows.length);
+
 
   $("disposedHero").textContent =
     fmt(t.disposedTotal);
 
+
   $("pendencyHero").textContent =
     fmt(t.totalPendency);
+
 
   $("disposedTotal").textContent =
     fmt(t.disposedTotal);
 
+
   $("receivedTotal").textContent =
-    fmt(t.created + t.received);
+    fmt(
+      t.created +
+      t.received
+    );
+
 
   $("pendencyTotal").textContent =
     fmt(t.totalPendency);
 
+
   $("avgPending").textContent =
-    avgWeighted(rows).toFixed(2);
+    avgWeighted(rows)
+      .toFixed(2);
+
 
   $("chartNote").textContent =
-    rows.length + " records";
+    rows.length +
+    " records";
+
 
   $("tableCount").textContent =
-    rows.length + " records";
+    rows.length +
+    " records";
 
 
   renderRankings(rows);
@@ -252,25 +320,32 @@ function render() {
 
   $("lastLoaded").textContent =
     "Last loaded: " +
-    new Date().toLocaleString("en-IN");
+    new Date()
+      .toLocaleString("en-IN");
+
+
+  setupSorting();
 
 }
 
 
-/* --------------------------------------------------
+/* =========================
    RANKINGS
--------------------------------------------------- */
+========================= */
 
 function renderRankings(rows) {
 
   const sorted =
     [...rows].sort(
-      (a, b) => b.score - a.score
+      (a, b) =>
+        b.score -
+        a.score
     );
 
 
-  const item =
-    (r, i, bottom = false) => `
+  function item(r, i, bottom) {
+
+    return `
 
       <div class="rank-item">
 
@@ -289,17 +364,20 @@ function renderRankings(rows) {
           </div>
 
           <div class="rank-meta">
-            ${esc(r.employee)}
+            ${esc(r.designation)}
           </div>
 
         </div>
 
         <span
-          class="badge ${bottom ? "red" : ""}"
+          class="badge ${
+            bottom ? "red" : ""
+          }"
         >
           ${
             bottom
-              ? "Pend. " + fmt(r.totalPendency)
+              ? "Pend. " +
+                fmt(r.totalPendency)
               : "Score"
           }
         </span>
@@ -312,44 +390,51 @@ function renderRankings(rows) {
 
     `;
 
+  }
+
 
   $("topList").innerHTML =
     sorted
       .slice(0, 5)
-      .map((r, i) => item(r, i))
+      .map(
+        (r, i) =>
+          item(r, i, false)
+      )
       .join("");
 
 
-  const bottom =
+  $("bottomList").innerHTML =
     sorted
       .slice(-5)
-      .reverse();
-
-
-  $("bottomList").innerHTML =
-    bottom
-      .map((r, i) =>
-        item(r, i, true)
+      .reverse()
+      .map(
+        (r, i) =>
+          item(r, i, true)
       )
       .join("");
 
 }
 
 
-/* --------------------------------------------------
-   BLUE BAR CHART
--------------------------------------------------- */
+/* =========================
+   CHART
+========================= */
 
 function renderChart(rows) {
 
   const sorted =
     [...rows].sort(
-      (a, b) => b.score - a.score
+      (a, b) =>
+        b.score -
+        a.score
     );
+
 
   const max =
     Math.max(
-      ...sorted.map(r => r.score),
+      ...sorted.map(
+        r => r.score
+      ),
       1
     );
 
@@ -361,15 +446,20 @@ function renderChart(rows) {
         const h =
           Math.max(
             8,
-            r.score / max * 220
+            r.score /
+            max *
+            220
           );
+
 
         return `
 
           <div
             class="bar"
             style="height:${h}px"
-            title="${esc(nameOf(r))}: ${r.score.toFixed(1)}"
+            title="${esc(
+              nameOf(r)
+            )}: ${r.score.toFixed(1)}"
           >
 
             <span>
@@ -390,15 +480,17 @@ function renderChart(rows) {
 }
 
 
-/* --------------------------------------------------
+/* =========================
    PERFORMANCE
--------------------------------------------------- */
+========================= */
 
 function renderPerformance(rows) {
 
   const sorted =
     [...rows].sort(
-      (a, b) => b.score - a.score
+      (a, b) =>
+        b.score -
+        a.score
     );
 
 
@@ -407,16 +499,26 @@ function renderPerformance(rows) {
       .map(r => {
 
         const available =
-          Number(r.openingBalance || 0) +
-          Number(r.created || 0) +
-          Number(r.received || 0);
+          Number(
+            r.openingBalance || 0
+          ) +
+          Number(
+            r.created || 0
+          ) +
+          Number(
+            r.received || 0
+          );
+
 
         const rate =
           available
             ? Math.min(
                 100,
-                Number(r.disposedTotal || 0) /
-                available * 100
+                Number(
+                  r.disposedTotal || 0
+                ) /
+                available *
+                100
               )
             : 0;
 
@@ -446,7 +548,7 @@ function renderPerformance(rows) {
             </div>
 
             <small>
-              Disposal rate:
+              Disposal:
               ${rate.toFixed(1)}%
               • Pending:
               ${fmt(r.totalPendency)}
@@ -466,15 +568,17 @@ function renderPerformance(rows) {
 }
 
 
-/* --------------------------------------------------
-   SUMMARY BARS
--------------------------------------------------- */
+/* =========================
+   SUMMARY
+========================= */
 
 function barRows(items) {
 
   const max =
     Math.max(
-      ...items.map(x => x.v),
+      ...items.map(
+        x => x.v
+      ),
       1
     );
 
@@ -492,12 +596,14 @@ function barRows(items) {
           <div class="track">
 
             <i
-              style="
-                width:${Math.max(
+              style="width:${
+                Math.max(
                   2,
-                  x.v / max * 100
-                )}%
-              "
+                  x.v /
+                  max *
+                  100
+                )
+              }%"
             ></i>
 
           </div>
@@ -514,10 +620,6 @@ function barRows(items) {
 
 }
 
-
-/* --------------------------------------------------
-   TRENDS
--------------------------------------------------- */
 
 function renderTrends(t) {
 
@@ -590,9 +692,9 @@ function renderTrends(t) {
 }
 
 
-/* --------------------------------------------------
-   FULL TABLE
--------------------------------------------------- */
+/* =========================
+   TABLE
+========================= */
 
 function tableRows(rows) {
 
@@ -602,9 +704,7 @@ function tableRows(rows) {
 
         <tr>
 
-          <td>
-            ${i + 1}
-          </td>
+          <td>${i + 1}</td>
 
           <td>
             <b>
@@ -616,57 +716,33 @@ function tableRows(rows) {
             ${esc(r.designation)}
           </td>
 
-          <td>
-            ${fmt(r.openingBalance)}
-          </td>
+          <td>${fmt(r.openingBalance)}</td>
 
-          <td>
-            ${fmt(r.created)}
-          </td>
+          <td>${fmt(r.created)}</td>
 
-          <td>
-            ${fmt(r.received)}
-          </td>
+          <td>${fmt(r.received)}</td>
 
-          <td>
-            ${fmt(r.closed)}
-          </td>
+          <td>${fmt(r.closed)}</td>
 
-          <td>
-            ${fmt(r.forwarded)}
-          </td>
+          <td>${fmt(r.forwarded)}</td>
 
           <td class="disposed-cell">
             ${fmt(r.disposedTotal)}
           </td>
 
-          <td>
-            ${fmt(r.parked)}
-          </td>
+          <td>${fmt(r.parked)}</td>
 
-          <td>
-            ${fmt(r.merged)}
-          </td>
+          <td>${fmt(r.merged)}</td>
 
-          <td>
-            ${fmt(r.pendency0to7)}
-          </td>
+          <td>${fmt(r.pendency0to7)}</td>
 
-          <td>
-            ${fmt(r.pendency8to15)}
-          </td>
+          <td>${fmt(r.pendency8to15)}</td>
 
-          <td>
-            ${fmt(r.pendency16to30)}
-          </td>
+          <td>${fmt(r.pendency16to30)}</td>
 
-          <td>
-            ${fmt(r.pendency31to60)}
-          </td>
+          <td>${fmt(r.pendency31to60)}</td>
 
-          <td>
-            ${fmt(r.pendencyOver60)}
-          </td>
+          <td>${fmt(r.pendencyOver60)}</td>
 
           <td class="pendency-cell">
             ${fmt(r.totalPendency)}
@@ -691,11 +767,14 @@ function tableRows(rows) {
 }
 
 
-/* --------------------------------------------------
-   RENDER TABLE
--------------------------------------------------- */
+/* =========================
+   TABLE FILTER
+========================= */
 
-function renderTable(rows, filter = "") {
+function renderTable(
+  rows,
+  filter = ""
+) {
 
   const q =
     String(filter)
@@ -704,23 +783,18 @@ function renderTable(rows, filter = "") {
 
 
   const list =
-    rows
-      .filter(r => {
+    rows.filter(r => {
 
-        const text =
-          `${r.employee || ""} ${
-            r.designation || ""
-          }`;
+      const text =
+        `${r.employee || ""} ${
+          r.designation || ""
+        }`;
 
-        return text
-          .toLowerCase()
-          .includes(q);
+      return text
+        .toLowerCase()
+        .includes(q);
 
-      })
-      .sort(
-        (a, b) =>
-          b.score - a.score
-      );
+    });
 
 
   const html =
@@ -745,9 +819,13 @@ function renderTable(rows, filter = "") {
       `;
 
 
-  $("rankingTable").innerHTML = html;
+  $("rankingTable").innerHTML =
+    html;
 
-  $("dataTable").innerHTML = html;
+
+  $("dataTable").innerHTML =
+    html;
+
 
   $("tableCount").textContent =
     list.length +
@@ -755,48 +833,95 @@ function renderTable(rows, filter = "") {
     rows.length +
     " records";
 
+
+  setupSorting();
+
 }
 
 
-/* --------------------------------------------------
+/* =========================
    REPORT
--------------------------------------------------- */
+========================= */
 
 function renderReport(t) {
 
   const items = [
 
-    ["Opening Balance", t.openingBalance],
+    [
+      "Opening Balance",
+      t.openingBalance
+    ],
 
-    ["Created", t.created],
+    [
+      "Created",
+      t.created
+    ],
 
-    ["Received", t.received],
+    [
+      "Received",
+      t.received
+    ],
 
-    ["Closed", t.closed],
+    [
+      "Closed",
+      t.closed
+    ],
 
-    ["Forwarded", t.forwarded],
+    [
+      "Forwarded",
+      t.forwarded
+    ],
 
-    ["Total Disposed", t.disposedTotal],
+    [
+      "Total Disposed",
+      t.disposedTotal
+    ],
 
-    ["Parked", t.parked],
+    [
+      "Parked",
+      t.parked
+    ],
 
-    ["Merged", t.merged],
+    [
+      "Merged",
+      t.merged
+    ],
 
-    ["Total Pendency", t.totalPendency],
+    [
+      "Total Pendency",
+      t.totalPendency
+    ],
 
-    ["0–7 Days", t.pendency0to7],
+    [
+      "0–7 Days",
+      t.pendency0to7
+    ],
 
-    ["8–15 Days", t.pendency8to15],
+    [
+      "8–15 Days",
+      t.pendency8to15
+    ],
 
-    ["16–30 Days", t.pendency16to30],
+    [
+      "16–30 Days",
+      t.pendency16to30
+    ],
 
-    ["31–60 Days", t.pendency31to60],
+    [
+      "31–60 Days",
+      t.pendency31to60
+    ],
 
-    [">60 Days", t.pendencyOver60],
+    [
+      ">60 Days",
+      t.pendencyOver60
+    ],
 
     [
       "Average Pending Days",
-      avgWeighted(enriched()).toFixed(2)
+      avgWeighted(
+        enriched()
+      ).toFixed(2)
     ]
 
   ];
@@ -839,47 +964,312 @@ function renderReport(t) {
 }
 
 
-/* --------------------------------------------------
-   LOAD E-OFFICE JSON
--------------------------------------------------- */
+/* =========================================================
+   SORTING
+========================================================= */
+
+function getSortValue(text) {
+
+  const clean =
+    String(text || "")
+      .trim()
+      .replace(/,/g, "");
+
+
+  const number =
+    Number(
+      clean.replace(
+        /[^0-9.-]/g,
+        ""
+      )
+    );
+
+
+  if (
+    clean !== "" &&
+    !isNaN(number)
+  ) {
+
+    return number;
+
+  }
+
+
+  return clean.toLowerCase();
+
+}
+
+
+function sortTable(table) {
+
+  const tbody =
+    table.querySelector("tbody");
+
+  if (!tbody)
+    return;
+
+
+  const rows =
+    Array.from(
+      tbody.querySelectorAll("tr")
+    );
+
+
+  if (
+    rows.length <= 1 &&
+    rows[0] &&
+    rows[0].children.length === 1
+  ) {
+    return;
+  }
+
+
+  rows.sort(
+    (a, b) => {
+
+      for (
+        const s
+        of sortColumns
+      ) {
+
+        const cellA =
+          a.children[s.index];
+
+        const cellB =
+          b.children[s.index];
+
+
+        if (!cellA || !cellB)
+          continue;
+
+
+        const A =
+          getSortValue(
+            cellA.innerText
+          );
+
+        const B =
+          getSortValue(
+            cellB.innerText
+          );
+
+
+        if (A < B)
+          return -1 *
+            s.direction;
+
+
+        if (A > B)
+          return 1 *
+            s.direction;
+
+      }
+
+
+      return 0;
+
+    }
+  );
+
+
+  rows.forEach(
+    row =>
+      tbody.appendChild(row)
+  );
+
+}
+
+
+function updateSortArrows(table) {
+
+  const headers =
+    table.querySelectorAll(
+      "thead th"
+    );
+
+
+  headers.forEach(
+    (th, index) => {
+
+      th.querySelectorAll(
+        ".sort-arrow"
+      ).forEach(
+        x => x.remove()
+      );
+
+
+      const s =
+        sortColumns.find(
+          x =>
+            x.index === index
+        );
+
+
+      if (!s)
+        return;
+
+
+      const arrow =
+        document.createElement(
+          "span"
+        );
+
+
+      arrow.className =
+        "sort-arrow";
+
+
+      arrow.textContent =
+        s.direction === 1
+          ? " ▲"
+          : " ▼";
+
+
+      th.appendChild(
+        arrow
+      );
+
+    }
+  );
+
+}
+
+
+function setupSorting() {
+
+  document
+    .querySelectorAll(
+      ".sortable-table"
+    )
+    .forEach(table => {
+
+      const headers =
+        table.querySelectorAll(
+          "thead th"
+        );
+
+
+      headers.forEach(
+        (th, index) => {
+
+          if (
+            th.dataset.sortReady
+          )
+            return;
+
+
+          th.dataset.sortReady =
+            "yes";
+
+
+          th.addEventListener(
+            "click",
+            event => {
+
+              if (
+                event.shiftKey
+              ) {
+
+                const existing =
+                  sortColumns.find(
+                    x =>
+                      x.index === index
+                  );
+
+
+                if (existing) {
+
+                  existing.direction *= -1;
+
+                } else {
+
+                  sortColumns.push({
+                    index: index,
+                    direction: 1
+                  });
+
+                }
+
+              } else {
+
+                const existing =
+                  sortColumns.find(
+                    x =>
+                      x.index === index
+                  );
+
+
+                sortColumns = [
+
+                  {
+                    index: index,
+
+                    direction:
+                      existing
+                        ? existing.direction * -1
+                        : 1
+
+                  }
+
+                ];
+
+              }
+
+
+              sortTable(table);
+
+              updateSortArrows(
+                table
+              );
+
+            }
+          );
+
+        }
+      );
+
+    });
+
+}
+
+
+/* =========================
+   LOAD E-OFFICE DATA
+========================= */
 
 async function load() {
 
   try {
 
-    /*
-      IMPORTANT:
-      We are now loading eoffice_data.json
-      instead of data.json.
-    */
-
-    const res =
+    const response =
       await fetch(
         "eoffice_data.json?cache=" +
         Date.now()
       );
 
 
-    if (!res.ok) {
+    if (!response.ok) {
 
       throw new Error(
-        "eoffice_data.json could not be loaded"
+        "eoffice_data.json could not be loaded."
       );
 
     }
 
 
     DATA =
-      await res.json();
+      await response.json();
 
 
     if (
       !DATA.records ||
-      !Array.isArray(DATA.records)
+      !Array.isArray(
+        DATA.records
+      )
     ) {
 
       throw new Error(
-        "No records found in eoffice_data.json"
+        "No E-Office records found."
       );
 
     }
@@ -888,32 +1278,24 @@ async function load() {
     render();
 
 
-  } catch (e) {
+  } catch (error) {
 
     document.body.innerHTML = `
 
-      <div
-        style="
-          font-family:Arial;
-          padding:50px;
-        "
-      >
+      <div class="error-box">
 
         <h2>
-          Dashboard data could not be loaded
+          E-Office Data Could Not Be Loaded
         </h2>
 
         <p>
-          ${esc(e.message)}
+          ${esc(error.message)}
         </p>
 
         <p>
-          Make sure
-          <b>eoffice_data.json</b>,
-          <b>index.html</b>,
-          <b>style.css</b> and
-          <b>script.js</b>
-          are in the same GitHub folder.
+          Please make sure
+          <b>eoffice_data.json</b>
+          is in the same GitHub repository.
         </p>
 
       </div>
@@ -925,9 +1307,9 @@ async function load() {
 }
 
 
-/* --------------------------------------------------
+/* =========================
    START
--------------------------------------------------- */
+========================= */
 
 document.addEventListener(
   "DOMContentLoaded",
