@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Chittoor Police — E-Office Performance Dashboard</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -11,30 +13,18 @@
 
 <div class="page">
 
-  <!-- ================= HEADER ================= -->
+  <!-- HEADER -->
   <header class="hero">
 
     <div class="brand">
 
-      <!-- POLICE / OFFICER IMAGES -->
       <div class="logo-row">
-
-        <div class="logo-circle">
-          <img src="2222.png" alt="Chittoor Police Logo">
-        </div>
-
-        <div class="logo-circle">
-          <img src="3333.png" alt="DGP Sir">
-        </div>
-
-        <div class="logo-circle">
-          <img src="4444.png" alt="SP Sir">
-        </div>
-
+        <div class="logo-circle">AP</div>
+        <div class="logo-circle">⚜</div>
+        <div class="logo-circle">✦</div>
       </div>
 
-      <!-- HEADER TEXT -->
-      <div class="brand-text">
+      <div>
 
         <div class="eyebrow">
           ANDHRA PRADESH POLICE
@@ -56,7 +46,6 @@
 
     </div>
 
-    <!-- HEADER STATISTICS -->
     <div class="hero-stats">
 
       <div>
@@ -79,8 +68,7 @@
   </header>
 
 
-  <!-- ================= NAVIGATION ================= -->
-
+  <!-- TABS -->
   <nav class="tabs">
 
     <button class="tab active" data-target="rankings">
@@ -106,12 +94,9 @@
   </nav>
 
 
-  <!-- ================= MAIN ================= -->
-
   <main>
 
-    <!-- ================= RANKINGS ================= -->
-
+    <!-- RANKINGS -->
     <section id="rankings" class="section active-section">
 
       <div class="section-title">
@@ -129,14 +114,11 @@
 
 
       <!-- KPI CARDS -->
-
       <div class="cards">
 
         <article class="metric-card">
 
-          <span>
-            📁 Total Files Disposed
-          </span>
+          <span>📁 Total Files Disposed</span>
 
           <strong id="disposedTotal">
             0
@@ -151,9 +133,7 @@
 
         <article class="metric-card">
 
-          <span>
-            📥 Total Files Received
-          </span>
+          <span>📥 Total Files Received</span>
 
           <strong id="receivedTotal">
             0
@@ -168,9 +148,7 @@
 
         <article class="metric-card">
 
-          <span>
-            ⏳ Total Pendency
-          </span>
+          <span>⏳ Total Pendency</span>
 
           <strong id="pendencyTotal">
             0
@@ -185,9 +163,7 @@
 
         <article class="metric-card">
 
-          <span>
-            🕐 Avg. Pending Days
-          </span>
+          <span>🕐 Avg. Pending Days</span>
 
           <strong id="avgPending">
             0
@@ -203,7 +179,6 @@
 
 
       <!-- TOP / BOTTOM -->
-
       <div class="two-col">
 
         <div class="panel">
@@ -247,7 +222,6 @@
 
 
       <!-- CHART -->
-
       <div class="panel chart-panel">
 
         <div class="panel-head">
@@ -264,25 +238,98 @@
 
       </div>
 
+
+      <!-- FULL DATA TABLE -->
+      <div class="panel full-data-panel">
+
+        <div class="panel-head">
+
+          <h3>
+            📊 Full E-Office Data
+          </h3>
+
+          <span id="tableCount">
+            0 records
+          </span>
+
+        </div>
+
+
+        <div class="table-toolbar">
+
+          <input
+            id="rankingSearch"
+            type="search"
+            placeholder="🔎 Search employee or police station..."
+          >
+
+          <button
+            id="refreshRanking"
+            class="refresh"
+          >
+            ↻ Refresh
+          </button>
+
+        </div>
+
+
+        <div class="table-wrap">
+
+          <table class="wide-table">
+
+            <thead>
+
+              <tr>
+
+                <th>S.No</th>
+                <th>Employee</th>
+                <th>Police Station / Designation</th>
+
+                <th>Opening</th>
+                <th>Created</th>
+                <th>Received</th>
+
+                <th>Closed</th>
+                <th>Forwarded</th>
+                <th>Disposed</th>
+
+                <th>Parked</th>
+                <th>Merged</th>
+
+                <th>0–7 Days</th>
+                <th>8–15 Days</th>
+                <th>16–30 Days</th>
+                <th>31–60 Days</th>
+                <th>&gt;60 Days</th>
+
+                <th>Total Pendency</th>
+                <th>Avg Pending Days</th>
+
+                <th>Score</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="rankingTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
     </section>
 
 
-    <!-- ================= PERFORMANCE ================= -->
-
+    <!-- PERFORMANCE -->
     <section id="performance" class="section">
 
       <div class="section-title">
 
         <div>
-
-          <span class="section-icon">
-            🔥
-          </span>
-
-          <h2>
-            Performance
-          </h2>
-
+          <span class="section-icon">🔥</span>
+          <h2>Performance</h2>
         </div>
 
         <span class="subtext">
@@ -304,26 +351,18 @@
     </section>
 
 
-    <!-- ================= TRENDS ================= -->
-
+    <!-- TRENDS -->
     <section id="trends" class="section">
 
       <div class="section-title">
 
         <div>
-
-          <span class="section-icon">
-            📈
-          </span>
-
-          <h2>
-            Trends & Summary
-          </h2>
-
+          <span class="section-icon">📈</span>
+          <h2>Trends & Summary</h2>
         </div>
 
         <span class="subtext">
-          Reporting-period summary from the uploaded Excel data
+          Reporting-period summary from the uploaded E-Office data
         </span>
 
       </div>
@@ -334,11 +373,7 @@
         <div class="panel">
 
           <div class="panel-head">
-
-            <h3>
-              File Movement
-            </h3>
-
+            <h3>File Movement</h3>
           </div>
 
           <div
@@ -352,11 +387,7 @@
         <div class="panel">
 
           <div class="panel-head">
-
-            <h3>
-              Pendency Age
-            </h3>
-
+            <h3>Pendency Age</h3>
           </div>
 
           <div
@@ -371,26 +402,18 @@
     </section>
 
 
-    <!-- ================= DETAILS ================= -->
-
+    <!-- DETAILS -->
     <section id="details" class="section">
 
       <div class="section-title">
 
         <div>
-
-          <span class="section-icon">
-            🔎
-          </span>
-
-          <h2>
-            Employee / Unit Detail
-          </h2>
-
+          <span class="section-icon">🔎</span>
+          <h2>Employee / Unit Detail</h2>
         </div>
 
         <span class="subtext">
-          Search and review every record in the uploaded report
+          Search and review every record
         </span>
 
       </div>
@@ -401,7 +424,7 @@
         <input
           id="search"
           type="search"
-          placeholder="🔎 Search employee, unit or designation..."
+          placeholder="🔎 Search employee, police station or designation..."
         >
 
         <button
@@ -417,39 +440,37 @@
 
         <div class="table-wrap">
 
-          <table>
+          <table class="wide-table">
 
             <thead>
 
               <tr>
 
-                <th>
-                  S.No
-                </th>
+                <th>S.No</th>
+                <th>Employee</th>
+                <th>Police Station / Designation</th>
 
-                <th>
-                  Employee
-                </th>
+                <th>Opening</th>
+                <th>Created</th>
+                <th>Received</th>
 
-                <th>
-                  Unit / Designation
-                </th>
+                <th>Closed</th>
+                <th>Forwarded</th>
+                <th>Disposed</th>
 
-                <th>
-                  Disposed
-                </th>
+                <th>Parked</th>
+                <th>Merged</th>
 
-                <th>
-                  Pendency
-                </th>
+                <th>0–7 Days</th>
+                <th>8–15 Days</th>
+                <th>16–30 Days</th>
+                <th>31–60 Days</th>
+                <th>&gt;60 Days</th>
 
-                <th>
-                  Avg Pending Days
-                </th>
+                <th>Total Pendency</th>
+                <th>Avg Pending Days</th>
 
-                <th>
-                  Score
-                </th>
+                <th>Score</th>
 
               </tr>
 
@@ -466,26 +487,18 @@
     </section>
 
 
-    <!-- ================= REPORTS ================= -->
-
+    <!-- REPORTS -->
     <section id="reports" class="section">
 
       <div class="section-title">
 
         <div>
-
-          <span class="section-icon">
-            📋
-          </span>
-
-          <h2>
-            Reports
-          </h2>
-
+          <span class="section-icon">📋</span>
+          <h2>Reports</h2>
         </div>
 
         <span class="subtext">
-          District-level figures from the source workbook
+          District-level figures from the E-Office data
         </span>
 
       </div>
@@ -501,8 +514,6 @@
   </main>
 
 
-  <!-- ================= FOOTER ================= -->
-
   <footer>
 
     <span>
@@ -515,8 +526,6 @@
 
 </div>
 
-
-<!-- ================= JAVASCRIPT ================= -->
 
 <script src="script.js"></script>
 
