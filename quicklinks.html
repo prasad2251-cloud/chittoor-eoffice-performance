@@ -4,10 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Chittoor Police - Quick Access</title>
+<title>Chittoor Police - Quick Links</title>
 
 <style>
-
 * {
     box-sizing: border-box;
 }
@@ -16,202 +15,238 @@ body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     background: #f3f6fa;
-    color: #173b68;
+    color: #172033;
 }
 
 /* HEADER */
-
 .header {
-    background: linear-gradient(135deg, #071a36, #123c68);
+    background: linear-gradient(135deg, #071a36, #123e68);
     color: white;
     text-align: center;
-    padding: 28px 20px;
+    padding: 22px 15px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.20);
 }
 
 .header h1 {
     margin: 0;
     font-size: 30px;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
 }
 
 .header h2 {
-    margin: 6px 0 0;
+    margin: 5px 0 0;
     font-size: 20px;
     font-weight: 500;
 }
 
 .header p {
-    margin: 8px 0 0;
+    margin: 7px 0 0;
     font-size: 14px;
 }
 
-/* CONTAINER */
+/* NAVIGATION */
+.nav {
+    background: white;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
 
+.nav a {
+    display: inline-block;
+    text-decoration: none;
+    color: #123e68;
+    background: #edf2f8;
+    padding: 10px 18px;
+    margin: 4px;
+    border-radius: 7px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.nav a:hover {
+    background: #123e68;
+    color: white;
+}
+
+/* MAIN */
 .container {
-    max-width: 1200px;
-    margin: 30px auto;
+    max-width: 1250px;
+    margin: 28px auto;
     padding: 0 20px;
 }
 
-/* TITLE */
-
 .title-box {
     background: white;
-    padding: 22px 25px;
-    border-radius: 15px;
-    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
     margin-bottom: 22px;
 }
 
 .title-box h2 {
     margin: 0;
-    font-size: 24px;
+    color: #123e68;
+    font-size: 25px;
 }
 
 .title-box p {
-    margin: 7px 0 0;
-    color: #64748b;
+    margin: 8px 0 0;
+    color: #60708a;
 }
 
-/* QUICK LINKS */
-
-.quick-links {
+/* QUICK LINKS GRID */
+.links {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 18px;
 }
 
-/* CARD */
-
-.quick-card {
+.link-card {
     background: white;
-    border-radius: 15px;
-    padding: 22px;
+    border-radius: 12px;
+    padding: 20px;
     text-decoration: none;
-    color: #173b68;
-    border-left: 5px solid #174a7c;
-    box-shadow: 0 5px 18px rgba(0,0,0,.08);
-    transition: all .2s ease;
-    min-height: 125px;
+    color: #172033;
+    border-left: 5px solid #123e68;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    transition: 0.2s;
 }
 
-.quick-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 9px 25px rgba(0,0,0,.13);
+.link-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 18px rgba(0,0,0,0.15);
+    background: #f8fbff;
 }
 
 .icon {
-    font-size: 32px;
+    font-size: 28px;
     margin-bottom: 10px;
 }
 
-.quick-card h3 {
-    margin: 0 0 6px;
-    font-size: 18px;
+.link-card h3 {
+    margin: 0;
+    color: #123e68;
+    font-size: 17px;
 }
 
-.quick-card p {
-    margin: 0;
-    color: #718096;
+.link-card p {
+    margin: 7px 0 0;
+    color: #687891;
+    font-size: 13px;
+}
+
+/* FOOTER */
+.footer {
+    text-align: center;
+    padding: 25px;
+    color: #60708a;
     font-size: 13px;
 }
 
 /* MOBILE */
+@media (max-width: 900px) {
+    .links {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
 
-@media (max-width: 800px) {
-
-    .quick-links {
+@media (max-width: 600px) {
+    .links {
         grid-template-columns: 1fr;
     }
 
     .header h1 {
-        font-size: 24px;
+        font-size: 23px;
     }
 
     .header h2 {
         font-size: 17px;
     }
 }
-
 </style>
 </head>
 
 <body>
 
-<header class="header">
-
+<!-- HEADER -->
+<div class="header">
     <h1>ANDHRA PRADESH POLICE</h1>
-
     <h2>CHITTOOR DISTRICT POLICE</h2>
+    <p>QUICK LINKS</p>
+</div>
 
-    <p>QUICK ACCESS</p>
+<!-- NAVIGATION -->
+<div class="nav">
+    <a href="index.html">🏠 E-Office Dashboard</a>
+    <a href="subdivision.html">🏛️ Sub-Division Performance</a>
+    <a href="quicklinks.html">🔗 Quick Links</a>
+</div>
 
-</header>
-
-
+<!-- MAIN -->
 <div class="container">
 
     <div class="title-box">
-
-        <h2>⚡ Quick Access</h2>
-
-        <p>
-            Important Police Department resources and applications
-        </p>
-
+        <h2>🔗 Quick Links</h2>
+        <p>Important Police Department portals and frequently used services</p>
     </div>
 
+    <div class="links">
 
-    <div class="quick-links">
-
-
-        <!-- IMPORTANT SOPS -->
-
-        <a href="#" class="quick-card">
-
-            <div class="icon">📁</div>
-
-            <h3>Important SOPs</h3>
-
-            <p>
-                Standard Operating Procedures
-            </p>
-
+        <a class="link-card" href="https://www.eoffice.ap.gov.in/" target="_blank">
+            <div class="icon">📂</div>
+            <h3>e-Office</h3>
+            <p>Andhra Pradesh e-Office Portal</p>
         </a>
 
-
-        <!-- IT APPLICATIONS -->
-
-        <a href="#" class="quick-card">
-
+        <a class="link-card" href="https://cctns.ap.gov.in/" target="_blank">
             <div class="icon">💻</div>
-
-            <h3>IT Applications</h3>
-
-            <p>
-                Police Department Applications
-            </p>
-
+            <h3>CCTNS</h3>
+            <p>Crime and Criminal Tracking Network</p>
         </a>
 
-
-        <!-- AWARENESS VIDEOS -->
-
-        <a href="#" class="quick-card">
-
-            <div class="icon">🎥</div>
-
-            <h3>Awareness Videos</h3>
-
-            <p>
-                Training & Awareness Resources
-            </p>
-
+        <a class="link-card" href="https://citizen.appolice.gov.in/" target="_blank">
+            <div class="icon">👮</div>
+            <h3>AP Police Citizen Portal</h3>
+            <p>Citizen services and police services</p>
         </a>
 
+        <a class="link-card" href="https://www.ap.gov.in/" target="_blank">
+            <div class="icon">🏛️</div>
+            <h3>AP Government</h3>
+            <p>Andhra Pradesh Government Portal</p>
+        </a>
+
+        <a class="link-card" href="https://www.police.gov.in/" target="_blank">
+            <div class="icon">🚔</div>
+            <h3>Police Department</h3>
+            <p>Official Police Department Portal</p>
+        </a>
+
+        <a class="link-card" href="https://www.indiacode.nic.in/" target="_blank">
+            <div class="icon">⚖️</div>
+            <h3>India Code</h3>
+            <p>Central and State Laws</p>
+        </a>
+
+        <a class="link-card" href="https://www.cybercrime.gov.in/" target="_blank">
+            <div class="icon">🔐</div>
+            <h3>Cyber Crime Portal</h3>
+            <p>National Cyber Crime Reporting Portal</p>
+        </a>
+
+        <a class="link-card" href="https://www.ceir.gov.in/" target="_blank">
+            <div class="icon">📱</div>
+            <h3>CEIR</h3>
+            <p>Central Equipment Identity Register</p>
+        </a>
 
     </div>
 
+</div>
+
+<div class="footer">
+    Chittoor District Police • Quick Links
 </div>
 
 </body>
