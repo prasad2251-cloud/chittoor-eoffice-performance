@@ -1,255 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Chittoor Police - Quick Links</title>
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Chittoor Police — Quick Access</title>
+
 
 <style>
 
-*{
-    box-sizing:border-box;
+* {
+    box-sizing: border-box;
 }
 
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f3f6fb;
-    color:#172033;
+
+body {
+
+    margin: 0;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #f3f6fa;
+
+    color: #173b70;
 }
 
-/* HEADER */
 
-.header{
-    background:linear-gradient(135deg,#071a36,#123f70);
-    color:white;
-    text-align:center;
-    padding:22px 15px;
+.header {
+
+    background:
+        linear-gradient(
+            135deg,
+            #071f40,
+            #123f6c
+        );
+
+    color: white;
+
+    text-align: center;
+
+    padding: 25px 20px;
 }
 
-.header h1{
-    margin:0;
-    font-size:30px;
+
+.header h1 {
+
+    margin: 0;
+
+    font-size: 30px;
+
+    letter-spacing: .5px;
 }
 
-.header h2{
-    margin:5px 0 0;
-    font-size:19px;
-    font-weight:500;
+
+.header h2 {
+
+    margin: 6px 0;
+
+    font-size: 19px;
+
+    font-weight: 500;
 }
 
-.header p{
-    margin:7px 0 0;
-    font-size:14px;
+
+.header p {
+
+    margin: 4px 0 0;
+
+    font-size: 13px;
 }
 
-/* NAVIGATION */
 
-.nav{
-    background:white;
-    padding:13px;
-    text-align:center;
-    border-bottom:1px solid #ddd;
+.navigation {
+
+    background: white;
+
+    padding: 14px;
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    border-bottom: 1px solid #dce3ec;
+
 }
 
-.nav a{
-    display:inline-block;
-    text-decoration:none;
-    color:#123f70;
-    background:#edf2f8;
-    padding:9px 18px;
-    margin:3px;
-    border-radius:7px;
-    font-size:13px;
-    font-weight:bold;
+
+.navigation a {
+
+    text-decoration: none;
+
+    background: #eef3f9;
+
+    color: #164d82;
+
+    padding: 9px 16px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+    font-weight: 600;
 }
 
-.nav a:hover{
-    background:#123f70;
-    color:white;
+
+.navigation a:hover {
+
+    background: #dce8f6;
 }
 
-/* MAIN */
 
-.container{
-    width:92%;
-    max-width:1200px;
-    margin:25px auto 50px;
+.container {
+
+    max-width: 1100px;
+
+    margin: 28px auto;
+
+    padding: 0 18px;
 }
 
-/* TITLE */
 
-.title-box{
-    background:white;
-    border-radius:12px;
-    padding:22px;
-    margin-bottom:20px;
-    box-shadow:0 3px 12px rgba(0,0,0,.08);
+.title-box {
+
+    background: white;
+
+    padding: 22px;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 5px 18px rgba(0,0,0,.08);
+
+    margin-bottom: 18px;
 }
 
-.title-box h2{
-    margin:0;
-    color:#123f70;
-    font-size:24px;
+
+.title-box h2 {
+
+    margin: 0;
+
+    font-size: 23px;
+
+    color: #173b70;
 }
 
-.title-box p{
-    margin:8px 0 0;
-    color:#60708a;
-    font-size:14px;
+
+.title-box p {
+
+    margin: 7px 0 0;
+
+    color: #66758a;
+
+    font-size: 13px;
 }
 
-/* SECTION */
 
-.section{
-    background:white;
-    border-radius:12px;
-    margin-bottom:18px;
-    box-shadow:0 3px 12px rgba(0,0,0,.08);
-    overflow:hidden;
+.grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
 }
 
-/* SECTION HEADER */
 
-.section-header{
-    background:#123f70;
-    color:white;
-    padding:18px 22px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    cursor:pointer;
+.card {
+
+    position: relative;
+
+    background: white;
+
+    min-height: 145px;
+
+    padding: 22px;
+
+    border-radius: 13px;
+
+    border-left: 5px solid #164d82;
+
+    text-decoration: none;
+
+    color: #173b70;
+
+    box-shadow:
+        0 4px 14px rgba(0,0,0,.07);
+
+    transition: .2s;
 }
 
-.section-header h3{
-    margin:0;
-    font-size:19px;
+
+.card:hover {
+
+    transform:
+        translateY(-4px);
+
+    box-shadow:
+        0 9px 20px rgba(0,0,0,.12);
 }
 
-.arrow{
-    font-size:20px;
+
+.icon {
+
+    font-size: 31px;
+
+    margin-bottom: 10px;
 }
 
-/* CONTENT */
 
-.section-content{
-    display:none;
-    padding:25px;
+.card h3 {
+
+    margin: 0 0 7px;
+
+    font-size: 18px;
 }
 
-/* DRIVE CARD */
 
-.drive-card{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:20px;
-    background:#f7faff;
-    border:1px solid #dce6f2;
-    border-radius:10px;
-    padding:20px;
+.card p {
+
+    margin: 0;
+
+    color: #66758a;
+
+    font-size: 12px;
+
+    line-height: 1.5;
 }
 
-.drive-info{
-    display:flex;
-    align-items:center;
-    gap:15px;
+
+.arrow {
+
+    position: absolute;
+
+    top: 15px;
+
+    right: 17px;
+
+    font-size: 19px;
+
+    color: #164d82;
 }
 
-.drive-icon{
-    font-size:42px;
+
+.footer {
+
+    text-align: center;
+
+    margin: 35px 0;
+
+    color: #64748b;
+
+    font-size: 12px;
 }
 
-.drive-info h4{
-    margin:0 0 5px;
-    color:#123f70;
-    font-size:18px;
-}
 
-.drive-info p{
-    margin:0;
-    color:#65758b;
-    font-size:13px;
-}
+@media(max-width:850px) {
 
-/* OPEN BUTTON */
+    .grid {
 
-.open-button{
-    display:inline-block;
-    background:#123f70;
-    color:white;
-    text-decoration:none;
-    padding:11px 20px;
-    border-radius:7px;
-    font-size:13px;
-    font-weight:bold;
-    white-space:nowrap;
-}
-
-.open-button:hover{
-    background:#0b2d52;
-}
-
-/* FOOTER */
-
-.footer{
-    text-align:center;
-    color:#60708a;
-    font-size:12px;
-    margin-top:30px;
-}
-
-/* MOBILE */
-
-@media(max-width:650px){
-
-    .header h1{
-        font-size:23px;
+        grid-template-columns: 1fr;
     }
 
-    .header h2{
-        font-size:16px;
-    }
+    .header h1 {
 
-    .container{
-        width:95%;
-    }
-
-    .drive-card{
-        flex-direction:column;
-        align-items:flex-start;
-    }
-
-    .open-button{
-        width:100%;
-        text-align:center;
+        font-size: 24px;
     }
 
 }
 
 </style>
+
 </head>
+
 
 <body>
 
 
 <!-- HEADER -->
 
-<div class="header">
+<header class="header">
 
-    <h1>ANDHRA PRADESH POLICE</h1>
+    <h1>
+        ANDHRA PRADESH POLICE
+    </h1>
 
-    <h2>CHITTOOR DISTRICT POLICE</h2>
+    <h2>
+        CHITTOOR DISTRICT POLICE
+    </h2>
 
-    <p>QUICK LINKS</p>
+    <p>
+        QUICK ACCESS
+    </p>
 
-</div>
+</header>
+
 
 
 <!-- NAVIGATION -->
 
-<div class="nav">
+<nav class="navigation">
 
     <a href="index.html">
         🏠 E-Office Dashboard
@@ -260,218 +319,121 @@ body{
     </a>
 
     <a href="quicklinks.html">
-        🔗 Quick Links
+        🔗 Quick Access
     </a>
 
-</div>
+</nav>
 
 
-<!-- MAIN -->
+
+<!-- CONTENT -->
 
 <div class="container">
 
 
-    <!-- TITLE -->
-
     <div class="title-box">
 
-        <h2>🔗 Quick Links</h2>
+        <h2>
+            🔗 Quick Access
+        </h2>
 
         <p>
-            SOPs, Awareness Videos and IT Applications
+            Important Police Department resources
         </p>
 
     </div>
 
 
-    <!-- ================================================= -->
-    <!-- SOPs -->
-    <!-- ================================================= -->
 
-    <div class="section">
-
-        <div class="section-header"
-             onclick="toggleSection('sops','sopArrow')">
-
-            <h3>
-                📘 SOPs
-            </h3>
-
-            <span class="arrow" id="sopArrow">
-                ▼
-            </span>
-
-        </div>
+    <div class="grid">
 
 
-        <div class="section-content" id="sops">
+        <!-- SOPs -->
 
-            <div class="drive-card">
+        <a class="card"
+           href="https://drive.google.com/drive/folders/1OTneCnMwI_nsI4-7YDTkQs1KQPkUOnFm?usp=drive_link"
+           target="_blank"
+           rel="noopener noreferrer">
 
-                <div class="drive-info">
-
-                    <div class="drive-icon">
-                        📘
-                    </div>
-
-                    <div>
-
-                        <h4>
-                            Standard Operating Procedures
-                        </h4>
-
-                        <p>
-                            Chittoor District Police SOPs
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <a
-                    class="open-button"
-                    href="https://drive.google.com/drive/folders/1OTneCnMwI_nsI4-7YDTkQs1KQPkUOnFm?usp=drive_link"
-                    target="_blank">
-
-                    📂 OPEN SOPs
-
-                </a>
-
+            <div class="icon">
+                📘
             </div>
 
-        </div>
-
-    </div>
-
-
-
-    <!-- ================================================= -->
-    <!-- AWARENESS VIDEOS -->
-    <!-- ================================================= -->
-
-    <div class="section">
-
-        <div class="section-header"
-             onclick="toggleSection('videos','videoArrow')">
-
             <h3>
-                🎥 Awareness Videos
+                SOPs
             </h3>
 
-            <span class="arrow" id="videoArrow">
-                ▼
+            <p>
+                Standard Operating Procedures and Police Department guidelines.
+            </p>
+
+            <span class="arrow">
+                ↗
             </span>
 
-        </div>
+        </a>
 
 
-        <div class="section-content" id="videos">
 
-            <div class="drive-card">
+        <!-- AWARENESS VIDEOS -->
 
-                <div class="drive-info">
+        <a class="card"
+           href="https://drive.google.com/drive/folders/1JVEKYLa0j40n0JLlj2jxXUQK774HlpOB?usp=drive_link"
+           target="_blank"
+           rel="noopener noreferrer">
 
-                    <div class="drive-icon">
-                        🎥
-                    </div>
-
-                    <div>
-
-                        <h4>
-                            Awareness Videos
-                        </h4>
-
-                        <p>
-                            Police awareness and public safety videos
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <a
-                    class="open-button"
-                    href="https://drive.google.com/drive/folders/1JVEKYLa0j40n0JLlj2jxXUQK774HlpOB?usp=drive_link"
-                    target="_blank">
-
-                    ▶ OPEN VIDEOS
-
-                </a>
-
+            <div class="icon">
+                🎥
             </div>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- ================================================= -->
-    <!-- IT APPLICATIONS -->
-    <!-- ================================================= -->
-
-    <div class="section">
-
-        <div class="section-header"
-             onclick="toggleSection('apps','appArrow')">
 
             <h3>
-                💻 IT Applications
+                Awareness Videos
             </h3>
 
-            <span class="arrow" id="appArrow">
-                ▼
+            <p>
+                Police awareness, public safety and training videos.
+            </p>
+
+            <span class="arrow">
+                ↗
             </span>
 
-        </div>
+        </a>
 
 
-        <div class="section-content" id="apps">
 
-            <div class="drive-card">
+        <!-- IT APPLICATIONS -->
 
-                <div class="drive-info">
+        <a class="card"
+           href="https://drive.google.com/drive/folders/1Esu62Kd7NZ_ubNUMI7EvbJ5aHXI6GnXu?usp=drive_link"
+           target="_blank"
+           rel="noopener noreferrer">
 
-                    <div class="drive-icon">
-                        💻
-                    </div>
-
-                    <div>
-
-                        <h4>
-                            Police IT Applications
-                        </h4>
-
-                        <p>
-                            Police Department IT applications and resources
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <a
-                    class="open-button"
-                    href="https://drive.google.com/drive/folders/1Esu62Kd7NZ_ubNUMI7EvbJ5aHXI6GnXu?usp=drive_link"
-                    target="_blank">
-
-                    💻 OPEN APPLICATIONS
-
-                </a>
-
+            <div class="icon">
+                💻
             </div>
 
-        </div>
+            <h3>
+                IT Applications
+            </h3>
+
+            <p>
+                Police IT applications, portals and digital services.
+            </p>
+
+            <span class="arrow">
+                ↗
+            </span>
+
+        </a>
+
 
     </div>
 
 
     <div class="footer">
 
-        Chittoor District Police • Quick Links
+        Chittoor District Police • Quick Access
 
     </div>
 
@@ -479,36 +441,6 @@ body{
 </div>
 
 
-<script>
-
-function toggleSection(sectionId,arrowId){
-
-    const section =
-        document.getElementById(sectionId);
-
-    const arrow =
-        document.getElementById(arrowId);
-
-
-    if(section.style.display === "block"){
-
-        section.style.display = "none";
-
-        arrow.innerHTML = "▼";
-
-    }
-    else{
-
-        section.style.display = "block";
-
-        arrow.innerHTML = "▲";
-
-    }
-
-}
-
-</script>
-
-
 </body>
+
 </html>
