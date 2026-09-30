@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Chittoor Police - Sub-Division Performance</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f6fa;
+    color: #172033;
+}
+
+/* HEADER */
+.header {
+    background: linear-gradient(135deg, #071a36, #123c68);
+    color: white;
+    padding: 22px 30px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,.20);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 30px;
+    letter-spacing: .5px;
+}
+
+.header h2 {
+    margin: 7px 0 0;
+    font-size: 21px;
+    font-weight: 500;
+}
+
+.header p {
+    margin: 8px 0 0;
+    font-size: 14px;
+}
+
+/* NAVIGATION */
+.nav {
+    background: white;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.nav button {
+    border: none;
+    padding: 11px 20px;
+    border-radius: 7px;
+    background: #e9eef5;
+    cursor: pointer;
+    font-weight: bold;
+    color: #17324f;
+}
+
+.nav button:hover {
+    background: #d7e4f2;
+}
+
+/* CONTENT */
+.container {
+    width: 96%;
+    margin: 25px auto;
+}
+
+.title {
+    background: white;
+    padding: 18px 22px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.title h2 {
+    margin: 0;
+    color: #123c68;
+}
+
+.title p {
+    margin: 7px 0 0;
+    color: #687386;
+}
+
+/* OFFICER CARDS */
+.officer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.officer-card {
+    background: white;
+    padding: 18px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    border-left: 5px solid #123c68;
+}
+
+.officer-card .designation {
+    font-size: 13px;
+    color: #687386;
+    margin-bottom: 7px;
+}
+
+.officer-card .name {
+    font-size: 17px;
+    font-weight: bold;
+    color: #172033;
+}
+
+/* TABLE */
+.table-wrapper {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1250px;
+}
+
+thead th {
+    background: #123c68;
+    color: white;
+    padding: 13px 10px;
+    font-size: 13px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+tbody td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #e2e6eb;
+    text-align: center;
+    font-size: 13px;
+    vertical-align: top;
+}
+
+tbody tr:hover {
+    background: #f7faff;
+}
+
+.subdivision {
+    font-weight: bold;
+    text-align: left !important;
+    color: #123c68;
+}
+
+.stations {
+    text-align: left !important;
+    line-height: 1.6;
+    min-width: 300px;
+}
+
+.rank {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.grade {
+    font-weight: bold;
+    padding: 5px 9px;
+    border-radius: 5px;
+    display: inline-block;
+    background: #e8f4ea;
+    color: #23733b;
+}
+
+/* FOOTER */
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: #6c7585;
+    font-size: 12px;
+}
+
+/* MOBILE */
+@media(max-width: 700px) {
+
+    .header h1 {
+        font-size: 23px;
+    }
+
+    .header h2 {
+        font-size: 17px;
+    }
+
+    .container {
+        width: 98%;
+    }
+
+    .nav {
+        flex-wrap: wrap;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>ANDHRA PRADESH POLICE</h1>
+    <h2>CHITTOOR DISTRICT POLICE</h2>
+    <p>SUB-DIVISION PERFORMANCE DASHBOARD</p>
+</header>
+
+<nav class="nav">
+    <button onclick="goHome()">🏠 E-Office Dashboard</button>
+    <button>🏛️ Sub-Division Performance</button>
+</nav>
+
+<main class="container">
+
+    <section class="title">
+        <h2>🏛️ Sub-Division Performance</h2>
+        <p>
+            Police Station-wise performance grouped under their respective
+            Sub-Divisions
+        </p>
+    </section>
+
+    <!-- OFFICERS -->
+
+    <section class="officer-grid">
+
+        <div class="officer-card">
+            <div class="designation">SDPO CHITTOOR</div>
+            <div class="name">J. VENKATANARAYANA</div>
+        </div>
+
+        <div class="officer-card">
+            <div class="designation">SDPO PALAMANER</div>
+            <div class="name">D. PRABHAKAR</div>
+        </div>
+
+        <div class="officer-card">
+            <div class="designation">SDPO NAGARI (IN-CHARGE)</div>
+            <div class="name">J. RAM BABU</div>
+        </div>
+
+        <div class="officer-card">
+            <div class="designation">DSP DTC</div>
+            <div class="name">J. RAM BABU</div>
+        </div>
+
+        <div class="officer-card">
+            <div class="designation">SDPO KUPPAM</div>
+            <div class="name">
+                B. HEMANTH, ASST. SUPDT. OF POLICE
+            </div>
+        </div>
+
+    </section>
+
+    <!-- SUB DIVISION TABLE -->
+
+    <section class="table-wrapper">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>RANK</th>
+                    <th>SUB-DIVISION</th>
+                    <th>AVG SCORE</th>
+                    <th>GRADE</th>
+                    <th>PS COUNT</th>
+                    <th>OVERALL AVG</th>
+                    <th>TOP PS</th>
+                    <th>WEAKEST PS</th>
+                    <th>CONSTITUENT POLICE STATIONS</th>
+                </tr>
+            </thead>
+
+            <tbody id="subDivisionTable">
+
+                <tr>
+                    <td class="rank">🥇</td>
+                    <td class="subdivision">KUPPAM</td>
+                    <td data-score="kuppam">--</td>
+                    <td><span class="grade">--</span></td>
+                    <td data-count="kuppam">--</td>
+                    <td data-average="kuppam">--</td>
+                    <td data-top="kuppam">--</td>
+                    <td data-weak="kuppam">--</td>
+                    <td class="stations">
+                        Gudipalli,
+                        Ramakuppam,
+                        Rallabudugur,
+                        Kuppam UPS
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="rank">🥈</td>
+                    <td class="subdivision">NAGARI</td>
+                    <td data-score="nagari">--</td>
+                    <td><span class="grade">--</span></td>
+                    <td data-count="nagari">--</td>
+                    <td data-average="nagari">--</td>
+                    <td data-top="nagari">--</td>
+                    <td data-weak="nagari">--</td>
+                    <td class="stations">
+                        Vedurukuppam,
+                        Nagari UPS,
+                        S.R.Puram,
+                        Nindra,
+                        K. Nagar,
+                        Vijayapuram,
+                        Palasamudram
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="rank">🥉</td>
+                    <td class="subdivision">PALAMANER</td>
+                    <td data-score="palamaner">--</td>
+                    <td><span class="grade">--</span></td>
+                    <td data-count="palamaner">--</td>
+                    <td data-average="palamaner">--</td>
+                    <td data-top="palamaner">--</td>
+                    <td data-weak="palamaner">--</td>
+                    <td class="stations">
+                        Bangarupalem UPS,
+                        Baireddypalle,
+                        Palamaner UPS,
+                        Gangavaram UPS,
+                        V.Kota UPS,
+                        Panjani
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="rank">#4</td>
+                    <td class="subdivision">SPL WINGS</td>
+                    <td data-score="spl">--</td>
+                    <td><span class="grade">--</span></td>
+                    <td data-count="spl">--</td>
+                    <td data-average="spl">--</td>
+                    <td data-top="spl">--</td>
+                    <td data-weak="spl">--</td>
+                    <td class="stations">
+                        CCS Chittoor UPS,
+                        Chittoor Traffic UPS,
+                        Mahila UPS, Chittoor
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="rank">#5</td>
+                    <td class="subdivision">CHITTOOR</td>
+                    <td data-score="chittoor">--</td>
+                    <td><span class="grade">--</span></td>
+                    <td data-count="chittoor">--</td>
+                    <td data-average="chittoor">--</td>
+                    <td data-top="chittoor">--</td>
+                    <td data-weak="chittoor">--</td>
+                    <td class="stations">
+                        Kanipakam,
+                        Gudipala,
+                        Chittoor II Town UPS,
+                        Yadamari,
+                        Chittoor I Town UPS,
+                        Penumur,
+                        Rompicherla,
+                        Irala,
+                        Puthalapattu UPS,
+                        Kallur,
+                        N.R.Peta,
+                        G.D.Nellore UPS,
+                        Chittoor Taluk PS,
+                        Thavanampalle
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+    Chittoor District Police • Sub-Division Performance Dashboard
+</footer>
+
+
+<script>
+
+/* CHANGE THIS URL TO YOUR MAIN E-OFFICE DASHBOARD */
+function goHome() {
+
+    window.location.href = "index.html";
+
+}
+
+
+/*
+====================================================
+AUTOMATIC SCORE CALCULATION
+====================================================
+
+Later we will connect this section to your
+Police Station JSON data.
+
+Each Police Station will have:
+
+{
+    name: "Gudipalli",
+    subdivision: "KUPPAM",
+    score: 74.3
+}
+
+The system will then automatically calculate:
+
+1. PS COUNT
+2. AVERAGE SCORE
+3. OVERALL AVERAGE
+4. TOP PS
+5. WEAKEST PS
+6. RANK
+7. GRADE
+
+====================================================
+*/
+
+const policeStations = [
+
+    /* KUPPAM */
+
+    {
+        name: "Gudipalli",
+        subdivision: "KUPPAM",
+        score: null
+    },
+
+    {
+        name: "Ramakuppam",
+        subdivision: "KUPPAM",
+        score: null
+    },
+
+    {
+        name: "Rallabudugur",
+        subdivision: "KUPPAM",
+        score: null
+    },
+
+    {
+        name: "Kuppam UPS",
+        subdivision: "KUPPAM",
+        score: null
+    },
+
+
+    /* NAGARI */
+
+    {
+        name: "Vedurukuppam",
+        subdivision: "NAGARI",
+        score: null
+    },
+
+    {
+        name: "Nagari UPS",
+        subdivision: "NAGARI",
+        score: null
+    },
+
+    {
+        name: "S.R.Puram",
+        subdivision: "NAGARI",
+        score: null
+    },
+
+    {
+        name: "Nindra",
+        subdivision: "NAGARI",
+        score: null
+    },
+
+    {
+        name: "K. Nagar",
+        subdivision: "NAGARI",
+        score: null
+    },
+
+    {
+        name: "Vijayapuram",
+        subdivision: "NAGARI",
+        score: null
+    },
+
+    {
+        name: "Palasamudram",
+        subdivision: "NAGARI",
+        score: null
+    },
+
+
+    /* PALAMANER */
+
+    {
+        name: "Bangarupalem UPS",
+        subdivision: "PALAMANER",
+        score: null
+    },
+
+    {
+        name: "Baireddypalle",
+        subdivision: "PALAMANER",
+        score: null
+    },
+
+    {
+        name: "Palamaner UPS",
+        subdivision: "PALAMANER",
+        score: null
+    },
+
+    {
+        name: "Gangavaram UPS",
+        subdivision: "PALAMANER",
+        score: null
+    },
+
+    {
+        name: "V.Kota UPS",
+        subdivision: "PALAMANER",
+        score: null
+    },
+
+    {
+        name: "Panjani",
+        subdivision: "PALAMANER",
+        score: null
+    },
+
+
+    /* SPL WINGS */
+
+    {
+        name: "CCS Chittoor UPS",
+        subdivision: "SPL WINGS",
+        score: null
+    },
+
+    {
+        name: "Chittoor Traffic UPS",
+        subdivision: "SPL WINGS",
+        score: null
+    },
+
+    {
+        name: "Mahila UPS, Chittoor",
+        subdivision: "SPL WINGS",
+        score: null
+    },
+
+
+    /* CHITTOOR */
+
+    {
+        name: "Kanipakam",
+        subdivision: "CHITTOOR",
+        score: null
+    },
+
+    {
+        name: "Gudipala",
+        subdivision: "CHITTOOR",
+        score: null
+    },
+
+    {
+        name: "Chittoor II Town UPS",
+        subdivision: "CHITTOOR",
+        score: null
+    },
+
+    {
+        name: "Yadamari",
+        subdivision: "CHITTOOR",
+        score: null
+    },
+
+    {
+        name: "Chittoor I Town UPS",
+        subdivision: "CHITTOOR",
+        score: null
+    },
+
+    {
+        name: "Penumur",
+        subdivision: "CHITTOOR",
+        score: null
+    },
+
+    {
+        name: "Rompicherla",
+        subdivision: "CHITTOOR",
+        score: null
+    },
+
+    {
+        name: "Irala",
+        subdivision: "CHITTOOR",
+        score: null
+    },
+
+    {
+        name: "Puthalapattu UPS",
+        subdivision: "CHITTOOR",
+        score: null
+    },
+
+    {
+        name: "Kallur",
+        subdivision: "CHITTOOR",
+        score: null
+    },
+
+    {
+        name: "N.R.Peta",
+        subdivision: "CHITTOOR",
+        score: null
+    },
+
+    {
+        name: "G.D.Nellore UPS",
+        subdivision: "CHITTOOR",
+        score: null
+    },
+
+    {
+        name: "Chittoor Taluk PS",
+        subdivision: "CHITTOOR",
+        score: null
+    },
+
+    {
+        name: "Thavanampalle",
+        subdivision: "CHITTOOR",
+        score: null
+    }
+
+];
+
+
+/* AUTOMATIC CALCULATION FUNCTION */
+
+function calculateSubdivision(subdivision) {
+
+    const records = policeStations.filter(
+        p => p.subdivision === subdivision &&
+             typeof p.score === "number"
+    );
+
+    if (!records.length) {
+        return null;
+    }
+
+    const scores = records.map(p => p.score);
+
+    const average =
+        scores.reduce((a,b) => a + b, 0) / scores.length;
+
+    const top = records.reduce(
+        (a,b) => a.score > b.score ? a : b
+    );
+
+    const weakest = records.reduce(
+        (a,b) => a.score < b.score ? a : b
+    );
+
+    return {
+        count: records.length,
+        average: average,
+        top: top.name,
+        weakest: weakest.name
+    };
+}
+
+
+/* GRADE */
+
+function getGrade(score) {
+
+    if (score >= 80) return "A+";
+    if (score >= 70) return "A";
+    if (score >= 60) return "B";
+    if (score >= 50) return "C";
+
+    return "D";
+}
+
+
+/*
+At present scores are null because we must connect
+your existing Smart Policing score data.
+
+Once connected, this function will populate the
+table automatically.
+*/
+
+function updateDashboard() {
+
+    const subdivisions = [
+        "KUPPAM",
+        "NAGARI",
+        "PALAMANER",
+        "SPL WINGS",
+        "CHITTOOR"
+    ];
+
+    subdivisions.forEach(sub => {
+
+        const result = calculateSubdivision(sub);
+
+        if (!result) return;
+
+        const key = sub
+            .toLowerCase()
+            .replace(" ", "");
+
+        const scoreElement =
+            document.querySelector(`[data-score="${key}"]`);
+
+        const countElement =
+            document.querySelector(`[data-count="${key}"]`);
+
+        const avgElement =
+            document.querySelector(`[data-average="${key}"]`);
+
+        const topElement =
+            document.querySelector(`[data-top="${key}"]`);
+
+        const weakElement =
+            document.querySelector(`[data-weak="${key}"]`);
+
+        if (scoreElement)
+            scoreElement.textContent =
+                result.average.toFixed(1);
+
+        if (countElement)
+            countElement.textContent =
+                result.count;
+
+        if (avgElement)
+            avgElement.textContent =
+                result.average.toFixed(1);
+
+        if (topElement)
+            topElement.textContent =
+                result.top;
+
+        if (weakElement)
+            weakElement.textContent =
+                result.weakest;
+    });
+}
+
+updateDashboard();
+
+</script>
+
+</body>
+</html>
