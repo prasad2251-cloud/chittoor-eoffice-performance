@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Chittoor Police - Quick Access</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f6fa;
+    color: #173b68;
+}
+
+/* HEADER */
+
+.header {
+    background: linear-gradient(135deg, #071a36, #123c68);
+    color: white;
+    text-align: center;
+    padding: 28px 20px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 30px;
+    letter-spacing: .5px;
+}
+
+.header h2 {
+    margin: 6px 0 0;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.header p {
+    margin: 8px 0 0;
+    font-size: 14px;
+}
+
+/* CONTAINER */
+
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* TITLE */
+
+.title-box {
+    background: white;
+    padding: 22px 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    margin-bottom: 22px;
+}
+
+.title-box h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.title-box p {
+    margin: 7px 0 0;
+    color: #64748b;
+}
+
+/* QUICK LINKS */
+
+.quick-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+/* CARD */
+
+.quick-card {
+    background: white;
+    border-radius: 15px;
+    padding: 22px;
+    text-decoration: none;
+    color: #173b68;
+    border-left: 5px solid #174a7c;
+    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    transition: all .2s ease;
+    min-height: 125px;
+}
+
+.quick-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 9px 25px rgba(0,0,0,.13);
+}
+
+.icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.quick-card h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+}
+
+.quick-card p {
+    margin: 0;
+    color: #718096;
+    font-size: 13px;
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    .quick-links {
+        grid-template-columns: 1fr;
+    }
+
+    .header h1 {
+        font-size: 24px;
+    }
+
+    .header h2 {
+        font-size: 17px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <h1>ANDHRA PRADESH POLICE</h1>
+
+    <h2>CHITTOOR DISTRICT POLICE</h2>
+
+    <p>QUICK ACCESS</p>
+
+</header>
+
+
+<div class="container">
+
+    <div class="title-box">
+
+        <h2>⚡ Quick Access</h2>
+
+        <p>
+            Important Police Department resources and applications
+        </p>
+
+    </div>
+
+
+    <div class="quick-links">
+
+
+        <!-- IMPORTANT SOPS -->
+
+        <a href="#" class="quick-card">
+
+            <div class="icon">📁</div>
+
+            <h3>Important SOPs</h3>
+
+            <p>
+                Standard Operating Procedures
+            </p>
+
+        </a>
+
+
+        <!-- IT APPLICATIONS -->
+
+        <a href="#" class="quick-card">
+
+            <div class="icon">💻</div>
+
+            <h3>IT Applications</h3>
+
+            <p>
+                Police Department Applications
+            </p>
+
+        </a>
+
+
+        <!-- AWARENESS VIDEOS -->
+
+        <a href="#" class="quick-card">
+
+            <div class="icon">🎥</div>
+
+            <h3>Awareness Videos</h3>
+
+            <p>
+                Training & Awareness Resources
+            </p>
+
+        </a>
+
+
+    </div>
+
+</div>
+
+</body>
+</html>
