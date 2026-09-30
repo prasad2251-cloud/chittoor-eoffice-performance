@@ -7,204 +7,808 @@
 <title>Chittoor Police - Quick Links</title>
 
 <style>
-* {
-    box-sizing: border-box;
+
+*{
+    box-sizing:border-box;
 }
 
-body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f3f6fa;
-    color: #172033;
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f3f6fb;
+    color:#172033;
 }
 
-/* HEADER */
-.header {
-    background: linear-gradient(135deg, #071a36, #123e68);
-    color: white;
-    text-align: center;
-    padding: 22px 15px;
+/* ================= HEADER ================= */
+
+.header{
+    background:linear-gradient(135deg,#071a36,#123f70);
+    color:white;
+    text-align:center;
+    padding:22px 15px;
 }
 
-.header h1 {
-    margin: 0;
-    font-size: 30px;
+.header h1{
+    margin:0;
+    font-size:30px;
+    letter-spacing:.5px;
 }
 
-.header h2 {
-    margin: 5px 0 0;
-    font-size: 20px;
-    font-weight: 500;
+.header h2{
+    margin:5px 0 0;
+    font-size:19px;
+    font-weight:500;
 }
 
-.header p {
-    margin: 7px 0 0;
-    font-size: 14px;
+.header p{
+    margin:6px 0 0;
+    font-size:14px;
+    letter-spacing:.3px;
 }
 
-/* NAVIGATION */
-.nav {
-    background: white;
-    padding: 12px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
+/* ================= NAVIGATION ================= */
+
+.nav{
+    background:white;
+    padding:14px;
+    text-align:center;
+    border-bottom:1px solid #ddd;
 }
 
-.nav a {
-    display: inline-block;
-    text-decoration: none;
-    color: #123e68;
-    background: #edf2f8;
-    padding: 10px 18px;
-    margin: 4px;
-    border-radius: 7px;
-    font-weight: bold;
-    font-size: 14px;
+.nav a{
+    display:inline-block;
+    text-decoration:none;
+    background:#edf2f8;
+    color:#06366b;
+    padding:9px 18px;
+    margin:3px;
+    border-radius:7px;
+    font-size:13px;
+    font-weight:bold;
 }
 
-.nav a:hover {
-    background: #123e68;
-    color: white;
+.nav a:hover{
+    background:#dce8f7;
 }
 
-/* MAIN */
-.container {
-    max-width: 1250px;
-    margin: 28px auto;
-    padding: 0 20px;
+/* ================= MAIN ================= */
+
+.container{
+    width:92%;
+    max-width:1250px;
+    margin:22px auto 50px;
 }
 
-.title-box {
-    background: white;
-    border-radius: 12px;
-    padding: 22px;
-    margin-bottom: 22px;
-    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+/* ================= PAGE TITLE ================= */
+
+.page-title{
+    background:white;
+    border-radius:12px;
+    padding:22px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+    margin-bottom:20px;
 }
 
-.title-box h2 {
-    margin: 0;
-    color: #123e68;
-    font-size: 25px;
+.page-title h2{
+    margin:0;
+    color:#123f70;
+    font-size:23px;
 }
 
-.title-box p {
-    margin: 8px 0 0;
-    color: #60708a;
+.page-title p{
+    margin:8px 0 0;
+    color:#60708a;
+    font-size:14px;
 }
 
-/* LINK CARDS */
-.links {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+/* ================= SECTION ================= */
+
+.section{
+    background:white;
+    border-radius:12px;
+    margin-bottom:22px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+    overflow:hidden;
 }
 
-.link-card {
-    background: white;
-    border-radius: 12px;
-    padding: 28px 24px;
-    text-decoration: none;
-    color: #172033;
-    border-left: 5px solid #123e68;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-    transition: 0.2s;
-    min-height: 150px;
+.section-header{
+    background:#123f70;
+    color:white;
+    padding:15px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    cursor:pointer;
 }
 
-.link-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 7px 18px rgba(0,0,0,0.15);
+.section-header h3{
+    margin:0;
+    font-size:18px;
 }
 
-.icon {
-    font-size: 38px;
-    margin-bottom: 12px;
+.section-header span{
+    font-size:20px;
 }
 
-.link-card h3 {
-    margin: 0;
-    color: #123e68;
-    font-size: 20px;
+.section-content{
+    padding:20px;
 }
 
-.link-card p {
-    margin: 8px 0 0;
-    color: #687891;
-    font-size: 14px;
+/* ================= CARDS ================= */
+
+.links-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
 }
 
-/* FOOTER */
-.footer {
-    text-align: center;
-    padding: 30px;
-    color: #60708a;
-    font-size: 13px;
+.link-card{
+    display:block;
+    text-decoration:none;
+    color:#172033;
+    background:#f8fbff;
+    border:1px solid #dbe5f0;
+    border-left:4px solid #124d82;
+    border-radius:9px;
+    padding:17px;
+    min-height:105px;
+    transition:.2s;
 }
 
-/* MOBILE */
-@media (max-width: 900px) {
-    .links {
-        grid-template-columns: 1fr;
+.link-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 5px 15px rgba(0,0,0,.10);
+    background:#eef6ff;
+}
+
+.icon{
+    font-size:25px;
+    margin-bottom:8px;
+}
+
+.link-card h4{
+    margin:0 0 6px;
+    color:#123f70;
+    font-size:15px;
+}
+
+.link-card p{
+    margin:0;
+    color:#687891;
+    font-size:12px;
+    line-height:1.4;
+}
+
+/* ================= FOOTER ================= */
+
+.footer{
+    text-align:center;
+    color:#60708a;
+    font-size:12px;
+    margin-top:30px;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:1000px){
+
+    .links-grid{
+        grid-template-columns:repeat(2,1fr);
     }
+
 }
+
+@media(max-width:600px){
+
+    .header h1{
+        font-size:23px;
+    }
+
+    .header h2{
+        font-size:16px;
+    }
+
+    .container{
+        width:95%;
+    }
+
+    .links-grid{
+        grid-template-columns:1fr;
+    }
+
+    .section-header h3{
+        font-size:16px;
+    }
+
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
+<!-- ================= HEADER ================= -->
+
 <div class="header">
+
     <h1>ANDHRA PRADESH POLICE</h1>
+
     <h2>CHITTOOR DISTRICT POLICE</h2>
+
     <p>QUICK LINKS</p>
+
 </div>
 
-<!-- NAVIGATION -->
+
+<!-- ================= NAVIGATION ================= -->
+
 <div class="nav">
+
     <a href="index.html">🏠 E-Office Dashboard</a>
+
     <a href="subdivision.html">🏛️ Sub-Division Performance</a>
+
     <a href="quicklinks.html">🔗 Quick Links</a>
+
 </div>
 
-<!-- MAIN -->
+
+<!-- ================= MAIN ================= -->
+
 <div class="container">
 
-    <div class="title-box">
+
+    <!-- PAGE TITLE -->
+
+    <div class="page-title">
+
         <h2>🔗 Quick Links</h2>
-        <p>Important resources for Chittoor District Police</p>
+
+        <p>
+            Important Police Department SOPs, Awareness Videos and IT Applications
+        </p>
+
     </div>
 
-    <div class="links">
 
-        <!-- SOPs -->
-        <a class="link-card" href="#" onclick="alert('SOPs section will be added here.'); return false;">
-            <div class="icon">📄</div>
-            <h3>SOPs</h3>
-            <p>Standard Operating Procedures</p>
-        </a>
 
-        <!-- Awareness Videos -->
-        <a class="link-card" href="#" onclick="alert('Awareness Videos section will be added here.'); return false;">
-            <div class="icon">🎥</div>
-            <h3>Awareness Videos</h3>
-            <p>Police awareness and public safety videos</p>
-        </a>
+    <!-- ================================================= -->
+    <!-- SOPs -->
+    <!-- ================================================= -->
 
-        <!-- IT Applications -->
-        <a class="link-card" href="#" onclick="alert('IT Applications section will be added here.'); return false;">
-            <div class="icon">💻</div>
-            <h3>IT Applications</h3>
-            <p>Police Department IT applications and portals</p>
-        </a>
+    <div class="section">
+
+        <div class="section-header"
+             onclick="toggleSection('sops','sopArrow')">
+
+            <h3>📘 SOPs — Standard Operating Procedures</h3>
+
+            <span id="sopArrow">▲</span>
+
+        </div>
+
+        <div class="section-content" id="sops">
+
+            <div class="links-grid">
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">📘</div>
+
+                    <h4>Law & Order SOPs</h4>
+
+                    <p>
+                        Standard Operating Procedures relating to Law & Order duties
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">🚔</div>
+
+                    <h4>Police Station SOPs</h4>
+
+                    <p>
+                        Procedures and guidelines for Police Station functioning
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">🔍</div>
+
+                    <h4>Investigation SOPs</h4>
+
+                    <p>
+                        Investigation, evidence collection and case documentation
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">⚖️</div>
+
+                    <h4>Crime & Prosecution SOPs</h4>
+
+                    <p>
+                        Crime investigation and prosecution related procedures
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">👩‍✈️</div>
+
+                    <h4>Women Safety SOPs</h4>
+
+                    <p>
+                        SOPs relating to women and child safety
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">💻</div>
+
+                    <h4>Cyber Crime SOPs</h4>
+
+                    <p>
+                        Cyber crime reporting, investigation and response procedures
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">🚨</div>
+
+                    <h4>Emergency Response SOPs</h4>
+
+                    <p>
+                        Emergency response and coordination procedures
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">📋</div>
+
+                    <h4>Smart Policing SOPs</h4>
+
+                    <p>
+                        SOPs relating to digital and smart policing initiatives
+                    </p>
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- AWARENESS VIDEOS -->
+    <!-- ================================================= -->
+
+    <div class="section">
+
+        <div class="section-header"
+             onclick="toggleSection('videos','videoArrow')">
+
+            <h3>🎥 Awareness Videos</h3>
+
+            <span id="videoArrow">▲</span>
+
+        </div>
+
+        <div class="section-content" id="videos">
+
+            <div class="links-grid">
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">🚨</div>
+
+                    <h4>Road Safety Awareness</h4>
+
+                    <p>
+                        Traffic rules, safe driving and road safety awareness videos
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">💻</div>
+
+                    <h4>Cyber Crime Awareness</h4>
+
+                    <p>
+                        Cyber fraud prevention and digital safety awareness
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">👩</div>
+
+                    <h4>Women Safety</h4>
+
+                    <p>
+                        Women safety and emergency assistance awareness videos
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">👦</div>
+
+                    <h4>Child Safety</h4>
+
+                    <p>
+                        Child protection and safety awareness videos
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">🚫</div>
+
+                    <h4>Drug Awareness</h4>
+
+                    <p>
+                        Awareness videos on prevention of drug abuse and trafficking
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">📱</div>
+
+                    <h4>Social Media Safety</h4>
+
+                    <p>
+                        Responsible use of social media and online safety
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">🏠</div>
+
+                    <h4>Locked House Safety</h4>
+
+                    <p>
+                        Preventive measures while leaving houses locked
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">🛡️</div>
+
+                    <h4>Public Safety Awareness</h4>
+
+                    <p>
+                        General public safety and police awareness programmes
+                    </p>
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- IT APPLICATIONS -->
+    <!-- ================================================= -->
+
+    <div class="section">
+
+        <div class="section-header"
+             onclick="toggleSection('apps','appArrow')">
+
+            <h3>💻 IT Applications</h3>
+
+            <span id="appArrow">▲</span>
+
+        </div>
+
+        <div class="section-content" id="apps">
+
+            <div class="links-grid">
+
+
+                <a class="link-card"
+                   href="https://www.eoffice.ap.gov.in/"
+                   target="_blank">
+
+                    <div class="icon">📁</div>
+
+                    <h4>e-Office</h4>
+
+                    <p>
+                        Andhra Pradesh e-Office Portal
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="https://cctns.ap.gov.in/"
+                   target="_blank">
+
+                    <div class="icon">💻</div>
+
+                    <h4>CCTNS</h4>
+
+                    <p>
+                        Crime and Criminal Tracking Network
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">📱</div>
+
+                    <h4>APOLIS</h4>
+
+                    <p>
+                        Andhra Pradesh Police digital application
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">🔐</div>
+
+                    <h4>CEIR</h4>
+
+                    <p>
+                        Central Equipment Identity Register
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">🧾</div>
+
+                    <h4>eSakshya</h4>
+
+                    <p>
+                        Digital evidence and electronic documentation system
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">⚖️</div>
+
+                    <h4>e-Prosecution</h4>
+
+                    <p>
+                        Digital prosecution and case monitoring application
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">🌐</div>
+
+                    <h4>NATGRID</h4>
+
+                    <p>
+                        National intelligence and information platform
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">📊</div>
+
+                    <h4>DGP Dashboard</h4>
+
+                    <p>
+                        Police performance monitoring and dashboard applications
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">🚔</div>
+
+                    <h4>Dial 112</h4>
+
+                    <p>
+                        Emergency response and assistance system
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">📋</div>
+
+                    <h4>Citizen Portal</h4>
+
+                    <p>
+                        Police citizen services and online applications
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">🛰️</div>
+
+                    <h4>NCRB / ICJS</h4>
+
+                    <p>
+                        Inter-operable Criminal Justice System
+                    </p>
+
+                </a>
+
+
+                <a class="link-card"
+                   href="#"
+                   target="_blank">
+
+                    <div class="icon">📈</div>
+
+                    <h4>Smart Policing Dashboard</h4>
+
+                    <p>
+                        Monitoring of digital policing initiatives and performance
+                    </p>
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="footer">
+
+        Chittoor District Police • Quick Links
 
     </div>
 
 </div>
 
-<div class="footer">
-    Chittoor District Police • Quick Links
-</div>
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+function toggleSection(sectionId, arrowId){
+
+    const section = document.getElementById(sectionId);
+    const arrow = document.getElementById(arrowId);
+
+    if(section.style.display === "none"){
+
+        section.style.display = "block";
+        arrow.innerHTML = "▲";
+
+    }else{
+
+        section.style.display = "none";
+        arrow.innerHTML = "▼";
+
+    }
+
+}
+
+</script>
 
 </body>
 </html>
