@@ -1,452 +1,985 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Chittoor Police — E-Office Performance Dashboard</title>
+
 <link rel="stylesheet" href="style.css">
+
+<style>
+
+/* =========================================================
+   QUICK ACCESS
+========================================================= */
+
+.quick-access-section {
+    margin: 28px 0;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.quick-access-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #e1e7f0;
+}
+
+.quick-access-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quick-access-title span {
+    font-size: 25px;
+}
+
+.quick-access-title h2 {
+    margin: 0;
+    color: #173b70;
+    font-size: 22px;
+}
+
+.quick-access-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.quick-access-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.quick-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    min-height: 105px;
+
+    padding: 18px;
+
+    background: #f8fbff;
+
+    border: 1px solid #dce6f2;
+    border-left: 5px solid #164d82;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    color: #173b70;
+
+    transition: all 0.2s ease;
+}
+
+.quick-card:hover {
+    transform: translateY(-3px);
+
+    background: #ffffff;
+
+    box-shadow: 0 8px 18px rgba(0,0,0,0.10);
+}
+
+.quick-icon {
+    width: 52px;
+    height: 52px;
+
+    min-width: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #e8f0fb;
+
+    border-radius: 12px;
+
+    font-size: 27px;
+}
+
+.quick-card h3 {
+    margin: 0 0 6px 0;
+
+    font-size: 17px;
+
+    color: #123e70;
+}
+
+.quick-card p {
+    margin: 0;
+
+    font-size: 12px;
+
+    line-height: 1.45;
+
+    color: #66758a;
+
+    padding-right: 20px;
+}
+
+.quick-arrow {
+    position: absolute;
+
+    right: 15px;
+    top: 14px;
+
+    font-size: 18px;
+
+    color: #174f87;
+}
+
+@media(max-width:900px) {
+
+    .quick-access-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-access-header {
+        display: block;
+    }
+
+    .quick-access-header p {
+        margin-top: 6px;
+    }
+}
+
+</style>
+
 </head>
+
 
 <body>
 
 <div class="page">
 
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
 <header class="hero">
 
-  <div class="brand">
+    <div class="brand">
 
-    <div class="image-row">
-      <div class="header-image logo-img">
-        <img src="2222.png" alt="AP Police">
-      </div>
+        <div class="image-row">
 
-      <div class="header-image">
-        <img src="3333.png" alt="Police Officer">
-      </div>
+            <div class="header-image logo-img">
+                <img src="2222.png" alt="AP Police">
+            </div>
 
-      <div class="header-image">
-        <img src="4444.png" alt="Police Officer">
-      </div>
+            <div class="header-image">
+                <img src="3333.png" alt="Police Officer">
+            </div>
+
+            <div class="header-image">
+                <img src="4444.png" alt="Police Officer">
+            </div>
+
+        </div>
+
+
+        <div class="title-block">
+
+            <div class="eyebrow">
+                ANDHRA PRADESH POLICE
+            </div>
+
+            <h1>
+                Chittoor Police — E-Office Performance Dashboard
+            </h1>
+
+            <p>
+                E-Office Files • Disposal Monitoring • Pendency • Response Performance
+            </p>
+
+            <span class="period" id="period">
+                Loading...
+            </span>
+
+        </div>
+
     </div>
 
-    <div class="title-block">
-      <div class="eyebrow">ANDHRA PRADESH POLICE</div>
 
-      <h1>Chittoor Police — E-Office Performance Dashboard</h1>
+    <div class="hero-stats">
 
-      <p>
-        E-Office Files • Disposal Monitoring • Pendency • Response Performance
-      </p>
+        <div>
+            <strong id="unitCount">0</strong>
+            <span>RECORDS</span>
+        </div>
 
-      <span class="period" id="period">Loading...</span>
+        <div>
+            <strong id="disposedHero">0</strong>
+            <span>DISPOSED</span>
+        </div>
+
+        <div>
+            <strong id="pendencyHero">0</strong>
+            <span>PENDING</span>
+        </div>
+
     </div>
-
-  </div>
-
-  <div class="hero-stats">
-
-    <div>
-      <strong id="unitCount">0</strong>
-      <span>RECORDS</span>
-    </div>
-
-    <div>
-      <strong id="disposedHero">0</strong>
-      <span>DISPOSED</span>
-    </div>
-
-    <div>
-      <strong id="pendencyHero">0</strong>
-      <span>PENDING</span>
-    </div>
-
-  </div>
 
 </header>
 
 
-<!-- MAIN NAVIGATION — ONLY ONE NAVIGATION BAR -->
+
+<!-- =========================================================
+     MAIN NAVIGATION
+========================================================= -->
 
 <nav class="tabs">
 
-  <button class="tab active" data-target="rankings">
-    🏆 Rankings
-  </button>
+    <button class="tab active"
+            data-target="rankings">
+        🏆 Rankings
+    </button>
 
-  <button class="tab" data-target="performance">
-    🔥 Performance
-  </button>
 
-  <button class="tab" data-target="trends">
-    📈 Trends
-  </button>
+    <button class="tab"
+            data-target="performance">
+        🔥 Performance
+    </button>
 
-  <button class="tab" data-target="details">
-    🔎 Police Station / Employee Detail
-  </button>
 
-  <button class="tab" data-target="reports">
-    📋 Reports
-  </button>
+    <button class="tab"
+            data-target="trends">
+        📈 Trends
+    </button>
 
-  <!-- NEW SEPARATE SUB-DIVISION PAGE -->
 
-  <button class="tab"
-          onclick="window.location.href='subdivision.html'">
-    🏛️ Sub-Division Performance
-  </button>
+    <button class="tab"
+            data-target="details">
+        🔎 Police Station / Employee Detail
+    </button>
+
+
+    <button class="tab"
+            data-target="reports">
+        📋 Reports
+    </button>
+
+
+    <button class="tab"
+            onclick="window.location.href='subdivision.html'">
+        🏛️ Sub-Division Performance
+    </button>
+
+
+    <!-- QUICK ACCESS -->
+    <button class="tab"
+            onclick="document.getElementById('quickAccess').scrollIntoView({behavior:'smooth'})">
+        🔗 Quick Access
+    </button>
 
 </nav>
+
 
 
 <main>
 
 
-<!-- ========================= -->
-<!-- RANKINGS -->
-<!-- ========================= -->
+<!-- =========================================================
+     RANKINGS
+========================================================= -->
 
-<section id="rankings" class="section active-section">
-
-  <div class="section-title">
-
-    <div>
-      <span class="section-icon">🏆</span>
-      <h2>Rankings</h2>
-    </div>
-
-    <span class="subtext">
-      Composite E-Office performance based on disposal and pendency indicators
-    </span>
-
-  </div>
+<section id="rankings"
+         class="section active-section">
 
 
-  <div class="cards">
+    <div class="section-title">
 
-    <article class="metric-card">
-      <span>📁 Total Files Disposed</span>
-      <strong id="disposedTotal">0</strong>
-      <small>Closed + Forwarded</small>
-    </article>
+        <div>
 
-    <article class="metric-card">
-      <span>📥 Total Files Received</span>
-      <strong id="receivedTotal">0</strong>
-      <small>Created + received during period</small>
-    </article>
+            <span class="section-icon">
+                🏆
+            </span>
 
-    <article class="metric-card">
-      <span>⏳ Total Pendency</span>
-      <strong id="pendencyTotal">0</strong>
-      <small>At the end of the reporting period</small>
-    </article>
+            <h2>
+                Rankings
+            </h2>
 
-    <article class="metric-card">
-      <span>🕐 Avg. Pending Days</span>
-      <strong id="avgPending">0</strong>
-      <small>Weighted by current pendency</small>
-    </article>
+        </div>
 
-  </div>
-
-
-  <div class="two-col">
-
-    <div class="panel">
-
-      <div class="panel-head">
-        <h3>🥇 Top 5 Performers</h3>
-        <span>Higher score</span>
-      </div>
-
-      <div id="topList" class="rank-list"></div>
+        <span class="subtext">
+            Composite E-Office performance based on disposal and pendency indicators
+        </span>
 
     </div>
 
 
-    <div class="panel">
 
-      <div class="panel-head">
-        <h3>⚠️ Bottom 5 — Need Attention</h3>
-        <span>Lower score</span>
-      </div>
+    <!-- KPI CARDS -->
 
-      <div id="bottomList" class="rank-list"></div>
-
-    </div>
-
-  </div>
+    <div class="cards">
 
 
-  <div class="panel chart-panel">
+        <article class="metric-card">
 
-    <div class="panel-head">
-      <h3>Composite Score — All E-Office Records</h3>
-      <span id="chartNote"></span>
-    </div>
+            <span>
+                📁 Total Files Disposed
+            </span>
 
-    <div id="barChart" class="bar-chart"></div>
+            <strong id="disposedTotal">
+                0
+            </strong>
 
-  </div>
+            <small>
+                Closed + Forwarded
+            </small>
 
-
-  <!-- FULL E-OFFICE TABLE -->
-
-  <div class="panel full-data-panel">
-
-    <div class="panel-head">
-
-      <h3>📊 Full E-Office Data</h3>
-
-      <span id="tableCount">0 records</span>
-
-    </div>
+        </article>
 
 
-    <div class="toolbar">
 
-      <input
-        id="searchRank"
-        type="search"
-        placeholder="🔎 Search employee, police station or designation..."
-      >
+        <article class="metric-card">
 
-      <button id="refreshRank" class="refresh">
-        ↻ Refresh
-      </button>
+            <span>
+                📥 Total Files Received
+            </span>
 
-    </div>
+            <strong id="receivedTotal">
+                0
+            </strong>
+
+            <small>
+                Created + received during period
+            </small>
+
+        </article>
 
 
-    <div class="table-wrap">
 
-      <table class="wide-table">
+        <article class="metric-card">
 
-        <thead>
+            <span>
+                ⏳ Total Pendency
+            </span>
 
-          <tr>
-            <th>S.No</th>
-            <th>Employee</th>
-            <th>Police Station / Designation</th>
-            <th>Opening</th>
-            <th>Created</th>
-            <th>Received</th>
-            <th>Closed</th>
-            <th>Forwarded</th>
-            <th>Disposed</th>
-            <th>Parked</th>
-            <th>Merged</th>
-            <th>0–7 Days</th>
-            <th>8–15 Days</th>
-            <th>16–30 Days</th>
-            <th>31–60 Days</th>
-            <th>&gt;60 Days</th>
-            <th>Total Pendency</th>
-            <th>Avg. Pending Days</th>
-            <th>Score</th>
-          </tr>
+            <strong id="pendencyTotal">
+                0
+            </strong>
 
-        </thead>
+            <small>
+                At the end of the reporting period
+            </small>
 
-        <tbody id="rankingTable"></tbody>
+        </article>
 
-      </table>
+
+
+        <article class="metric-card">
+
+            <span>
+                🕐 Avg. Pending Days
+            </span>
+
+            <strong id="avgPending">
+                0
+            </strong>
+
+            <small>
+                Weighted by current pendency
+            </small>
+
+        </article>
 
     </div>
 
-  </div>
+
+
+    <!-- TOP / BOTTOM -->
+
+    <div class="two-col">
+
+
+        <div class="panel">
+
+            <div class="panel-head">
+
+                <h3>
+                    🥇 Top 5 Performers
+                </h3>
+
+                <span>
+                    Higher score
+                </span>
+
+            </div>
+
+            <div id="topList"
+                 class="rank-list">
+            </div>
+
+        </div>
+
+
+
+        <div class="panel">
+
+            <div class="panel-head">
+
+                <h3>
+                    ⚠️ Bottom 5 — Need Attention
+                </h3>
+
+                <span>
+                    Lower score
+                </span>
+
+            </div>
+
+            <div id="bottomList"
+                 class="rank-list">
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- CHART -->
+
+    <div class="panel chart-panel">
+
+        <div class="panel-head">
+
+            <h3>
+                Composite Score — All E-Office Records
+            </h3>
+
+            <span id="chartNote">
+            </span>
+
+        </div>
+
+        <div id="barChart"
+             class="bar-chart">
+        </div>
+
+    </div>
+
+
+
+    <!-- FULL DATA -->
+
+    <div class="panel full-data-panel">
+
+        <div class="panel-head">
+
+            <h3>
+                📊 Full E-Office Data
+            </h3>
+
+            <span id="tableCount">
+                0 records
+            </span>
+
+        </div>
+
+
+        <div class="toolbar">
+
+            <input
+                id="searchRank"
+                type="search"
+                placeholder="🔎 Search employee, police station or designation..."
+            >
+
+
+            <button id="refreshRank"
+                    class="refresh">
+
+                ↻ Refresh
+
+            </button>
+
+        </div>
+
+
+
+        <div class="table-wrap">
+
+            <table class="wide-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>S.No</th>
+
+                        <th>Employee</th>
+
+                        <th>Police Station / Designation</th>
+
+                        <th>Opening</th>
+
+                        <th>Created</th>
+
+                        <th>Received</th>
+
+                        <th>Closed</th>
+
+                        <th>Forwarded</th>
+
+                        <th>Disposed</th>
+
+                        <th>Parked</th>
+
+                        <th>Merged</th>
+
+                        <th>0–7 Days</th>
+
+                        <th>8–15 Days</th>
+
+                        <th>16–30 Days</th>
+
+                        <th>31–60 Days</th>
+
+                        <th>&gt;60 Days</th>
+
+                        <th>Total Pendency</th>
+
+                        <th>Avg. Pending Days</th>
+
+                        <th>Score</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="rankingTable">
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </section>
 
 
-<!-- ========================= -->
-<!-- PERFORMANCE -->
-<!-- ========================= -->
 
-<section id="performance" class="section">
+<!-- =========================================================
+     PERFORMANCE
+========================================================= -->
 
-  <div class="section-title">
-
-    <div>
-      <span class="section-icon">🔥</span>
-      <h2>Performance</h2>
-    </div>
-
-    <span class="subtext">
-      Disposal rate and current pendency indicators
-    </span>
-
-  </div>
-
-  <div class="panel">
-
-    <div
-      class="performance-grid"
-      id="performanceGrid">
-    </div>
-
-  </div>
-
-</section>
+<section id="performance"
+         class="section">
 
 
-<!-- ========================= -->
-<!-- TRENDS -->
-<!-- ========================= -->
+    <div class="section-title">
 
-<section id="trends" class="section">
+        <div>
 
-  <div class="section-title">
+            <span class="section-icon">
+                🔥
+            </span>
 
-    <div>
-      <span class="section-icon">📈</span>
-      <h2>Trends & Summary</h2>
-    </div>
+            <h2>
+                Performance
+            </h2>
 
-    <span class="subtext">
-      Reporting-period summary from the uploaded E-Office data
-    </span>
+        </div>
 
-  </div>
-
-
-  <div class="two-col">
-
-    <div class="panel">
-
-      <div class="panel-head">
-        <h3>File Movement</h3>
-      </div>
-
-      <div
-        id="movementBars"
-        class="summary-bars">
-      </div>
+        <span class="subtext">
+            Disposal rate and current pendency indicators
+        </span>
 
     </div>
 
 
     <div class="panel">
 
-      <div class="panel-head">
-        <h3>Pendency Age</h3>
-      </div>
-
-      <div
-        id="pendencyBars"
-        class="summary-bars">
-      </div>
+        <div class="performance-grid"
+             id="performanceGrid">
+        </div>
 
     </div>
-
-  </div>
 
 </section>
 
 
-<!-- ========================= -->
-<!-- POLICE STATION / EMPLOYEE -->
-<!-- ========================= -->
 
-<section id="details" class="section">
+<!-- =========================================================
+     TRENDS
+========================================================= -->
 
-  <div class="section-title">
-
-    <div>
-      <span class="section-icon">🔎</span>
-      <h2>Police Station / Employee Detail</h2>
-    </div>
-
-    <span class="subtext">
-      Search and review every E-Office record
-    </span>
-
-  </div>
+<section id="trends"
+         class="section">
 
 
-  <div class="panel full-data-panel">
+    <div class="section-title">
 
-    <div class="toolbar">
+        <div>
 
-      <input
-        id="searchDetail"
-        type="search"
-        placeholder="🔎 Search employee, police station or designation..."
-      >
+            <span class="section-icon">
+                📈
+            </span>
 
-      <button id="refreshDetail" class="refresh">
-        ↻ Refresh
-      </button>
+            <h2>
+                Trends & Summary
+            </h2>
+
+        </div>
+
+        <span class="subtext">
+            Reporting-period summary from the uploaded E-Office data
+        </span>
 
     </div>
 
 
-    <div class="table-wrap">
+    <div class="two-col">
 
-      <table class="wide-table">
 
-        <thead>
+        <div class="panel">
 
-          <tr>
-            <th>S.No</th>
-            <th>Employee</th>
-            <th>Police Station / Designation</th>
-            <th>Opening</th>
-            <th>Created</th>
-            <th>Received</th>
-            <th>Closed</th>
-            <th>Forwarded</th>
-            <th>Disposed</th>
-            <th>Parked</th>
-            <th>Merged</th>
-            <th>0–7 Days</th>
-            <th>8–15 Days</th>
-            <th>16–30 Days</th>
-            <th>31–60 Days</th>
-            <th>&gt;60 Days</th>
-            <th>Total Pendency</th>
-            <th>Avg. Pending Days</th>
-            <th>Score</th>
-          </tr>
+            <div class="panel-head">
 
-        </thead>
+                <h3>
+                    File Movement
+                </h3>
 
-        <tbody id="detailTable"></tbody>
+            </div>
 
-      </table>
+            <div id="movementBars"
+                 class="summary-bars">
+            </div>
+
+        </div>
+
+
+
+        <div class="panel">
+
+            <div class="panel-head">
+
+                <h3>
+                    Pendency Age
+                </h3>
+
+            </div>
+
+            <div id="pendencyBars"
+                 class="summary-bars">
+            </div>
+
+        </div>
 
     </div>
-
-  </div>
 
 </section>
 
 
-<!-- ========================= -->
-<!-- REPORTS -->
-<!-- ========================= -->
 
-<section id="reports" class="section">
+<!-- =========================================================
+     POLICE STATION / EMPLOYEE DETAIL
+========================================================= -->
 
-  <div class="section-title">
+<section id="details"
+         class="section">
 
-    <div>
-      <span class="section-icon">📋</span>
-      <h2>Reports</h2>
+
+    <div class="section-title">
+
+        <div>
+
+            <span class="section-icon">
+                🔎
+            </span>
+
+            <h2>
+                Police Station / Employee Detail
+            </h2>
+
+        </div>
+
+        <span class="subtext">
+            Search and review every E-Office record
+        </span>
+
     </div>
 
-    <span class="subtext">
-      District-level figures calculated from the uploaded E-Office data
-    </span>
-
-  </div>
 
 
-  <div
-    class="panel report-box"
-    id="reportBox">
-  </div>
+    <div class="panel full-data-panel">
+
+
+        <div class="toolbar">
+
+            <input
+                id="searchDetail"
+                type="search"
+                placeholder="🔎 Search employee, police station or designation..."
+            >
+
+
+            <button id="refreshDetail"
+                    class="refresh">
+
+                ↻ Refresh
+
+            </button>
+
+        </div>
+
+
+
+        <div class="table-wrap">
+
+            <table class="wide-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>S.No</th>
+
+                        <th>Employee</th>
+
+                        <th>Police Station / Designation</th>
+
+                        <th>Opening</th>
+
+                        <th>Created</th>
+
+                        <th>Received</th>
+
+                        <th>Closed</th>
+
+                        <th>Forwarded</th>
+
+                        <th>Disposed</th>
+
+                        <th>Parked</th>
+
+                        <th>Merged</th>
+
+                        <th>0–7 Days</th>
+
+                        <th>8–15 Days</th>
+
+                        <th>16–30 Days</th>
+
+                        <th>31–60 Days</th>
+
+                        <th>&gt;60 Days</th>
+
+                        <th>Total Pendency</th>
+
+                        <th>Avg. Pending Days</th>
+
+                        <th>Score</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="detailTable">
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     REPORTS
+========================================================= -->
+
+<section id="reports"
+         class="section">
+
+
+    <div class="section-title">
+
+        <div>
+
+            <span class="section-icon">
+                📋
+            </span>
+
+            <h2>
+                Reports
+            </h2>
+
+        </div>
+
+        <span class="subtext">
+            District-level figures calculated from the uploaded E-Office data
+        </span>
+
+    </div>
+
+
+    <div class="panel report-box"
+         id="reportBox">
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     QUICK ACCESS
+========================================================= -->
+
+<section id="quickAccess"
+         class="quick-access-section">
+
+
+    <div class="quick-access-header">
+
+        <div class="quick-access-title">
+
+            <span>
+                🔗
+            </span>
+
+            <h2>
+                Quick Access
+            </h2>
+
+        </div>
+
+
+        <p>
+            SOPs • Awareness Videos • IT Applications
+        </p>
+
+    </div>
+
+
+
+    <div class="quick-access-grid">
+
+
+        <!-- =================================================
+             SOPs
+        ================================================== -->
+
+        <a class="quick-card"
+           href="https://drive.google.com/drive/folders/1OTneCnMwI_nsI4-7YDTkQs1KQPkUOnFm?usp=drive_link"
+           target="_blank"
+           rel="noopener noreferrer">
+
+            <div class="quick-icon">
+                📘
+            </div>
+
+
+            <div>
+
+                <h3>
+                    SOPs
+                </h3>
+
+                <p>
+                    Standard Operating Procedures and Police Department guidelines
+                </p>
+
+            </div>
+
+
+            <span class="quick-arrow">
+                ↗
+            </span>
+
+        </a>
+
+
+
+        <!-- =================================================
+             AWARENESS VIDEOS
+        ================================================== -->
+
+        <a class="quick-card"
+           href="https://drive.google.com/drive/folders/1JVEKYLa0j40n0JLlj2jxXUQK774HlpOB?usp=drive_link"
+           target="_blank"
+           rel="noopener noreferrer">
+
+            <div class="quick-icon">
+                🎥
+            </div>
+
+
+            <div>
+
+                <h3>
+                    Awareness Videos
+                </h3>
+
+                <p>
+                    Police awareness, public safety and training videos
+                </p>
+
+            </div>
+
+
+            <span class="quick-arrow">
+                ↗
+            </span>
+
+        </a>
+
+
+
+        <!-- =================================================
+             IT APPLICATIONS
+        ================================================== -->
+
+        <a class="quick-card"
+           href="https://drive.google.com/drive/folders/1Esu62Kd7NZ_ubNUMI7EvbJ5aHXI6GnXu?usp=drive_link"
+           target="_blank"
+           rel="noopener noreferrer">
+
+            <div class="quick-icon">
+                💻
+            </div>
+
+
+            <div>
+
+                <h3>
+                    IT Applications
+                </h3>
+
+                <p>
+                    Police IT applications, portals and digital services
+                </p>
+
+            </div>
+
+
+            <span class="quick-arrow">
+                ↗
+            </span>
+
+        </a>
+
+    </div>
 
 </section>
 
@@ -454,13 +987,19 @@
 </main>
 
 
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
 <footer>
 
-  <span>
-    Chittoor District Police • E-Office Performance Dashboard
-  </span>
+    <span>
+        Chittoor District Police • E-Office Performance Dashboard
+    </span>
 
-  <span id="lastLoaded"></span>
+    <span id="lastLoaded">
+    </span>
 
 </footer>
 
@@ -468,7 +1007,14 @@
 </div>
 
 
+
+<!-- =========================================================
+     EXISTING DATA SCRIPT
+========================================================= -->
+
 <script src="script.js"></script>
 
+
 </body>
+
 </html>
