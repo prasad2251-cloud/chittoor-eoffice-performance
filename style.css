@@ -20,3 +20,104 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(
 footer{display:flex;justify-content:space-between;color:#6b7890;font-size:11px;padding:18px 4px}
 @media(max-width:900px){.hero{flex-direction:column;align-items:flex-start}.hero-stats{width:100%}.hero-stats div{flex:1}.cards{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}.performance-grid{grid-template-columns:1fr}}
 @media(max-width:560px){.page{width:96%}.brand{align-items:flex-start}.image-row{display:none}.hero h1{font-size:21px}.cards{grid-template-columns:1fr}.hero-stats{gap:5px}.hero-stats div{min-width:0}.tabs{gap:5px}.tab{padding:9px 11px;font-size:11px}.section-title{display:block}.subtext{display:block;margin-top:5px}.report-grid{grid-template-columns:1fr}}
+/* ================================
+   QUICK ACCESS
+================================ */
+
+.quick-access {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px;
+  margin: 20px 0;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.quick-access-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.quick-star {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #263fc5;
+  color: #ffd83d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 23px;
+}
+
+.quick-access-header h2 {
+  margin: 0;
+  font-size: 15px;
+  color: #1f3fae;
+  font-weight: 800;
+}
+
+.quick-access-header p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #667085;
+}
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.quick-card {
+  min-height: 90px;
+  border-radius: 14px;
+  text-decoration: none;
+  color: #111827;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s ease;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+.quick-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.10);
+}
+
+.sop-card {
+  background: #fff8e8;
+}
+
+.app-card {
+  background: #f0ecff;
+}
+
+.video-card {
+  background: #eaf8f1;
+}
+
+.quick-icon {
+  font-size: 23px;
+  margin-bottom: 4px;
+}
+
+.quick-title {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.quick-subtitle {
+  font-size: 11px;
+  margin-top: 2px;
+  color: #344054;
+}
+
+@media (max-width: 700px) {
+  .quick-grid {
+    grid-template-columns: 1fr;
+  }
+}
