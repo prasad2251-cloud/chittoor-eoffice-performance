@@ -24,13 +24,11 @@ body {
     color: white;
     text-align: center;
     padding: 22px 15px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.20);
 }
 
 .header h1 {
     margin: 0;
     font-size: 30px;
-    letter-spacing: 0.5px;
 }
 
 .header h2 {
@@ -80,8 +78,8 @@ body {
     background: white;
     border-radius: 12px;
     padding: 22px;
-    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
     margin-bottom: 22px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
 }
 
 .title-box h2 {
@@ -95,51 +93,51 @@ body {
     color: #60708a;
 }
 
-/* QUICK LINKS GRID */
+/* LINK CARDS */
 .links {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
 }
 
 .link-card {
     background: white;
     border-radius: 12px;
-    padding: 20px;
+    padding: 28px 24px;
     text-decoration: none;
     color: #172033;
     border-left: 5px solid #123e68;
     box-shadow: 0 3px 12px rgba(0,0,0,0.08);
     transition: 0.2s;
+    min-height: 150px;
 }
 
 .link-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 7px 18px rgba(0,0,0,0.15);
-    background: #f8fbff;
 }
 
 .icon {
-    font-size: 28px;
-    margin-bottom: 10px;
+    font-size: 38px;
+    margin-bottom: 12px;
 }
 
 .link-card h3 {
     margin: 0;
     color: #123e68;
-    font-size: 17px;
+    font-size: 20px;
 }
 
 .link-card p {
-    margin: 7px 0 0;
+    margin: 8px 0 0;
     color: #687891;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 /* FOOTER */
 .footer {
     text-align: center;
-    padding: 25px;
+    padding: 30px;
     color: #60708a;
     font-size: 13px;
 }
@@ -147,21 +145,7 @@ body {
 /* MOBILE */
 @media (max-width: 900px) {
     .links {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 600px) {
-    .links {
         grid-template-columns: 1fr;
-    }
-
-    .header h1 {
-        font-size: 23px;
-    }
-
-    .header h2 {
-        font-size: 17px;
     }
 }
 </style>
@@ -188,57 +172,30 @@ body {
 
     <div class="title-box">
         <h2>🔗 Quick Links</h2>
-        <p>Important Police Department portals and frequently used services</p>
+        <p>Important resources for Chittoor District Police</p>
     </div>
 
     <div class="links">
 
-        <a class="link-card" href="https://www.eoffice.ap.gov.in/" target="_blank">
-            <div class="icon">📂</div>
-            <h3>e-Office</h3>
-            <p>Andhra Pradesh e-Office Portal</p>
+        <!-- SOPs -->
+        <a class="link-card" href="#" onclick="alert('SOPs section will be added here.'); return false;">
+            <div class="icon">📄</div>
+            <h3>SOPs</h3>
+            <p>Standard Operating Procedures</p>
         </a>
 
-        <a class="link-card" href="https://cctns.ap.gov.in/" target="_blank">
+        <!-- Awareness Videos -->
+        <a class="link-card" href="#" onclick="alert('Awareness Videos section will be added here.'); return false;">
+            <div class="icon">🎥</div>
+            <h3>Awareness Videos</h3>
+            <p>Police awareness and public safety videos</p>
+        </a>
+
+        <!-- IT Applications -->
+        <a class="link-card" href="#" onclick="alert('IT Applications section will be added here.'); return false;">
             <div class="icon">💻</div>
-            <h3>CCTNS</h3>
-            <p>Crime and Criminal Tracking Network</p>
-        </a>
-
-        <a class="link-card" href="https://citizen.appolice.gov.in/" target="_blank">
-            <div class="icon">👮</div>
-            <h3>AP Police Citizen Portal</h3>
-            <p>Citizen services and police services</p>
-        </a>
-
-        <a class="link-card" href="https://www.ap.gov.in/" target="_blank">
-            <div class="icon">🏛️</div>
-            <h3>AP Government</h3>
-            <p>Andhra Pradesh Government Portal</p>
-        </a>
-
-        <a class="link-card" href="https://www.police.gov.in/" target="_blank">
-            <div class="icon">🚔</div>
-            <h3>Police Department</h3>
-            <p>Official Police Department Portal</p>
-        </a>
-
-        <a class="link-card" href="https://www.indiacode.nic.in/" target="_blank">
-            <div class="icon">⚖️</div>
-            <h3>India Code</h3>
-            <p>Central and State Laws</p>
-        </a>
-
-        <a class="link-card" href="https://www.cybercrime.gov.in/" target="_blank">
-            <div class="icon">🔐</div>
-            <h3>Cyber Crime Portal</h3>
-            <p>National Cyber Crime Reporting Portal</p>
-        </a>
-
-        <a class="link-card" href="https://www.ceir.gov.in/" target="_blank">
-            <div class="icon">📱</div>
-            <h3>CEIR</h3>
-            <p>Central Equipment Identity Register</p>
+            <h3>IT Applications</h3>
+            <p>Police Department IT applications and portals</p>
         </a>
 
     </div>
