@@ -1,10 +1,11 @@
 {
+  "reportTitle": "eOFFICE - FILE SUMMARY REPORT",
   "period": "01/01/2026 TO 30/09/2026",
   "records": [
     {
       "slNo": 1,
       "employee": "P.SUBRAMANYAM",
-      "designation": "SUPDT ",
+      "designation": "SUPDT",
       "openingBalance": 0,
       "created": 0,
       "received": 1535,
@@ -703,7 +704,7 @@
     },
     {
       "slNo": 36,
-      "employee": " M THIMMAIAH",
+      "employee": "M THIMMAIAH",
       "designation": "Puthalapattu UPS",
       "openingBalance": 0,
       "created": 956,
@@ -1104,7 +1105,7 @@
     {
       "slNo": 56,
       "employee": "S.PUSHPA RAJ",
-      "designation": "SUPDT ",
+      "designation": "SUPDT",
       "openingBalance": 0,
       "created": 0,
       "received": 503,
@@ -1563,7 +1564,7 @@
     },
     {
       "slNo": 79,
-      "employee": " B HEMANTH",
+      "employee": "B HEMANTH",
       "designation": "ASST. SP",
       "openingBalance": 0,
       "created": 0,
@@ -1580,26 +1581,6 @@
       "pendencyOver60": 0,
       "totalPendency": 0,
       "averagePendingDays": 0
-    },
-    {
-      "slNo": "CHITTOOR DIST TOTAL",
-      "employee": null,
-      "designation": null,
-      "openingBalance": 16,
-      "created": 34445,
-      "received": 28384,
-      "closed": 39607,
-      "forwarded": 27608,
-      "disposedTotal": 67215,
-      "parked": 634,
-      "merged": 0,
-      "pendency0to7": 96,
-      "pendency8to15": 2,
-      "pendency16to30": 5,
-      "pendency31to60": 7,
-      "pendencyOver60": 2,
-      "totalPendency": 112,
-      "averagePendingDays": 377.88
     }
   ]
 }
