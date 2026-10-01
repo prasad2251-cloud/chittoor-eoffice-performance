@@ -596,20 +596,18 @@ async function loadData(){
         }
 
 
-        const records =
-            Array.isArray(data)
-                ? data
-                : data.records;
+       const records =
+    Array.isArray(data)
+        ? data
+        : data.subdivisions;
 
+if(!Array.isArray(records)){
 
-        if(!Array.isArray(records)){
+    throw new Error(
+        "Invalid JSON format. Expected subdivisions array."
+    );
 
-            throw new Error(
-                "Invalid JSON format. Expected records array."
-            );
-
-        }
-
+}
 
         renderDashboard(records);
 
