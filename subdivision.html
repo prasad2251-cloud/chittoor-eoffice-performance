@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +7,6 @@
 <title>Chittoor Police - Sub-Division Performance</title>
 
 <style>
-
 *{
     box-sizing:border-box;
 }
@@ -20,13 +18,13 @@ body{
     color:#172033;
 }
 
-/* ================= HEADER ================= */
-
+/* HEADER */
 .header{
-    background:linear-gradient(135deg,#071a36,#123f68);
+    background:linear-gradient(135deg,#071a36,#123c68);
     color:white;
+    padding:22px 30px;
     text-align:center;
-    padding:22px 20px 20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.20);
 }
 
 .header h1{
@@ -36,8 +34,8 @@ body{
 }
 
 .header h2{
-    margin:6px 0 0;
-    font-size:20px;
+    margin:7px 0 0;
+    font-size:21px;
     font-weight:500;
 }
 
@@ -46,223 +44,187 @@ body{
     font-size:14px;
 }
 
-/* ================= NAVIGATION ================= */
-
+/* NAVIGATION */
 .nav{
     background:white;
-    padding:12px;
-    text-align:center;
+    padding:12px 20px;
+    display:flex;
+    justify-content:center;
+    gap:12px;
     border-bottom:1px solid #ddd;
 }
 
 .nav button{
-    border:0;
-    background:#e9eef5;
-    color:#123c68;
-    padding:10px 20px;
-    margin:3px;
+    border:none;
+    padding:11px 20px;
     border-radius:7px;
-    font-weight:bold;
+    background:#e9eef5;
     cursor:pointer;
+    font-weight:bold;
+    color:#17324f;
 }
 
 .nav button:hover{
-    background:#dbe7f4;
+    background:#d7e4f2;
 }
 
-/* ================= MAIN ================= */
-
+/* CONTENT */
 .container{
     width:96%;
-    max-width:1600px;
-    margin:22px auto;
+    margin:25px auto;
 }
 
-/* ================= TITLE ================= */
-
-.title-box{
+.title{
     background:white;
-    border-radius:12px;
-    padding:20px 24px;
-    box-shadow:0 2px 10px rgba(0,0,0,.08);
-    margin-bottom:16px;
+    padding:18px 22px;
+    border-radius:10px;
+    margin-bottom:18px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.title-box h2{
+.title h2{
     margin:0;
-    color:#123f68;
-    font-size:23px;
+    color:#123c68;
 }
 
-.title-box p{
+.title p{
     margin:7px 0 0;
-    color:#66758a;
+    color:#687386;
 }
 
-/* ================= OFFICERS ================= */
+#status{
+    margin-top:8px;
+    font-size:13px;
+    color:#687386;
+}
 
+/* OFFICER CARDS */
 .officer-grid{
     display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:12px;
-    margin-bottom:20px;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:15px;
+    margin-bottom:25px;
 }
 
 .officer-card{
     background:white;
-    border-left:5px solid #164b7a;
+    padding:18px;
     border-radius:10px;
-    padding:14px 16px;
-    min-height:84px;
-    box-shadow:0 2px 8px rgba(0,0,0,.07);
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+    border-left:5px solid #123c68;
 }
 
 .officer-card .designation{
-    font-size:12px;
-    color:#63758b;
+    font-size:13px;
+    color:#687386;
     margin-bottom:7px;
-    text-transform:uppercase;
 }
 
 .officer-card .name{
-    font-size:16px;
+    font-size:17px;
     font-weight:bold;
-    color:#12233d;
-    line-height:1.3;
+    color:#172033;
 }
 
-/* ================= TABLE PANEL ================= */
-
-.table-panel{
+/* TABLE */
+.table-wrapper{
     background:white;
-    border-radius:12px;
-    padding:12px;
-    box-shadow:0 2px 10px rgba(0,0,0,.08);
-    overflow:hidden;
-}
-
-.table-wrap{
-    width:100%;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
     overflow-x:auto;
 }
 
 table{
     width:100%;
     border-collapse:collapse;
-    min-width:1200px;
+    min-width:1250px;
 }
 
 thead th{
-    background:#123f68;
+    background:#123c68;
     color:white;
-    padding:11px 10px;
-    font-size:12px;
+    padding:13px 10px;
+    font-size:13px;
     text-align:center;
-    border-right:1px solid rgba(255,255,255,.25);
+    white-space:nowrap;
 }
 
 tbody td{
-    padding:11px 10px;
-    border-bottom:1px solid #dce3ec;
-    font-size:13px;
+    padding:12px 10px;
+    border-bottom:1px solid #e2e6eb;
     text-align:center;
-}
-
-tbody tr:nth-child(even){
-    background:#f6f9fd;
+    font-size:13px;
+    vertical-align:top;
 }
 
 tbody tr:hover{
-    background:#eef5fc;
-}
-
-.rank{
-    font-weight:bold;
-    width:65px;
+    background:#f7faff;
 }
 
 .subdivision{
     font-weight:bold;
-    color:#123f68;
-    text-align:left;
-    white-space:nowrap;
+    text-align:left !important;
+    color:#123c68;
+}
+
+.stations{
+    text-align:left !important;
+    line-height:1.6;
+    min-width:300px;
+}
+
+.rank{
+    font-size:18px;
+    font-weight:bold;
 }
 
 .score{
     font-weight:bold;
-    color:#07945c;
-    font-size:15px;
+    color:#168447;
 }
 
 .grade{
-    display:inline-block;
-    min-width:32px;
-    padding:5px 8px;
-    border-radius:6px;
-    background:#18a86b;
-    color:white;
     font-weight:bold;
+    padding:5px 9px;
+    border-radius:5px;
+    display:inline-block;
+    background:#e8f4ea;
+    color:#23733b;
 }
 
 .top{
-    color:#07864f;
+    color:#168447;
     font-weight:bold;
-    text-align:left;
 }
 
 .weak{
-    color:#d52c2c;
+    color:#d32f2f;
     font-weight:bold;
-    text-align:left;
 }
 
-.stations{
-    text-align:left;
-    color:#53657b;
-    line-height:1.6;
-}
-
-/* ================= STATUS ================= */
-
-.status{
-    text-align:center;
-    padding:14px;
-    color:#64748b;
-    font-size:13px;
-}
-
-.error{
-    background:#fee2e2;
-    color:#991b1b;
-    padding:15px;
+/* ERROR */
+.error-box{
+    display:none;
+    margin-top:15px;
+    padding:18px;
+    background:#fde2e2;
+    color:#b42318;
     border-radius:8px;
+    text-align:center;
     font-weight:bold;
 }
 
-/* ================= FOOTER ================= */
-
+/* FOOTER */
 .footer{
     text-align:center;
-    padding:25px;
-    color:#66758a;
+    padding:20px;
+    color:#6c7585;
     font-size:12px;
 }
 
-/* ================= MOBILE ================= */
-
-@media(max-width:1100px){
-
-    .officer-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-}
-
-@media(max-width:650px){
-
-    .officer-grid{
-        grid-template-columns:1fr;
-    }
+/* MOBILE */
+@media(max-width:700px){
 
     .header h1{
         font-size:23px;
@@ -273,19 +235,17 @@ tbody tr:hover{
     }
 
     .container{
-        width:94%;
+        width:98%;
     }
 
+    .nav{
+        flex-wrap:wrap;
+    }
 }
-
 </style>
 </head>
 
-
 <body>
-
-
-<!-- ================= HEADER ================= -->
 
 <header class="header">
 
@@ -298,11 +258,9 @@ tbody tr:hover{
 </header>
 
 
-<!-- ================= NAVIGATION ================= -->
+<nav class="nav">
 
-<div class="nav">
-
-    <button onclick="window.location.href='index.html'">
+    <button onclick="goHome()">
         🏠 E-Office Dashboard
     </button>
 
@@ -310,36 +268,30 @@ tbody tr:hover{
         🏛️ Sub-Division Performance
     </button>
 
-</div>
+</nav>
 
 
-<!-- ================= MAIN ================= -->
+<main class="container">
 
-<div class="container">
-
-
-    <!-- TITLE -->
-
-    <div class="title-box">
+    <section class="title">
 
         <h2>🏛️ Sub-Division Performance</h2>
 
         <p>
-            Police Station-wise performance grouped under their respective Sub-Divisions
+            Police Station-wise performance grouped under their respective
+            Sub-Divisions
         </p>
 
-        <div id="period"
-             style="margin-top:8px;font-size:12px;color:#64748b;">
+        <div id="status">
             Loading reporting period...
         </div>
 
-    </div>
+    </section>
 
 
-    <!-- ================= OFFICERS ================= -->
+    <!-- OFFICERS -->
 
-    <div class="officer-grid">
-
+    <section class="officer-grid">
 
         <div class="officer-card">
 
@@ -405,184 +357,83 @@ tbody tr:hover{
 
         </div>
 
-
-    </div>
-
-
-    <!-- ================= TABLE ================= -->
-
-    <div class="table-panel">
-
-        <div class="table-wrap">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>RANK</th>
-
-                        <th>SUB-DIVISION</th>
-
-                        <th>AVG SCORE</th>
-
-                        <th>GRADE</th>
-
-                        <th>PS COUNT</th>
-
-                        <th>OVERALL AVG</th>
-
-                        <th>TOP PS</th>
-
-                        <th>WEAKEST PS</th>
-
-                        <th>CONSTITUENT POLICE STATIONS</th>
-
-                    </tr>
-
-                </thead>
+    </section>
 
 
-                <tbody id="subDivisionTable">
+    <!-- TABLE -->
 
-                    <tr>
-                        <td colspan="9">
-                            Loading E-Office data...
-                        </td>
-                    </tr>
+    <section class="table-wrapper">
 
-                </tbody>
+        <table>
 
-            </table>
+            <thead>
 
-        </div>
+                <tr>
 
-    </div>
+                    <th>RANK</th>
+
+                    <th>SUB-DIVISION</th>
+
+                    <th>AVG SCORE</th>
+
+                    <th>GRADE</th>
+
+                    <th>PS COUNT</th>
+
+                    <th>OVERALL AVG</th>
+
+                    <th>TOP PS</th>
+
+                    <th>WEAKEST PS</th>
+
+                    <th>CONSTITUENT POLICE STATIONS</th>
+
+                </tr>
+
+            </thead>
 
 
-</div>
+            <tbody id="subDivisionTable">
+
+            </tbody>
+
+        </table>
 
 
-<!-- ================= FOOTER ================= -->
+        <div id="errorBox" class="error-box"></div>
 
-<div class="footer">
+    </section>
+
+</main>
+
+
+<footer class="footer">
 
     Chittoor District Police • Sub-Division Performance Dashboard
 
-</div>
+</footer>
 
 
 <script>
 
-/* =========================================================
-   NUMBER HELPER
-========================================================= */
+/* =====================================================
+   HOME BUTTON
+===================================================== */
 
-function num(value){
+function goHome(){
 
-    const n = Number(value);
-
-    return Number.isFinite(n) ? n : 0;
+    window.location.href = "index.html";
 
 }
 
 
-/* =========================================================
-   SAME SCORE FORMULA USED BY MAIN E-OFFICE DASHBOARD
-========================================================= */
-
-function calculateScore(record){
-
-    const incoming =
-        num(record.openingBalance) +
-        num(record.created) +
-        num(record.received);
-
-    const disposed =
-        num(record.disposedTotal);
-
-    const pending =
-        num(record.totalPendency);
-
-
-    const disposalRate =
-        incoming > 0
-        ? Math.min(
-            100,
-            (disposed / incoming) * 100
-        )
-        : 0;
-
-
-    const pendingRate =
-        disposed + pending > 0
-        ? Math.min(
-            100,
-            (pending / (disposed + pending)) * 100
-        )
-        : 0;
-
-
-    const score =
-        disposalRate * 0.78 +
-        (100 - pendingRate) * 0.22;
-
-
-    return Math.max(
-        0,
-        Math.min(100,score)
-    );
-
-}
-
-
-/* =========================================================
-   GRADE
-========================================================= */
-
-function getGrade(score){
-
-    if(score >= 80) return "A+";
-
-    if(score >= 70) return "A";
-
-    if(score >= 60) return "B";
-
-    if(score >= 50) return "C";
-
-    return "D";
-
-}
-
-
-/* =========================================================
-   NORMALIZE NAME
-   Allows:
-   K. Nagar
-   K.Nagar
-   k nagar
-   etc.
-========================================================= */
-
-function normalize(value){
-
-    return String(value || "")
-        .toUpperCase()
-        .replace(/[^A-Z0-9]/g,"");
-
-}
-
-
-/* =========================================================
+/* =====================================================
    SUB-DIVISION CONFIGURATION
-========================================================= */
+===================================================== */
 
-const SUBDIVISIONS = [
+const subdivisionConfig = {
 
-    {
-
-        name:"KUPPAM",
+    "KUPPAM": {
 
         stations:[
             "Gudipalli",
@@ -594,9 +445,7 @@ const SUBDIVISIONS = [
     },
 
 
-    {
-
-        name:"NAGARI",
+    "NAGARI": {
 
         stations:[
             "Vedurukuppam",
@@ -611,9 +460,7 @@ const SUBDIVISIONS = [
     },
 
 
-    {
-
-        name:"PALAMANER",
+    "PALAMANER": {
 
         stations:[
             "Bangarupalem UPS",
@@ -627,9 +474,7 @@ const SUBDIVISIONS = [
     },
 
 
-    {
-
-        name:"SPL WINGS",
+    "SPL WINGS": {
 
         stations:[
             "CCS Chittoor UPS",
@@ -640,9 +485,7 @@ const SUBDIVISIONS = [
     },
 
 
-    {
-
-        name:"CHITTOOR",
+    "CHITTOOR": {
 
         stations:[
             "Kanipakam",
@@ -663,187 +506,300 @@ const SUBDIVISIONS = [
 
     }
 
-];
+};
 
 
-/* =========================================================
-   GET POLICE STATION RECORD
-========================================================= */
+/* =====================================================
+   GRADE
+===================================================== */
 
-function getStationRecord(records,stationName){
+function getGrade(score){
 
-    const wanted =
-        normalize(stationName);
+    if(score >= 80) return "A+";
 
+    if(score >= 70) return "A";
 
-    return records.find(record => {
+    if(score >= 60) return "B";
 
-        return normalize(record.designation) === wanted;
+    if(score >= 50) return "C";
 
-    });
+    return "D";
 
 }
 
 
-/* =========================================================
-   CALCULATE SUB-DIVISION
-========================================================= */
+/* =====================================================
+   NORMALIZE STATION NAME
+===================================================== */
 
-function calculateSubdivision(records,subdivision){
+function normalizeName(value){
 
-    const stationRecords = [];
+    return String(value || "")
+        .toUpperCase()
+        .replace(/\s+/g," ")
+        .trim();
+
+}
 
 
-    subdivision.stations.forEach(stationName => {
+/* =====================================================
+   LOAD DATA
+===================================================== */
 
-        const record =
-            getStationRecord(
-                records,
-                stationName
+async function loadData(){
+
+    const status =
+        document.getElementById("status");
+
+    const errorBox =
+        document.getElementById("errorBox");
+
+
+    try{
+
+        status.textContent =
+            "Loading Sub-Division performance data...";
+
+
+        /*
+          IMPORTANT:
+
+          This is a separate file because the existing
+          data.json contains E-Office employee records,
+          not Police Station performance records.
+        */
+
+        const response = await fetch(
+            "subdivision_data.json?ts=" + Date.now()
+        );
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "subdivision_data.json could not be loaded. HTTP " +
+                response.status
             );
-
-
-        if(record){
-
-            stationRecords.push({
-
-                ...record,
-
-                score:
-                    calculateScore(record),
-
-                stationName:
-                    stationName
-
-            });
 
         }
 
-    });
+
+        const data = await response.json();
 
 
-    if(!stationRecords.length){
+        if(!data){
+
+            throw new Error(
+                "No data received."
+            );
+
+        }
+
+
+        const records =
+            Array.isArray(data)
+                ? data
+                : data.records;
+
+
+        if(!Array.isArray(records)){
+
+            throw new Error(
+                "Invalid JSON format. Expected records array."
+            );
+
+        }
+
+
+        renderDashboard(records);
+
+
+        if(data.reporting){
+
+            status.textContent =
+                "Reporting Period: " +
+                (data.reporting.from || "") +
+                " to " +
+                (data.reporting.to || "");
+
+        }else{
+
+            status.textContent =
+                "Sub-Division performance data loaded successfully.";
+
+        }
+
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        status.textContent =
+            "Unable to load Sub-Division performance data.";
+
+        errorBox.style.display = "block";
+
+        errorBox.innerHTML =
+            "Unable to load <b>subdivision_data.json</b>.<br><br>" +
+            "Please make sure subdivision_data.json is uploaded " +
+            "in the same GitHub repository folder as subdivision.html." +
+            "<br><br>" +
+            "Error: " + error.message;
+
+    }
+
+}
+
+
+/* =====================================================
+   CALCULATE SUBDIVISION
+===================================================== */
+
+function calculateSubdivision(
+    subdivision,
+    records
+){
+
+    const config =
+        subdivisionConfig[subdivision];
+
+
+    if(!config){
+
+        return null;
+
+    }
+
+
+    const stationScores = [];
+
+
+    config.stations.forEach(
+        stationName => {
+
+            const target =
+                normalizeName(stationName);
+
+
+            /*
+              Find matching station in JSON
+            */
+
+            const matches =
+                records.filter(record => {
+
+                    const name =
+                        normalizeName(
+                            record.station ||
+                            record.name ||
+                            record.policeStation
+                        );
+
+
+                    return name === target;
+
+                });
+
+
+            if(matches.length){
+
+                /*
+                  Use the latest/first valid score
+                */
+
+                const valid =
+                    matches.find(
+                        x =>
+                            typeof x.score === "number"
+                    );
+
+
+                if(valid){
+
+                    stationScores.push({
+
+                        name:stationName,
+
+                        score:Number(valid.score)
+
+                    });
+
+                }
+
+            }
+
+        }
+    );
+
+
+    if(!stationScores.length){
 
         return {
 
             count:0,
+
             average:0,
-            overall:0,
+
             top:"--",
+
             weakest:"--",
-            stationRecords:[]
+
+            stations:[]
 
         };
 
     }
 
 
-    const scores =
-        stationRecords.map(
-            r => r.score
+    const total =
+        stationScores.reduce(
+            (sum,item) =>
+                sum + item.score,
+            0
         );
 
 
     const average =
-        scores.reduce(
-            (a,b) => a + b,
-            0
-        ) / scores.length;
+        total / stationScores.length;
 
 
     const top =
-        stationRecords.reduce(
+        stationScores.reduce(
             (a,b) =>
-                a.score > b.score
-                ? a
-                : b
+                a.score >= b.score ? a : b
         );
 
 
     const weakest =
-        stationRecords.reduce(
+        stationScores.reduce(
             (a,b) =>
-                a.score < b.score
-                ? a
-                : b
+                a.score <= b.score ? a : b
         );
 
 
     return {
 
-        count:
-            stationRecords.length,
+        count:stationScores.length,
 
-        average:
-            average,
+        average:average,
 
-        overall:
-            average,
+        top:top.name,
 
-        top:
-            top.stationName,
+        weakest:weakest.name,
 
-        weakest:
-            weakest.stationName,
-
-        stationRecords:
-            stationRecords
+        stations:stationScores
 
     };
 
 }
 
 
-/* =========================================================
-   RANKING ORDER
-========================================================= */
+/* =====================================================
+   RENDER DASHBOARD
+===================================================== */
 
-function rankIcon(index){
-
-    if(index === 0) return "🥇";
-
-    if(index === 1) return "🥈";
-
-    if(index === 2) return "🥉";
-
-    return "#" + (index + 1);
-
-}
-
-
-/* =========================================================
-   DISPLAY TABLE
-========================================================= */
-
-function renderTable(records){
-
-    const results =
-        SUBDIVISIONS.map(subdivision => {
-
-            return {
-
-                subdivision:
-                    subdivision,
-
-                result:
-                    calculateSubdivision(
-                        records,
-                        subdivision
-                    )
-
-            };
-
-        });
-
-
-    /* Sort by average score */
-
-    results.sort(
-        (a,b) =>
-            b.result.average -
-            a.result.average
-    );
-
+function renderDashboard(records){
 
     const tbody =
         document.getElementById(
@@ -854,208 +810,175 @@ function renderTable(records){
     tbody.innerHTML = "";
 
 
+    const results = [];
+
+
+    Object.keys(subdivisionConfig)
+        .forEach(subdivision => {
+
+            const result =
+                calculateSubdivision(
+                    subdivision,
+                    records
+                );
+
+
+            if(result){
+
+                results.push({
+
+                    subdivision:subdivision,
+
+                    ...result
+
+                });
+
+            }
+
+        });
+
+
+    /*
+      Sort only subdivisions that have
+      actual scores.
+    */
+
+    results.sort(
+        (a,b) =>
+            b.average - a.average
+    );
+
+
     results.forEach(
         (item,index) => {
 
-            const sub =
-                item.subdivision;
+            let rank = "";
 
-            const result =
-                item.result;
+            if(index === 0){
+
+                rank = "🥇";
+
+            }
+            else if(index === 1){
+
+                rank = "🥈";
+
+            }
+            else if(index === 2){
+
+                rank = "🥉";
+
+            }
+            else{
+
+                rank = "#" + (index + 1);
+
+            }
 
 
-            const tr =
+            const row =
                 document.createElement("tr");
 
 
-            const stations =
-                sub.stations.join(", ");
+            const stationList =
+                subdivisionConfig[
+                    item.subdivision
+                ].stations.join(", ");
 
 
-            tr.innerHTML = `
+            if(item.count === 0){
 
-                <td class="rank">
-                    ${rankIcon(index)}
-                </td>
+                row.innerHTML = `
+
+                    <td class="rank">
+                        ${rank}
+                    </td>
+
+                    <td class="subdivision">
+                        ${item.subdivision}
+                    </td>
+
+                    <td>--</td>
+
+                    <td>
+                        <span class="grade">
+                            --
+                        </span>
+                    </td>
+
+                    <td>0</td>
+
+                    <td>--</td>
+
+                    <td>--</td>
+
+                    <td>--</td>
+
+                    <td class="stations">
+                        ${stationList}
+                    </td>
+
+                `;
+
+            }
+            else{
+
+                row.innerHTML = `
+
+                    <td class="rank">
+                        ${rank}
+                    </td>
+
+                    <td class="subdivision">
+                        ${item.subdivision}
+                    </td>
+
+                    <td class="score">
+                        ${item.average.toFixed(1)}
+                    </td>
+
+                    <td>
+                        <span class="grade">
+                            ${getGrade(item.average)}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${item.count}
+                    </td>
+
+                    <td>
+                        ${item.average.toFixed(1)}
+                    </td>
+
+                    <td class="top">
+                        ${item.top}
+                    </td>
+
+                    <td class="weak">
+                        ${item.weakest}
+                    </td>
+
+                    <td class="stations">
+                        ${stationList}
+                    </td>
+
+                `;
+
+            }
 
 
-                <td class="subdivision">
-                    ${sub.name}
-                </td>
-
-
-                <td class="score">
-                    ${
-                        result.count
-                        ? result.average.toFixed(1)
-                        : "--"
-                    }
-                </td>
-
-
-                <td>
-                    ${
-                        result.count
-                        ?
-                        `<span class="grade">
-                            ${getGrade(result.average)}
-                        </span>`
-                        :
-                        "--"
-                    }
-                </td>
-
-
-                <td>
-                    ${
-                        result.count
-                        ? result.count
-                        : "--"
-                    }
-                </td>
-
-
-                <td class="score">
-                    ${
-                        result.count
-                        ? result.overall.toFixed(1)
-                        : "--"
-                    }
-                </td>
-
-
-                <td class="top">
-                    ${result.top}
-                </td>
-
-
-                <td class="weak">
-                    ${result.weakest}
-                </td>
-
-
-                <td class="stations">
-                    ${stations}
-                </td>
-
-            `;
-
-
-            tbody.appendChild(tr);
+            tbody.appendChild(row);
 
         }
-
     );
 
 }
 
 
-/* =========================================================
-   LOAD JSON
-========================================================= */
-
-async function loadData(){
-
-    const tbody =
-        document.getElementById(
-            "subDivisionTable"
-        );
-
-
-    try{
-
-        const response =
-            await fetch(
-                "eoffice_data.json?ts=" +
-                Date.now()
-            );
-
-
-        if(!response.ok){
-
-            throw new Error(
-                "HTTP " +
-                response.status
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        if(
-            !data ||
-            !Array.isArray(data.records)
-        ){
-
-            throw new Error(
-                "Invalid JSON structure"
-            );
-
-        }
-
-
-        /* Reporting period */
-
-        document.getElementById(
-            "period"
-        ).textContent =
-            "Reporting Period: " +
-            (
-                data.period ||
-                "Current Data"
-            );
-
-
-        /* Render */
-
-        renderTable(
-            data.records
-        );
-
-
-    }
-    catch(error){
-
-        console.error(error);
-
-
-        tbody.innerHTML = `
-
-            <tr>
-
-                <td colspan="9">
-
-                    <div class="error">
-
-                        Unable to load
-                        eoffice_data.json.
-
-                        <br><br>
-
-                        Please make sure
-                        eoffice_data.json
-                        is in the same GitHub
-                        repository folder.
-
-                    </div>
-
-                </td>
-
-            </tr>
-
-        `;
-
-    }
-
-}
-
-
-/* =========================================================
+/* =====================================================
    START
-========================================================= */
+===================================================== */
 
 loadData();
 
