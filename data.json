@@ -1,0 +1,13 @@
+{
+  "reporting":{"from":"01/10/2026","to":"01/10/2026"},
+  "records":[
+    {"name":"SAMPLE OFFICER","designation":"INSPECTOR","section":"Chittoor 1 Town PS","station":"Chittoor 1 Town PS","subdivision":"Chittoor","received":10,"disposed":10,"pending":0,"pendingDays":0,"score":100},
+    {"name":"SAMPLE OFFICER 2","designation":"SUB INSPECTOR","section":"Palamaner PS","station":"Palamaner PS","subdivision":"Palamaner","received":8,"disposed":7,"pending":1,"pendingDays":2,"score":91.5}
+  ],
+  "trend":[],
+  "quickAccess":[
+    {"title":"CCTNS","description":"CCTNS portal","url":"https://cctns.gov.in/"},
+    {"title":"AP Police","description":"Andhra Pradesh Police website","url":"https://appolice.gov.in/"},
+    {"title":"eOffice","description":"Official eOffice access","url":"https://eoffice.gov.in/"}
+  ]
+}
