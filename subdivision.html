@@ -1,262 +1,599 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Chittoor Police - Sub-Division Performance</title>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>
+Chittoor Police - Sub-Division Performance
+</title>
+
 
 <style>
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
 *{
     box-sizing:border-box;
 }
 
 body{
+
     margin:0;
-    font-family:Arial,Helvetica,sans-serif;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
     background:#f3f6fa;
+
     color:#172033;
+
 }
 
-/* HEADER */
+
+/* =========================================================
+   HEADER
+========================================================= */
+
 .header{
-    background:linear-gradient(135deg,#071a36,#123c68);
+
+    background:
+    linear-gradient(
+        135deg,
+        #071a36,
+        #123c68
+    );
+
     color:white;
+
     padding:22px 30px;
+
     text-align:center;
-    box-shadow:0 3px 12px rgba(0,0,0,.20);
+
+    box-shadow:
+    0 3px 12px rgba(0,0,0,.20);
+
 }
 
 .header h1{
+
     margin:0;
+
     font-size:30px;
+
     letter-spacing:.5px;
+
 }
 
 .header h2{
+
     margin:7px 0 0;
+
     font-size:21px;
+
     font-weight:500;
+
 }
 
 .header p{
+
     margin:8px 0 0;
+
     font-size:14px;
+
 }
 
-/* NAVIGATION */
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
 .nav{
+
     background:white;
+
     padding:12px 20px;
+
     display:flex;
+
     justify-content:center;
+
     gap:12px;
-    border-bottom:1px solid #ddd;
+
+    border-bottom:
+    1px solid #ddd;
+
 }
 
 .nav button{
+
     border:none;
-    padding:11px 20px;
+
+    padding:
+    10px 20px;
+
     border-radius:7px;
+
     background:#e9eef5;
+
     cursor:pointer;
+
     font-weight:bold;
+
     color:#17324f;
+
 }
 
 .nav button:hover{
+
     background:#d7e4f2;
+
 }
 
-/* CONTENT */
+
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
+
 .container{
+
     width:96%;
-    margin:25px auto;
+
+    max-width:1500px;
+
+    margin:
+    20px auto 30px;
+
 }
 
-.title{
+
+/* =========================================================
+   TITLE CARD
+========================================================= */
+
+.title-card{
+
     background:white;
-    padding:18px 22px;
+
+    padding:
+    18px 22px;
+
     border-radius:10px;
-    margin-bottom:18px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+    margin-bottom:15px;
+
+    box-shadow:
+    0 2px 8px rgba(0,0,0,.08);
+
 }
 
-.title h2{
+.title-card h2{
+
     margin:0;
+
     color:#123c68;
+
+    font-size:22px;
+
 }
 
-.title p{
-    margin:7px 0 0;
+.title-card p{
+
+    margin:
+    7px 0 0;
+
     color:#687386;
+
+    font-size:14px;
+
 }
 
 #status{
+
     margin-top:8px;
+
     font-size:13px;
+
     color:#687386;
+
 }
 
-/* OFFICER CARDS */
+
+/* =========================================================
+   OFFICER CARDS
+========================================================= */
+
 .officer-grid{
+
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:15px;
-    margin-bottom:25px;
+
+    grid-template-columns:
+    repeat(5,1fr);
+
+    gap:10px;
+
+    margin-bottom:18px;
+
 }
 
 .officer-card{
+
     background:white;
-    padding:18px;
+
+    min-height:90px;
+
+    padding:
+    15px 14px;
+
     border-radius:10px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
-    border-left:5px solid #123c68;
+
+    box-shadow:
+    0 2px 8px rgba(0,0,0,.08);
+
+    border-left:
+    5px solid #123c68;
+
 }
 
 .officer-card .designation{
-    font-size:13px;
+
+    font-size:12px;
+
     color:#687386;
+
     margin-bottom:7px;
+
 }
 
 .officer-card .name{
-    font-size:17px;
+
+    font-size:15px;
+
     font-weight:bold;
+
     color:#172033;
+
+    line-height:1.25;
+
 }
 
-/* TABLE */
-.table-wrapper{
+
+/* =========================================================
+   TABLE CARD
+========================================================= */
+
+.table-card{
+
     background:white;
-    padding:15px;
+
+    padding:13px;
+
     border-radius:10px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+    box-shadow:
+    0 2px 8px rgba(0,0,0,.08);
+
     overflow-x:auto;
+
 }
+
+
+/* =========================================================
+   TABLE
+========================================================= */
 
 table{
+
     width:100%;
-    border-collapse:collapse;
-    min-width:1250px;
+
+    min-width:1200px;
+
+    border-collapse:
+    collapse;
+
 }
 
 thead th{
+
     background:#123c68;
+
     color:white;
-    padding:13px 10px;
-    font-size:13px;
+
+    padding:
+    12px 9px;
+
+    font-size:12px;
+
     text-align:center;
+
+    border-right:
+    1px solid rgba(255,255,255,.25);
+
     white-space:nowrap;
+
 }
 
 tbody td{
-    padding:12px 10px;
-    border-bottom:1px solid #e2e6eb;
+
+    padding:
+    11px 9px;
+
+    border-bottom:
+    1px solid #e1e6ed;
+
     text-align:center;
+
     font-size:13px;
-    vertical-align:top;
+
+    vertical-align:middle;
+
 }
 
 tbody tr:hover{
+
     background:#f7faff;
+
+}
+
+
+/* =========================================================
+   TABLE CELLS
+========================================================= */
+
+.rank{
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    white-space:nowrap;
+
 }
 
 .subdivision{
-    font-weight:bold;
+
     text-align:left !important;
+
+    font-weight:bold;
+
     color:#123c68;
-}
 
-.stations{
-    text-align:left !important;
-    line-height:1.6;
-    min-width:300px;
-}
+    white-space:nowrap;
 
-.rank{
-    font-size:18px;
-    font-weight:bold;
 }
 
 .score{
-    font-weight:bold;
+
     color:#168447;
+
+    font-weight:bold;
+
+    font-size:14px;
+
 }
 
 .grade{
-    font-weight:bold;
-    padding:5px 9px;
-    border-radius:5px;
+
     display:inline-block;
-    background:#e8f4ea;
-    color:#23733b;
+
+    min-width:34px;
+
+    padding:
+    5px 8px;
+
+    border-radius:5px;
+
+    background:#e7f5ec;
+
+    color:#158447;
+
+    font-weight:bold;
+
 }
 
 .top{
+
     color:#168447;
+
     font-weight:bold;
+
+    text-align:left !important;
+
 }
 
 .weak{
+
     color:#d32f2f;
+
     font-weight:bold;
+
+    text-align:left !important;
+
 }
 
-/* ERROR */
+.stations{
+
+    text-align:left !important;
+
+    line-height:1.55;
+
+    min-width:300px;
+
+    color:#536071;
+
+}
+
+
+/* =========================================================
+   STATION DETAILS
+========================================================= */
+
+.station-count{
+
+    font-weight:bold;
+
+}
+
+
+/* =========================================================
+   ERROR BOX
+========================================================= */
+
 .error-box{
+
     display:none;
+
     margin-top:15px;
-    padding:18px;
+
+    padding:
+    18px;
+
     background:#fde2e2;
+
     color:#b42318;
+
     border-radius:8px;
+
     text-align:center;
+
     font-weight:bold;
+
+    line-height:1.6;
+
 }
 
-/* FOOTER */
-.footer{
-    text-align:center;
-    padding:20px;
-    color:#6c7585;
+
+/* =========================================================
+   SUCCESS BOX
+========================================================= */
+
+.success-box{
+
+    display:none;
+
+    margin-top:10px;
+
+    padding:8px 12px;
+
+    background:#e8f6ed;
+
+    color:#16733b;
+
+    border-radius:6px;
+
     font-size:12px;
+
 }
 
-/* MOBILE */
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer{
+
+    text-align:center;
+
+    padding:
+    18px;
+
+    color:#6c7585;
+
+    font-size:12px;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px){
+
+    .officer-grid{
+
+        grid-template-columns:
+        repeat(3,1fr);
+
+    }
+
+}
+
+
 @media(max-width:700px){
 
     .header h1{
+
         font-size:23px;
+
     }
 
     .header h2{
+
         font-size:17px;
+
+    }
+
+    .officer-grid{
+
+        grid-template-columns:
+        1fr;
+
     }
 
     .container{
+
         width:98%;
+
     }
 
     .nav{
+
         flex-wrap:wrap;
+
     }
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- =======================================================
+     HEADER
+======================================================== -->
+
 <header class="header">
 
-    <h1>ANDHRA PRADESH POLICE</h1>
+    <h1>
+        ANDHRA PRADESH POLICE
+    </h1>
 
-    <h2>CHITTOOR DISTRICT POLICE</h2>
+    <h2>
+        CHITTOOR DISTRICT POLICE
+    </h2>
 
-    <p>SUB-DIVISION PERFORMANCE DASHBOARD</p>
+    <p>
+        SUB-DIVISION PERFORMANCE DASHBOARD
+    </p>
 
 </header>
 
+
+<!-- =======================================================
+     NAVIGATION
+======================================================== -->
 
 <nav class="nav">
 
@@ -271,27 +608,44 @@ tbody tr:hover{
 </nav>
 
 
+<!-- =======================================================
+     MAIN
+======================================================== -->
+
 <main class="container">
 
-    <section class="title">
 
-        <h2>🏛️ Sub-Division Performance</h2>
+    <!-- TITLE -->
+
+    <section class="title-card">
+
+        <h2>
+            🏛️ Sub-Division Performance
+        </h2>
 
         <p>
-            Police Station-wise performance grouped under their respective
-            Sub-Divisions
+            Police Station-wise performance grouped under
+            their respective Sub-Divisions
         </p>
 
         <div id="status">
-            Loading reporting period...
+            Loading Sub-Division performance data...
+        </div>
+
+        <div id="successBox"
+             class="success-box">
         </div>
 
     </section>
 
 
-    <!-- OFFICERS -->
+
+    <!-- ===================================================
+         OFFICER CARDS
+    ==================================================== -->
 
     <section class="officer-grid">
+
 
         <div class="officer-card">
 
@@ -357,12 +711,16 @@ tbody tr:hover{
 
         </div>
 
+
     </section>
 
 
-    <!-- TABLE -->
 
-    <section class="table-wrapper">
+    <!-- ===================================================
+         PERFORMANCE TABLE
+    ==================================================== -->
+
+    <section class="table-card">
 
         <table>
 
@@ -370,23 +728,41 @@ tbody tr:hover{
 
                 <tr>
 
-                    <th>RANK</th>
+                    <th>
+                        RANK
+                    </th>
 
-                    <th>SUB-DIVISION</th>
+                    <th>
+                        SUB-DIVISION
+                    </th>
 
-                    <th>AVG SCORE</th>
+                    <th>
+                        AVG SCORE
+                    </th>
 
-                    <th>GRADE</th>
+                    <th>
+                        GRADE
+                    </th>
 
-                    <th>PS COUNT</th>
+                    <th>
+                        PS COUNT
+                    </th>
 
-                    <th>OVERALL AVG</th>
+                    <th>
+                        OVERALL AVG
+                    </th>
 
-                    <th>TOP PS</th>
+                    <th>
+                        TOP PS
+                    </th>
 
-                    <th>WEAKEST PS</th>
+                    <th>
+                        WEAKEST PS
+                    </th>
 
-                    <th>CONSTITUENT POLICE STATIONS</th>
+                    <th>
+                        CONSTITUENT POLICE STATIONS
+                    </th>
 
                 </tr>
 
@@ -395,232 +771,530 @@ tbody tr:hover{
 
             <tbody id="subDivisionTable">
 
+                <tr>
+
+                    <td colspan="9"
+                        style="
+                        padding:25px;
+                        color:#687386;
+                        ">
+
+                        Loading data...
+
+                    </td>
+
+                </tr>
+
             </tbody>
 
         </table>
 
 
-        <div id="errorBox" class="error-box"></div>
+        <!-- ERROR -->
+
+        <div id="errorBox"
+             class="error-box">
+        </div>
+
 
     </section>
+
 
 </main>
 
 
+<!-- =======================================================
+     FOOTER
+======================================================== -->
+
 <footer class="footer">
 
-    Chittoor District Police • Sub-Division Performance Dashboard
+    Chittoor District Police •
+    Sub-Division Performance Dashboard
 
 </footer>
 
 
+
 <script>
 
-/* =====================================================
+/* =========================================================
    HOME BUTTON
-===================================================== */
+========================================================= */
 
 function goHome(){
 
-    window.location.href = "index.html";
+    window.location.href =
+        "index.html";
 
 }
 
 
-/* =====================================================
-   SUB-DIVISION CONFIGURATION
-===================================================== */
-
-const subdivisionConfig = {
-
-    "KUPPAM": {
-
-        stations:[
-            "Gudipalli",
-            "Ramakuppam",
-            "Rallabudugur",
-            "Kuppam UPS"
-        ]
-
-    },
-
-
-    "NAGARI": {
-
-        stations:[
-            "Vedurukuppam",
-            "Nagari UPS",
-            "S.R.Puram",
-            "Nindra",
-            "K. Nagar",
-            "Vijayapuram",
-            "Palasamudram"
-        ]
-
-    },
-
-
-    "PALAMANER": {
-
-        stations:[
-            "Bangarupalem UPS",
-            "Baireddypalle",
-            "Palamaner UPS",
-            "Gangavaram UPS",
-            "V.Kota UPS",
-            "Panjani"
-        ]
-
-    },
-
-
-    "SPL WINGS": {
-
-        stations:[
-            "CCS Chittoor UPS",
-            "Chittoor Traffic UPS",
-            "Mahila UPS, Chittoor"
-        ]
-
-    },
-
-
-    "CHITTOOR": {
-
-        stations:[
-            "Kanipakam",
-            "Gudipala",
-            "Chittoor II Town UPS",
-            "Yadamari",
-            "Chittoor I Town UPS",
-            "Penumur",
-            "Rompicherla",
-            "Irala",
-            "Puthalapattu UPS",
-            "Kallur",
-            "N.R.Peta",
-            "G.D.Nellore UPS",
-            "Chittoor Taluk PS",
-            "Thavanampalle"
-        ]
-
-    }
-
-};
-
-
-/* =====================================================
+/* =========================================================
    GRADE
-===================================================== */
+========================================================= */
 
 function getGrade(score){
 
-    if(score >= 80) return "A+";
+    score =
+        Number(score) || 0;
 
-    if(score >= 70) return "A";
 
-    if(score >= 60) return "B";
+    if(score >= 80){
 
-    if(score >= 50) return "C";
+        return "A+";
+
+    }
+
+    if(score >= 70){
+
+        return "A";
+
+    }
+
+    if(score >= 60){
+
+        return "B";
+
+    }
+
+    if(score >= 50){
+
+        return "C";
+
+    }
 
     return "D";
 
 }
 
 
-/* =====================================================
-   NORMALIZE STATION NAME
-===================================================== */
+/* =========================================================
+   RANK DISPLAY
+========================================================= */
 
-function normalizeName(value){
+function getRankDisplay(rank){
 
-    return String(value || "")
-        .toUpperCase()
-        .replace(/\s+/g," ")
-        .trim();
+    rank =
+        Number(rank);
+
+
+    if(rank === 1){
+
+        return "🥇";
+
+    }
+
+    if(rank === 2){
+
+        return "🥈";
+
+    }
+
+    if(rank === 3){
+
+        return "🥉";
+
+    }
+
+    return "#" + rank;
 
 }
 
 
-/* =====================================================
-   LOAD DATA
-===================================================== */
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value){
+
+    if(value === null ||
+       value === undefined){
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(/&/g,"&amp;")
+
+        .replace(/</g,"&lt;")
+
+        .replace(/>/g,"&gt;")
+
+        .replace(/"/g,"&quot;")
+
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   LOAD JSON
+========================================================= */
 
 async function loadData(){
 
     const status =
-        document.getElementById("status");
+        document.getElementById(
+            "status"
+        );
+
+
+    const table =
+        document.getElementById(
+            "subDivisionTable"
+        );
+
 
     const errorBox =
-        document.getElementById("errorBox");
+        document.getElementById(
+            "errorBox"
+        );
+
+
+    const successBox =
+        document.getElementById(
+            "successBox"
+        );
 
 
     try{
+
 
         status.textContent =
             "Loading Sub-Division performance data...";
 
 
         /*
-          IMPORTANT:
+          IMPORTANT
 
-          This is a separate file because the existing
-          data.json contains E-Office employee records,
-          not Police Station performance records.
+          This page uses ONLY:
+
+          subdivision_data.json
+
+          It does NOT use:
+
+          data.json
+          eoffice_data.json
         */
 
-        const response = await fetch(
-            "subdivision_data.json?ts=" + Date.now()
-        );
+
+        const url =
+            "subdivision_data.json?ts=" +
+            new Date().getTime();
+
+
+        const response =
+            await fetch(url);
 
 
         if(!response.ok){
 
             throw new Error(
-                "subdivision_data.json could not be loaded. HTTP " +
-                response.status
+                "HTTP " +
+                response.status +
+                " - subdivision_data.json not found"
             );
 
         }
 
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
 
-        if(!data){
+        /*
+          OUR JSON STRUCTURE:
+
+          {
+              reporting:{...},
+              subdivisions:[...]
+          }
+        */
+
+
+        let subdivisions;
+
+
+        if(Array.isArray(data)){
+
+            subdivisions =
+                data;
+
+        }
+        else if(
+            data &&
+            Array.isArray(
+                data.subdivisions
+            )
+        ){
+
+            subdivisions =
+                data.subdivisions;
+
+        }
+        else{
 
             throw new Error(
-                "No data received."
+                "Invalid JSON structure. " +
+                "The file must contain a 'subdivisions' array."
             );
 
         }
 
 
-       const records =
-    Array.isArray(data)
-        ? data
-        : data.subdivisions;
+        if(
+            subdivisions.length === 0
+        ){
 
-if(!Array.isArray(records)){
+            throw new Error(
+                "No Sub-Division records found."
+            );
 
-    throw new Error(
-        "Invalid JSON format. Expected subdivisions array."
-    );
-
-}
-
-        renderDashboard(records);
+        }
 
 
-        if(data.reporting){
+        /*
+          Sort by rank
+        */
+
+        subdivisions.sort(
+            function(a,b){
+
+                return (
+                    Number(a.rank || 999) -
+                    Number(b.rank || 999)
+                );
+
+            }
+        );
+
+
+        /*
+          Clear loading row
+        */
+
+        table.innerHTML = "";
+
+
+        /*
+          Build rows
+        */
+
+        subdivisions.forEach(
+            function(item,index){
+
+                const rank =
+                    Number(
+                        item.rank ||
+                        index + 1
+                    );
+
+
+                const rankDisplay =
+                    getRankDisplay(rank);
+
+
+                const score =
+                    Number(
+                        item.average_score
+                    ) || 0;
+
+
+                const grade =
+                    item.grade ||
+                    getGrade(score);
+
+
+                const psCount =
+                    Number(
+                        item.ps_count
+                    ) || 0;
+
+
+                /*
+                  Station objects
+                */
+
+                const stations =
+                    Array.isArray(
+                        item.stations
+                    )
+                    ?
+                    item.stations
+                    :
+                    [];
+
+
+                /*
+                  Station names
+                */
+
+                let stationNames =
+                    stations
+                    .map(
+                        function(station){
+
+                            return escapeHTML(
+                                station.station ||
+                                station.name ||
+                                ""
+                            );
+
+                        }
+                    )
+                    .filter(
+                        function(name){
+
+                            return name !== "";
+
+                        }
+                    )
+                    .join(", ");
+
+
+                /*
+                  If station list is not
+                  inside stations array,
+                  use constituent_stations
+                */
+
+                if(
+                    !stationNames &&
+                    Array.isArray(
+                        item.constituent_stations
+                    )
+                ){
+
+                    stationNames =
+                        item.constituent_stations
+                        .map(
+                            function(s){
+
+                                return escapeHTML(s);
+
+                            }
+                        )
+                        .join(", ");
+
+                }
+
+
+                if(!stationNames){
+
+                    stationNames =
+                        "--";
+
+                }
+
+
+                /*
+                  Create row
+                */
+
+                const row =
+                    document.createElement("tr");
+
+
+                row.innerHTML = `
+
+                    <td class="rank">
+                        ${rankDisplay}
+                    </td>
+
+
+                    <td class="subdivision">
+                        ${escapeHTML(
+                            item.subdivision ||
+                            "--"
+                        )}
+                    </td>
+
+
+                    <td class="score">
+                        ${score.toFixed(1)}
+                    </td>
+
+
+                    <td>
+
+                        <span class="grade">
+
+                            ${escapeHTML(
+                                grade
+                            )}
+
+                        </span>
+
+                    </td>
+
+
+                    <td class="station-count">
+                        ${psCount}
+                    </td>
+
+
+                    <td class="score">
+                        ${score.toFixed(1)}
+                    </td>
+
+
+                    <td class="top">
+
+                        ${escapeHTML(
+                            item.top_ps ||
+                            "--"
+                        )}
+
+                    </td>
+
+
+                    <td class="weak">
+
+                        ${escapeHTML(
+                            item.weakest_ps ||
+                            "--"
+                        )}
+
+                    </td>
+
+
+                    <td class="stations">
+
+                        ${stationNames}
+
+                    </td>
+
+                `;
+
+
+                table.appendChild(row);
+
+            }
+        );
+
+
+        /*
+          Reporting period
+        */
+
+        if(
+            data.reporting &&
+            data.reporting.from &&
+            data.reporting.to
+        ){
 
             status.textContent =
                 "Reporting Period: " +
-                (data.reporting.from || "") +
+                data.reporting.from +
                 " to " +
-                (data.reporting.to || "");
+                data.reporting.to;
 
-        }else{
+        }
+        else{
 
             status.textContent =
                 "Sub-Division performance data loaded successfully.";
@@ -628,359 +1302,73 @@ if(!Array.isArray(records)){
         }
 
 
+        /*
+          Success message
+        */
+
+        successBox.style.display =
+            "block";
+
+        successBox.textContent =
+            subdivisions.length +
+            " Sub-Divisions loaded successfully.";
+
+
     }
     catch(error){
 
-        console.error(error);
+        console.error(
+            "Sub-Division JSON Error:",
+            error
+        );
+
 
         status.textContent =
             "Unable to load Sub-Division performance data.";
 
-        errorBox.style.display = "block";
 
-        errorBox.innerHTML =
-            "Unable to load <b>subdivision_data.json</b>.<br><br>" +
-            "Please make sure subdivision_data.json is uploaded " +
-            "in the same GitHub repository folder as subdivision.html." +
-            "<br><br>" +
-            "Error: " + error.message;
+        table.innerHTML = "";
+
+
+        errorBox.style.display =
+            "block";
+
+
+        errorBox.innerHTML = `
+
+            Unable to load
+            <b>subdivision_data.json</b>.
+
+            <br><br>
+
+            <b>Error:</b>
+            ${escapeHTML(
+                error.message
+            )}
+
+            <br><br>
+
+            Please make sure
+            <b>subdivision_data.json</b>
+            is uploaded in the same GitHub
+            repository folder as
+            <b>subdivision.html</b>.
+
+        `;
 
     }
 
 }
 
 
-/* =====================================================
-   CALCULATE SUBDIVISION
-===================================================== */
-
-function calculateSubdivision(
-    subdivision,
-    records
-){
-
-    const config =
-        subdivisionConfig[subdivision];
-
-
-    if(!config){
-
-        return null;
-
-    }
-
-
-    const stationScores = [];
-
-
-    config.stations.forEach(
-        stationName => {
-
-            const target =
-                normalizeName(stationName);
-
-
-            /*
-              Find matching station in JSON
-            */
-
-            const matches =
-                records.filter(record => {
-
-                    const name =
-                        normalizeName(
-                            record.station ||
-                            record.name ||
-                            record.policeStation
-                        );
-
-
-                    return name === target;
-
-                });
-
-
-            if(matches.length){
-
-                /*
-                  Use the latest/first valid score
-                */
-
-                const valid =
-                    matches.find(
-                        x =>
-                            typeof x.score === "number"
-                    );
-
-
-                if(valid){
-
-                    stationScores.push({
-
-                        name:stationName,
-
-                        score:Number(valid.score)
-
-                    });
-
-                }
-
-            }
-
-        }
-    );
-
-
-    if(!stationScores.length){
-
-        return {
-
-            count:0,
-
-            average:0,
-
-            top:"--",
-
-            weakest:"--",
-
-            stations:[]
-
-        };
-
-    }
-
-
-    const total =
-        stationScores.reduce(
-            (sum,item) =>
-                sum + item.score,
-            0
-        );
-
-
-    const average =
-        total / stationScores.length;
-
-
-    const top =
-        stationScores.reduce(
-            (a,b) =>
-                a.score >= b.score ? a : b
-        );
-
-
-    const weakest =
-        stationScores.reduce(
-            (a,b) =>
-                a.score <= b.score ? a : b
-        );
-
-
-    return {
-
-        count:stationScores.length,
-
-        average:average,
-
-        top:top.name,
-
-        weakest:weakest.name,
-
-        stations:stationScores
-
-    };
-
-}
-
-
-/* =====================================================
-   RENDER DASHBOARD
-===================================================== */
-
-function renderDashboard(records){
-
-    const tbody =
-        document.getElementById(
-            "subDivisionTable"
-        );
-
-
-    tbody.innerHTML = "";
-
-
-    const results = [];
-
-
-    Object.keys(subdivisionConfig)
-        .forEach(subdivision => {
-
-            const result =
-                calculateSubdivision(
-                    subdivision,
-                    records
-                );
-
-
-            if(result){
-
-                results.push({
-
-                    subdivision:subdivision,
-
-                    ...result
-
-                });
-
-            }
-
-        });
-
-
-    /*
-      Sort only subdivisions that have
-      actual scores.
-    */
-
-    results.sort(
-        (a,b) =>
-            b.average - a.average
-    );
-
-
-    results.forEach(
-        (item,index) => {
-
-            let rank = "";
-
-            if(index === 0){
-
-                rank = "🥇";
-
-            }
-            else if(index === 1){
-
-                rank = "🥈";
-
-            }
-            else if(index === 2){
-
-                rank = "🥉";
-
-            }
-            else{
-
-                rank = "#" + (index + 1);
-
-            }
-
-
-            const row =
-                document.createElement("tr");
-
-
-            const stationList =
-                subdivisionConfig[
-                    item.subdivision
-                ].stations.join(", ");
-
-
-            if(item.count === 0){
-
-                row.innerHTML = `
-
-                    <td class="rank">
-                        ${rank}
-                    </td>
-
-                    <td class="subdivision">
-                        ${item.subdivision}
-                    </td>
-
-                    <td>--</td>
-
-                    <td>
-                        <span class="grade">
-                            --
-                        </span>
-                    </td>
-
-                    <td>0</td>
-
-                    <td>--</td>
-
-                    <td>--</td>
-
-                    <td>--</td>
-
-                    <td class="stations">
-                        ${stationList}
-                    </td>
-
-                `;
-
-            }
-            else{
-
-                row.innerHTML = `
-
-                    <td class="rank">
-                        ${rank}
-                    </td>
-
-                    <td class="subdivision">
-                        ${item.subdivision}
-                    </td>
-
-                    <td class="score">
-                        ${item.average.toFixed(1)}
-                    </td>
-
-                    <td>
-                        <span class="grade">
-                            ${getGrade(item.average)}
-                        </span>
-                    </td>
-
-                    <td>
-                        ${item.count}
-                    </td>
-
-                    <td>
-                        ${item.average.toFixed(1)}
-                    </td>
-
-                    <td class="top">
-                        ${item.top}
-                    </td>
-
-                    <td class="weak">
-                        ${item.weakest}
-                    </td>
-
-                    <td class="stations">
-                        ${stationList}
-                    </td>
-
-                `;
-
-            }
-
-
-            tbody.appendChild(row);
-
-        }
-    );
-
-}
-
-
-/* =====================================================
+/* =========================================================
    START
-===================================================== */
+========================================================= */
 
 loadData();
 
 </script>
+
 
 </body>
 </html>
