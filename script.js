@@ -1,1048 +1,1076 @@
-/* =========================================================
-   CHITTOOR POLICE — E-OFFICE PERFORMANCE DASHBOARD
-   FINAL SCRIPT
-   Compatible with current index.html
-   ========================================================= */
-
 let DATA = null;
 
 const $ = id => document.getElementById(id);
 
-const num = value => {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : 0;
-};
+const fmt = n =>
+  Number(n || 0).toLocaleString("en-IN");
 
-const fmt = value => num(value).toLocaleString("en-IN");
+const esc = s =>
+  String(s ?? "").replace(/[&<>"']/g, m => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[m]));
 
-const esc = value =>
-    String(value ?? "")
-        .replace(/[&<>"']/g, ch => ({
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#039;"
-        }[ch]));
 
-/* =========================================================
+/* =========================
+   NUMBER HELPER
+========================= */
+
+function num(v) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+}
+
+
+/* =========================
+   NORMALIZE DATA
+   Supports new + old JSON
+========================= */
+
+function normalizeRecord(r) {
+
+  return {
+    employee:
+      r.employee ??
+      r.name ??
+      r.employee_name ??
+      "",
+
+    unit_designation:
+      r.unit_designation ??
+      r.designation ??
+      r.unit ??
+      r.unitName ??
+      r.station ??
+      r.PS ??
+      "",
+
+    opening_balance:
+      num(r.opening_balance ?? r.openingBalance),
+
+    created:
+      num(r.created),
+
+    received:
+      num(r.received),
+
+    disposed_closed:
+      num(r.disposed_closed ?? r.closed),
+
+    disposed_forwarded:
+      num(r.disposed_forwarded ?? r.forwarded),
+
+    disposed_total:
+      num(r.disposed_total ?? r.disposedTotal),
+
+    parked:
+      num(r.parked),
+
+    merged:
+      num(r.merged),
+
+    pendency_0_7_days:
+      num(r.pendency_0_7_days ?? r.pendency0to7),
+
+    pendency_8_15_days:
+      num(r.pendency_8_15_days ?? r.pendency8to15),
+
+    pendency_16_30_days:
+      num(r.pendency_16_30_days ?? r.pendency16to30),
+
+    pendency_31_60_days:
+      num(r.pendency_31_60_days ?? r.pendency31to60),
+
+    pendency_over_60_days:
+      num(r.pendency_over_60_days ?? r.pendencyOver60),
+
+    total_pendency:
+      num(r.total_pendency ?? r.totalPendency),
+
+    average_pending_days:
+      num(r.average_pending_days ?? r.averagePendingDays)
+  };
+}
+
+
+/* =========================
+   NORMALIZE DISTRICT TOTAL
+========================= */
+
+function normalizeTotal(t) {
+
+  return {
+
+    opening_balance:
+      num(t.opening_balance ?? t.openingBalance),
+
+    created:
+      num(t.created),
+
+    received:
+      num(t.received),
+
+    disposed_closed:
+      num(t.disposed_closed ?? t.closed),
+
+    disposed_forwarded:
+      num(t.disposed_forwarded ?? t.forwarded),
+
+    disposed_total:
+      num(t.disposed_total ?? t.disposedTotal),
+
+    parked:
+      num(t.parked),
+
+    merged:
+      num(t.merged),
+
+    pendency_0_7_days:
+      num(t.pendency_0_7_days ?? t.pendency0to7),
+
+    pendency_8_15_days:
+      num(t.pendency_8_15_days ?? t.pendency8to15),
+
+    pendency_16_30_days:
+      num(t.pendency_16_30_days ?? t.pendency16to30),
+
+    pendency_31_60_days:
+      num(t.pendency_31_60_days ?? t.pendency31to60),
+
+    pendency_over_60_days:
+      num(t.pendency_over_60_days ?? t.pendencyOver60),
+
+    total_pendency:
+      num(t.total_pendency ?? t.totalPendency),
+
+    average_pending_days:
+      num(t.average_pending_days ?? t.averagePendingDays)
+  };
+}
+
+
+/* =========================
    SCORE
-   ========================================================= */
+========================= */
 
-function calculateScore(r) {
+function score(r) {
 
-    const incoming =
-        num(r.openingBalance) +
-        num(r.created) +
-        num(r.received);
+  const available =
+    num(r.opening_balance) +
+    num(r.created) +
+    num(r.received);
 
-    const disposed = num(r.disposedTotal);
-    const pending = num(r.totalPendency);
+  const disposed =
+    num(r.disposed_total);
 
-    const disposalRate =
-        incoming > 0
-            ? Math.min(100, (disposed / incoming) * 100)
-            : 0;
+  const pend =
+    num(r.total_pendency);
 
-    const pendingRate =
-        disposed + pending > 0
-            ? Math.min(
-                100,
-                (pending / (disposed + pending)) * 100
-            )
-            : 0;
+  const disposalRate =
+    available > 0
+      ? Math.min(100, disposed / available * 100)
+      : 0;
 
-    const score =
-        disposalRate * 0.78 +
-        (100 - pendingRate) * 0.22;
+  const pendPenalty =
+    Math.min(
+      35,
+      pend / Math.max(1, disposed + pend) * 100
+    );
 
-    return Math.max(0, Math.min(100, score));
+  return Math.max(
+    0,
+    Math.min(
+      100,
+      disposalRate * 0.8 +
+      (100 - pendPenalty) * 0.2
+    )
+  );
 }
 
-/* =========================================================
-   PREPARE ROWS
-   ========================================================= */
 
-function getRows() {
+/* =========================
+   RECORDS
+========================= */
 
-    if (!DATA || !Array.isArray(DATA.records)) {
-        return [];
-    }
+function enriched() {
 
-    return DATA.records.map(record => ({
-        ...record,
-        score: calculateScore(record)
-    }));
+  if (!DATA || !Array.isArray(DATA.records)) {
+    return [];
+  }
+
+  return DATA.records.map(r => {
+
+    const x = normalizeRecord(r);
+
+    return {
+      ...x,
+      score: score(x)
+    };
+
+  });
 }
 
-/* =========================================================
-   LOAD DATA
-   ========================================================= */
 
-async function loadData() {
+/* =========================
+   AVERAGE PENDING
+========================= */
 
-    try {
+function avgWeighted(records) {
 
-        const response = await fetch(
-            "eoffice_data.json?ts=" + Date.now()
-        );
+  const totalPend =
+    records.reduce(
+      (a, r) => a + num(r.total_pendency),
+      0
+    );
 
-        if (!response.ok) {
-            throw new Error(
-                "HTTP error " + response.status
-            );
+  if (!totalPend) return 0;
+
+  return records.reduce(
+    (a, r) =>
+      a +
+      num(r.average_pending_days) *
+      num(r.total_pendency),
+    0
+  ) / totalPend;
+}
+
+
+/* =========================
+   NAME
+========================= */
+
+function nameOf(r) {
+
+  return (
+    r.unit_designation ||
+    r.employee ||
+    "Unknown"
+  );
+}
+
+
+/* =========================
+   TABS
+========================= */
+
+function setupTabs() {
+
+  document
+    .querySelectorAll(".tab")
+    .forEach(btn => {
+
+      btn.addEventListener("click", () => {
+
+        document
+          .querySelectorAll(".tab")
+          .forEach(b =>
+            b.classList.remove("active")
+          );
+
+        document
+          .querySelectorAll(".section")
+          .forEach(s =>
+            s.classList.remove("active-section")
+          );
+
+        btn.classList.add("active");
+
+        const target =
+          $(btn.dataset.target);
+
+        if (target) {
+          target.classList.add(
+            "active-section"
+          );
         }
 
-        DATA = await response.json();
+      });
 
-        renderDashboard();
-
-    } catch (error) {
-
-        console.error(
-            "E-Office JSON loading error:",
-            error
-        );
-
-        document.body.insertAdjacentHTML(
-            "afterbegin",
-            `
-            <div style="
-                position:fixed;
-                top:0;
-                left:0;
-                right:0;
-                z-index:99999;
-                background:#b91c1c;
-                color:white;
-                padding:15px;
-                text-align:center;
-                font-family:Arial;
-                font-weight:bold;
-            ">
-                Unable to load eoffice_data.json.
-                Please check the GitHub file name and location.
-            </div>
-            `
-        );
-    }
+    });
 }
 
-/* =========================================================
-   MAIN DASHBOARD
-   ========================================================= */
 
-function renderDashboard() {
+/* =========================
+   MAIN RENDER
+========================= */
 
-    const records = getRows();
+function render() {
 
-    const period =
-        DATA.period ||
-        "Reporting Period";
+  const rows = enriched();
 
-    /* Header */
+  const t =
+    normalizeTotal(
+      DATA.district_total || {}
+    );
 
-    if ($("period")) {
-        $("period").textContent =
-            "Reporting Period: " + period;
-    }
+  if ($("period")) {
+    $("period").textContent =
+      "Reporting Period: " +
+      (DATA.reporting_period ||
+       DATA.period ||
+       "");
+  }
 
-    if ($("unitCount")) {
-        $("unitCount").textContent =
-            records.length;
-    }
+  if ($("unitCount")) {
+    $("unitCount").textContent =
+      fmt(rows.length);
+  }
 
-    /* =====================================================
-       TOTALS
-       ===================================================== */
+  if ($("disposedHero")) {
+    $("disposedHero").textContent =
+      fmt(t.disposed_total);
+  }
 
-    const totalDisposed =
-        records.reduce(
-            (sum, r) => sum + num(r.disposedTotal),
-            0
-        );
+  if ($("pendencyHero")) {
+    $("pendencyHero").textContent =
+      fmt(t.total_pendency);
+  }
 
-    const totalReceived =
-        records.reduce(
-            (sum, r) =>
-                sum +
-                num(r.created) +
-                num(r.received),
-            0
-        );
+  if ($("disposedTotal")) {
+    $("disposedTotal").textContent =
+      fmt(t.disposed_total);
+  }
 
-    const totalPendency =
-        records.reduce(
-            (sum, r) =>
-                sum + num(r.totalPendency),
-            0
-        );
+  if ($("receivedTotal")) {
+    $("receivedTotal").textContent =
+      fmt(
+        t.created +
+        t.received
+      );
+  }
 
-    const weightedAverage =
-        totalPendency > 0
-            ? records.reduce(
-                (sum, r) =>
-                    sum +
-                    num(r.averagePendingDays) *
-                    num(r.totalPendency),
-                0
-            ) / totalPendency
+  if ($("pendencyTotal")) {
+    $("pendencyTotal").textContent =
+      fmt(t.total_pendency);
+  }
+
+  if ($("avgPending")) {
+
+    const avg =
+      t.average_pending_days ||
+      avgWeighted(rows);
+
+    $("avgPending").textContent =
+      Number(avg).toFixed(2);
+  }
+
+  if ($("chartNote")) {
+    $("chartNote").textContent =
+      rows.length + " records";
+  }
+
+  renderRankings(rows);
+  renderChart(rows);
+  renderPerformance(rows);
+  renderTrends(t);
+  renderTable(rows);
+  renderReport(t);
+
+  if ($("lastLoaded")) {
+    $("lastLoaded").textContent =
+      "Last loaded: " +
+      new Date().toLocaleString("en-IN");
+  }
+}
+
+
+/* =========================
+   RANKINGS
+========================= */
+
+function renderRankings(rows) {
+
+  const sorted =
+    [...rows].sort(
+      (a, b) => b.score - a.score
+    );
+
+  const item =
+    (r, i, bottom = false) => {
+
+      return `
+        <div class="rank-item">
+
+          <div class="rank-num">
+            ${
+              bottom
+                ? "#" + (rows.length - i)
+                : "🏅 " + (i + 1)
+            }
+          </div>
+
+          <div>
+            <div class="rank-name">
+              ${esc(nameOf(r))}
+            </div>
+
+            <div class="rank-meta">
+              ${esc(r.employee)}
+            </div>
+          </div>
+
+          <span class="badge ${bottom ? "red" : ""}">
+            ${
+              bottom
+                ? "Pend. " +
+                  fmt(r.total_pendency)
+                : "Score"
+            }
+          </span>
+
+          <div class="score">
+            ${r.score.toFixed(1)}
+          </div>
+
+        </div>
+      `;
+    };
+
+  if ($("topList")) {
+
+    $("topList").innerHTML =
+      sorted
+        .slice(0, 5)
+        .map((r, i) =>
+          item(r, i)
+        )
+        .join("");
+  }
+
+  if ($("bottomList")) {
+
+    const bottom =
+      sorted
+        .slice(-5)
+        .reverse();
+
+    $("bottomList").innerHTML =
+      bottom
+        .map((r, i) =>
+          item(
+            r,
+            i,
+            true
+          )
+        )
+        .join("");
+  }
+}
+
+
+/* =========================
+   CHART
+========================= */
+
+function renderChart(rows) {
+
+  if (!$("barChart")) return;
+
+  const sorted =
+    [...rows].sort(
+      (a, b) => b.score - a.score
+    );
+
+  const max =
+    Math.max(
+      ...sorted.map(r => r.score),
+      1
+    );
+
+  $("barChart").innerHTML =
+    sorted
+      .map(r => {
+
+        const h =
+          Math.max(
+            8,
+            r.score / max * 220
+          );
+
+        return `
+          <div
+            class="bar"
+            style="height:${h}px"
+            title="${esc(nameOf(r))}: ${r.score.toFixed(1)}"
+          >
+            <span>
+              ${r.score.toFixed(0)}
+            </span>
+
+            <label>
+              ${esc(nameOf(r))}
+            </label>
+          </div>
+        `;
+
+      })
+      .join("");
+}
+
+
+/* =========================
+   PERFORMANCE
+========================= */
+
+function renderPerformance(rows) {
+
+  if (!$("performanceGrid")) return;
+
+  const sorted =
+    [...rows].sort(
+      (a, b) => b.score - a.score
+    );
+
+  $("performanceGrid").innerHTML =
+    sorted
+      .map(r => {
+
+        const available =
+          num(r.opening_balance) +
+          num(r.created) +
+          num(r.received);
+
+        const rate =
+          available
+            ? Math.min(
+                100,
+                num(r.disposed_total) /
+                available *
+                100
+              )
             : 0;
 
-    /* Header cards */
+        return `
+          <div class="perf">
 
-    if ($("disposedHero")) {
-        $("disposedHero").textContent =
-            fmt(totalDisposed);
-    }
+            <div class="perf-head">
 
-    if ($("pendencyHero")) {
-        $("pendencyHero").textContent =
-            fmt(totalPendency);
-    }
+              <span>
+                ${esc(nameOf(r))}
+              </span>
 
-    /* Main KPI cards */
-
-    if ($("disposedTotal")) {
-        $("disposedTotal").textContent =
-            fmt(totalDisposed);
-    }
-
-    if ($("receivedTotal")) {
-        $("receivedTotal").textContent =
-            fmt(totalReceived);
-    }
-
-    if ($("pendencyTotal")) {
-        $("pendencyTotal").textContent =
-            fmt(totalPendency);
-    }
-
-    if ($("avgPending")) {
-        $("avgPending").textContent =
-            weightedAverage.toFixed(2);
-    }
-
-    if ($("lastLoaded")) {
-        $("lastLoaded").textContent =
-            "Last loaded: " +
-            new Date().toLocaleString("en-IN");
-    }
-
-    /* =====================================================
-       RENDER ALL SECTIONS
-       ===================================================== */
-
-    renderRankings(records);
-    renderChart(records);
-    renderPerformance(records);
-    renderTrends(records);
-    renderRankingTable(records);
-    renderDetailTable(records);
-    renderReports(
-        records,
-        totalDisposed,
-        totalReceived,
-        totalPendency,
-        weightedAverage
-    );
-
-    setupSearch();
-}
-
-/* =========================================================
-   DISPLAY NAME
-   ========================================================= */
-
-function displayName(record) {
-
-    return record.designation ||
-        "Unknown";
-}
-
-/* =========================================================
-   RANKINGS
-   ========================================================= */
-
-function renderRankings(records) {
-
-    const sorted = [...records].sort(
-        (a, b) => b.score - a.score
-    );
-
-    const topFive =
-        sorted.slice(0, 5);
-
-    const bottomFive =
-        sorted
-            .slice(-5)
-            .reverse();
-
-    /* TOP 5 */
-
-    if ($("topList")) {
-
-        $("topList").innerHTML =
-            topFive.map(
-                (record, index) => {
-
-                    return `
-                    <div class="rank-item">
-
-                        <div class="rank-num">
-                            🏅 ${index + 1}
-                        </div>
-
-                        <div>
-                            <div class="rank-name">
-                                ${esc(displayName(record))}
-                            </div>
-
-                            <div class="rank-meta">
-                                ${esc(record.employee)}
-                            </div>
-                        </div>
-
-                        <span class="badge">
-                            Score
-                        </span>
-
-                        <div class="score">
-                            ${record.score.toFixed(1)}
-                        </div>
-
-                    </div>
-                    `;
-                }
-            ).join("");
-    }
-
-    /* BOTTOM 5 */
-
-    if ($("bottomList")) {
-
-        $("bottomList").innerHTML =
-            bottomFive.map(
-                (record, index) => {
-
-                    const rank =
-                        records.length - index;
-
-                    return `
-                    <div class="rank-item">
-
-                        <div class="rank-num">
-                            #${rank}
-                        </div>
-
-                        <div>
-                            <div class="rank-name">
-                                ${esc(displayName(record))}
-                            </div>
-
-                            <div class="rank-meta">
-                                ${esc(record.employee)}
-                            </div>
-                        </div>
-
-                        <span class="badge red">
-                            Pend. ${fmt(record.totalPendency)}
-                        </span>
-
-                        <div class="score">
-                            ${record.score.toFixed(1)}
-                        </div>
-
-                    </div>
-                    `;
-                }
-            ).join("");
-    }
-}
-
-/* =========================================================
-   BAR CHART
-   ========================================================= */
-
-function renderChart(records) {
-
-    if (!$("barChart")) {
-        return;
-    }
-
-    const sorted =
-        [...records].sort(
-            (a, b) => b.score - a.score
-        );
-
-    $("barChart").innerHTML =
-        sorted.map(record => {
-
-            const height =
-                Math.max(
-                    18,
-                    record.score * 2.05
-                );
-
-            return `
-            <div
-                class="bar"
-                style="height:${height}px"
-                title="${esc(displayName(record))}: ${record.score.toFixed(1)}"
-            >
-
-                <span>
-                    ${record.score.toFixed(0)}
-                </span>
-
-                <label>
-                    ${esc(displayName(record))}
-                </label>
+              <b>
+                ${r.score.toFixed(1)}
+              </b>
 
             </div>
-            `;
 
-        }).join("");
-
-    if ($("chartNote")) {
-
-        $("chartNote").textContent =
-            records.length + " records";
-    }
-}
-
-/* =========================================================
-   PERFORMANCE
-   ========================================================= */
-
-function renderPerformance(records) {
-
-    if (!$("performanceGrid")) {
-        return;
-    }
-
-    const sorted =
-        [...records].sort(
-            (a, b) => b.score - a.score
-        );
-
-    $("performanceGrid").innerHTML =
-        sorted.map(record => {
-
-            const incoming =
-                num(record.openingBalance) +
-                num(record.created) +
-                num(record.received);
-
-            const disposalRate =
-                incoming > 0
-                    ? Math.min(
-                        100,
-                        num(record.disposedTotal) /
-                        incoming * 100
-                    )
-                    : 0;
-
-            return `
-            <div class="perf">
-
-                <div class="perf-head">
-
-                    <span>
-                        ${esc(displayName(record))}
-                        —
-                        ${esc(record.employee)}
-                    </span>
-
-                    <b>
-                        ${record.score.toFixed(1)}
-                    </b>
-
-                </div>
-
-                <div class="progress">
-                    <i
-                        style="width:${disposalRate}%"
-                    ></i>
-                </div>
-
-                <small>
-                    Disposal rate:
-                    ${disposalRate.toFixed(1)}%
-                    • Pending:
-                    ${fmt(record.totalPendency)}
-                    • Avg days:
-                    ${num(record.averagePendingDays).toFixed(2)}
-                </small>
-
+            <div class="progress">
+              <i style="width:${rate}%"></i>
             </div>
-            `;
 
-        }).join("");
+            <small>
+              Disposal rate:
+              ${rate.toFixed(1)}%
+              • Pending:
+              ${fmt(r.total_pendency)}
+              • Avg days:
+              ${num(r.average_pending_days).toFixed(2)}
+            </small>
+
+          </div>
+        `;
+
+      })
+      .join("");
 }
 
-/* =========================================================
+
+/* =========================
+   SUMMARY BARS
+========================= */
+
+function barRows(items) {
+
+  const max =
+    Math.max(
+      ...items.map(x => x.v),
+      1
+    );
+
+  return items
+    .map(x => {
+
+      return `
+        <div class="summary-row">
+
+          <span>
+            ${x.k}
+          </span>
+
+          <div class="track">
+
+            <i
+              style="
+                width:${Math.max(
+                  2,
+                  x.v / max * 100
+                )}%
+              "
+            ></i>
+
+          </div>
+
+          <strong>
+            ${fmt(x.v)}
+          </strong>
+
+        </div>
+      `;
+
+    })
+    .join("");
+}
+
+
+/* =========================
    TRENDS
-   ========================================================= */
+========================= */
 
-function renderTrends(records) {
+function renderTrends(t) {
 
-    /* FILE MOVEMENT */
+  if ($("movementBars")) {
 
-    if ($("movementBars")) {
+    $("movementBars").innerHTML =
+      barRows([
 
-        const movement = [
+        {
+          k: "Opening Balance",
+          v: t.opening_balance
+        },
 
-            [
-                "Created",
-                records.reduce(
-                    (a, r) =>
-                        a + num(r.created),
-                    0
-                )
-            ],
+        {
+          k: "Created",
+          v: t.created
+        },
 
-            [
-                "Received",
-                records.reduce(
-                    (a, r) =>
-                        a + num(r.received),
-                    0
-                )
-            ],
+        {
+          k: "Received",
+          v: t.received
+        },
 
-            [
-                "Closed",
-                records.reduce(
-                    (a, r) =>
-                        a + num(r.closed),
-                    0
-                )
-            ],
+        {
+          k: "Disposed",
+          v: t.disposed_total
+        },
 
-            [
-                "Forwarded",
-                records.reduce(
-                    (a, r) =>
-                        a + num(r.forwarded),
-                    0
-                )
-            ],
+        {
+          k: "Parked",
+          v: t.parked
+        },
 
-            [
-                "Disposed",
-                records.reduce(
-                    (a, r) =>
-                        a + num(r.disposedTotal),
-                    0
-                )
-            ]
+        {
+          k: "Merged",
+          v: t.merged
+        }
 
-        ];
+      ]);
+  }
 
-        const max =
-            Math.max(
-                ...movement.map(x => x[1]),
-                1
-            );
+  if ($("pendencyBars")) {
 
-        $("movementBars").innerHTML =
-            movement.map(
-                ([name, value]) => {
+    $("pendencyBars").innerHTML =
+      barRows([
 
-                    const width =
-                        value / max * 100;
+        {
+          k: "0–7 Days",
+          v: t.pendency_0_7_days
+        },
 
-                    return `
-                    <div class="simple-row">
+        {
+          k: "8–15 Days",
+          v: t.pendency_8_15_days
+        },
 
-                        <b>${name}</b>
+        {
+          k: "16–30 Days",
+          v: t.pendency_16_30_days
+        },
 
-                        <div class="simple-track">
+        {
+          k: "31–60 Days",
+          v: t.pendency_31_60_days
+        },
 
-                            <div
-                                class="simple-fill"
-                                style="width:${width}%"
-                            ></div>
+        {
+          k: ">60 Days",
+          v: t.pendency_over_60_days
+        }
 
-                        </div>
-
-                        <strong>
-                            ${fmt(value)}
-                        </strong>
-
-                    </div>
-                    `;
-                }
-            ).join("");
-    }
-
-    /* PENDENCY AGE */
-
-    if ($("pendencyBars")) {
-
-        const pendency = [
-
-            [
-                "0–7 Days",
-                records.reduce(
-                    (a, r) =>
-                        a + num(r.pendency0to7),
-                    0
-                )
-            ],
-
-            [
-                "8–15 Days",
-                records.reduce(
-                    (a, r) =>
-                        a + num(r.pendency8to15),
-                    0
-                )
-            ],
-
-            [
-                "16–30 Days",
-                records.reduce(
-                    (a, r) =>
-                        a + num(r.pendency16to30),
-                    0
-                )
-            ],
-
-            [
-                "31–60 Days",
-                records.reduce(
-                    (a, r) =>
-                        a + num(r.pendency31to60),
-                    0
-                )
-            ],
-
-            [
-                ">60 Days",
-                records.reduce(
-                    (a, r) =>
-                        a + num(r.pendencyOver60),
-                    0
-                )
-            ]
-
-        ];
-
-        const max =
-            Math.max(
-                ...pendency.map(x => x[1]),
-                1
-            );
-
-        $("pendencyBars").innerHTML =
-            pendency.map(
-                ([name, value]) => {
-
-                    const width =
-                        value / max * 100;
-
-                    return `
-                    <div class="simple-row">
-
-                        <b>${name}</b>
-
-                        <div class="simple-track">
-
-                            <div
-                                class="simple-fill"
-                                style="width:${width}%"
-                            ></div>
-
-                        </div>
-
-                        <strong>
-                            ${fmt(value)}
-                        </strong>
-
-                    </div>
-                    `;
-                }
-            ).join("");
-    }
+      ]);
+  }
 }
 
-/* =========================================================
-   TABLE ROW
-   ========================================================= */
 
-function tableRow(record) {
-
-    return `
-    <tr>
-
-        <td>${record.slNo}</td>
-
-        <td>
-            <strong>
-                ${esc(record.employee)}
-            </strong>
-        </td>
-
-        <td>
-            ${esc(record.designation)}
-        </td>
-
-        <td>${fmt(record.openingBalance)}</td>
-        <td>${fmt(record.created)}</td>
-        <td>${fmt(record.received)}</td>
-        <td>${fmt(record.closed)}</td>
-        <td>${fmt(record.forwarded)}</td>
-
-        <td>
-            <b style="color:#1761c7">
-                ${fmt(record.disposedTotal)}
-            </b>
-        </td>
-
-        <td>${fmt(record.parked)}</td>
-        <td>${fmt(record.merged)}</td>
-
-        <td>${fmt(record.pendency0to7)}</td>
-        <td>${fmt(record.pendency8to15)}</td>
-        <td>${fmt(record.pendency16to30)}</td>
-        <td>${fmt(record.pendency31to60)}</td>
-        <td>${fmt(record.pendencyOver60)}</td>
-
-        <td>
-            <b>
-                ${fmt(record.totalPendency)}
-            </b>
-        </td>
-
-        <td>
-            ${num(record.averagePendingDays).toFixed(2)}
-        </td>
-
-        <td>
-            <span class="score">
-                ${record.score.toFixed(1)}
-            </span>
-        </td>
-
-    </tr>
-    `;
-}
-
-/* =========================================================
-   RANKINGS TABLE
-   ========================================================= */
-
-function renderRankingTable(records) {
-
-    if (!$("rankingTable")) {
-        return;
-    }
-
-    const search =
-        ($("searchRank")?.value || "")
-            .toLowerCase()
-            .trim();
-
-    const filtered =
-        records.filter(record => {
-
-            const text =
-                `${record.employee} ${record.designation}`
-                    .toLowerCase();
-
-            return text.includes(search);
-        });
-
-    $("rankingTable").innerHTML =
-        filtered
-            .map(tableRow)
-            .join("");
-
-    if ($("tableCount")) {
-
-        $("tableCount").textContent =
-            `${filtered.length} of ${records.length} records`;
-    }
-}
-
-/* =========================================================
+/* =========================
    DETAIL TABLE
-   ========================================================= */
+========================= */
 
-function renderDetailTable(records) {
-
-    if (!$("detailTable")) {
-        return;
-    }
-
-    const search =
-        ($("searchDetail")?.value || "")
-            .toLowerCase()
-            .trim();
-
-    const filtered =
-        records.filter(record => {
-
-            const text =
-                `${record.employee} ${record.designation}`
-                    .toLowerCase();
-
-            return text.includes(search);
-        });
-
-    $("detailTable").innerHTML =
-        filtered
-            .map(tableRow)
-            .join("");
-}
-
-/* =========================================================
-   SEARCH
-   ========================================================= */
-
-function setupSearch() {
-
-    const rankSearch =
-        $("searchRank");
-
-    const detailSearch =
-        $("searchDetail");
-
-    if (rankSearch) {
-
-        rankSearch.oninput = () => {
-
-            renderRankingTable(
-                getRows()
-            );
-        };
-    }
-
-    if (detailSearch) {
-
-        detailSearch.oninput = () => {
-
-            renderDetailTable(
-                getRows()
-            );
-        };
-    }
-
-    /* RANKING REFRESH */
-
-    if ($("refreshRank")) {
-
-        $("refreshRank").onclick = () => {
-
-            renderRankingTable(
-                getRows()
-            );
-        };
-    }
-
-    /* DETAIL REFRESH */
-
-    if ($("refreshDetail")) {
-
-        $("refreshDetail").onclick = () => {
-
-            renderDetailTable(
-                getRows()
-            );
-        };
-    }
-}
-
-/* =========================================================
-   REPORTS
-   ========================================================= */
-
-function renderReports(
-    records,
-    disposed,
-    received,
-    pending,
-    weightedAverage
+function renderTable(
+  rows,
+  filter = ""
 ) {
 
-    if (!$("reportBox")) {
-        return;
-    }
+  if (!$("dataTable")) return;
 
-    const disposalRate =
-        received > 0
-            ? disposed / received * 100
-            : 0;
+  const q =
+    filter
+      .toLowerCase()
+      .trim();
 
-    const parked =
-        records.reduce(
-            (a, r) =>
-                a + num(r.parked),
-            0
-        );
+  const list =
+    rows
+      .filter(r => {
 
-    const merged =
-        records.reduce(
-            (a, r) =>
-                a + num(r.merged),
-            0
-        );
+        const text =
+          (
+            r.employee +
+            " " +
+            r.unit_designation
+          ).toLowerCase();
 
-    $("reportBox").innerHTML = `
+        return text.includes(q);
+      })
+      .sort(
+        (a, b) =>
+          b.score - a.score
+      );
 
-        <div class="report-card">
+  $("dataTable").innerHTML =
+    list.length
 
-            <b>
-                Total Employees / Units
-            </b>
+      ? list.map((r, i) => {
 
-            <strong>
-                ${fmt(records.length)}
-            </strong>
+          return `
+            <tr>
 
-            <small>
-                Records in current E-Office report
-            </small>
+              <td>
+                ${i + 1}
+              </td>
 
-        </div>
+              <td>
+                <b>
+                  ${esc(r.employee)}
+                </b>
+              </td>
 
-        <div class="report-card">
+              <td>
+                ${esc(r.unit_designation)}
+              </td>
 
-            <b>
-                Overall Disposal Rate
-            </b>
+              <td>
+                ${fmt(r.disposed_total)}
+              </td>
 
-            <strong>
-                ${disposalRate.toFixed(1)}%
-            </strong>
+              <td>
+                ${fmt(r.total_pendency)}
+              </td>
 
-            <small>
-                Disposed compared with created + received
-            </small>
+              <td>
+                ${num(
+                  r.average_pending_days
+                ).toFixed(2)}
+              </td>
 
-        </div>
+              <td class="score-cell">
+                ${r.score.toFixed(1)}
+              </td>
 
-        <div class="report-card">
+            </tr>
+          `;
 
-            <b>
-                Average Pending Days
-            </b>
+        }).join("")
 
-            <strong>
-                ${weightedAverage.toFixed(2)}
-            </strong>
-
-            <small>
-                Weighted by current pendency
-            </small>
-
-        </div>
-
-        <div class="report-card">
-
-            <b>
-                Total Parked Files
-            </b>
-
-            <strong>
-                ${fmt(parked)}
-            </strong>
-
-            <small>
-                Across all records
-            </small>
-
-        </div>
-
-        <div class="report-card">
-
-            <b>
-                Total Merged Files
-            </b>
-
-            <strong>
-                ${fmt(merged)}
-            </strong>
-
-            <small>
-                Across all records
-            </small>
-
-        </div>
-
-        <div class="report-card">
-
-            <b>
-                Current Pendency
-            </b>
-
-            <strong>
-                ${fmt(pending)}
-            </strong>
-
-            <small>
-                All age categories combined
-            </small>
-
-        </div>
-
-    `;
+      : `
+        <tr>
+          <td
+            colspan="7"
+            style="
+              text-align:center;
+              padding:25px
+            "
+          >
+            No matching record found.
+          </td>
+        </tr>
+      `;
 }
 
-/* =========================================================
-   TAB NAVIGATION
-   ========================================================= */
 
-document
-    .querySelectorAll(".tab")
-    .forEach(button => {
+/* =========================
+   REPORT
+========================= */
 
-        button.addEventListener(
-            "click",
-            () => {
+function renderReport(t) {
 
-                document
-                    .querySelectorAll(".tab")
-                    .forEach(btn =>
-                        btn.classList.remove("active")
-                    );
+  if (!$("reportBox")) return;
 
-                document
-                    .querySelectorAll(".section")
-                    .forEach(section =>
-                        section.classList.remove(
-                            "active-section"
-                        )
-                    );
+  const items = [
 
-                button.classList.add("active");
+    [
+      "Opening Balance",
+      t.opening_balance
+    ],
 
-                const target =
-                    document.getElementById(
-                        button.dataset.target
-                    );
+    [
+      "Created",
+      t.created
+    ],
 
-                if (target) {
+    [
+      "Received",
+      t.received
+    ],
 
-                    target.classList.add(
-                        "active-section"
-                    );
+    [
+      "Disposed — Closed",
+      t.disposed_closed
+    ],
 
-                    window.scrollTo({
-                        top:
-                            target.offsetTop - 10,
-                        behavior:
-                            "smooth"
-                    });
-                }
-            }
-        );
-    });
+    [
+      "Disposed — Forwarded",
+      t.disposed_forwarded
+    ],
 
-/* =========================================================
+    [
+      "Total Disposed",
+      t.disposed_total
+    ],
+
+    [
+      "Parked",
+      t.parked
+    ],
+
+    [
+      "Merged",
+      t.merged
+    ],
+
+    [
+      "Total Pendency",
+      t.total_pendency
+    ],
+
+    [
+      "0–7 Days",
+      t.pendency_0_7_days
+    ],
+
+    [
+      "8–15 Days",
+      t.pendency_8_15_days
+    ],
+
+    [
+      "16–30 Days",
+      t.pendency_16_30_days
+    ],
+
+    [
+      "31–60 Days",
+      t.pendency_31_60_days
+    ],
+
+    [
+      ">60 Days",
+      t.pendency_over_60_days
+    ],
+
+    [
+      "Average Pending Days",
+      num(
+        t.average_pending_days
+      ).toFixed(2)
+    ]
+
+  ];
+
+  $("reportBox").innerHTML = `
+    <div class="report-grid">
+
+      ${
+        items.map(x => {
+
+          const value =
+            typeof x[1] === "number"
+              ? fmt(x[1])
+              : x[1];
+
+          return `
+            <div class="report-item">
+
+              <span>
+                ${x[0]}
+              </span>
+
+              <strong>
+                ${value}
+              </strong>
+
+            </div>
+          `;
+
+        }).join("")
+      }
+
+    </div>
+  `;
+}
+
+
+/* =========================
+   LOAD DATA.JSON
+========================= */
+
+async function load() {
+
+  try {
+
+    console.log(
+      "Loading Chittoor E-Office data.json..."
+    );
+
+    const url =
+      "data.json?cache=" +
+      Date.now();
+
+    const res =
+      await fetch(url, {
+        cache: "no-store"
+      });
+
+    if (!res.ok) {
+
+      throw new Error(
+        "data.json could not be loaded. HTTP " +
+        res.status
+      );
+    }
+
+    const json =
+      await res.json();
+
+    if (!json) {
+
+      throw new Error(
+        "data.json is empty."
+      );
+    }
+
+    DATA = json;
+
+    console.log(
+      "data.json loaded successfully",
+      DATA
+    );
+
+    render();
+
+  }
+
+  catch (e) {
+
+    console.error(
+      "Dashboard loading error:",
+      e
+    );
+
+    document.body.innerHTML = `
+
+      <div
+        style="
+          font-family:Arial;
+          padding:50px;
+          max-width:900px;
+          margin:auto;
+        "
+      >
+
+        <h2>
+          Dashboard data could not be loaded
+        </h2>
+
+        <p>
+          ${esc(e.message)}
+        </p>
+
+        <hr>
+
+        <p>
+          Please make sure these files are
+          in the same GitHub root folder:
+        </p>
+
+        <ul>
+
+          <li>
+            <b>index.html</b>
+          </li>
+
+          <li>
+            <b>script.js</b>
+          </li>
+
+          <li>
+            <b>style.css</b>
+          </li>
+
+          <li>
+            <b>data.json</b>
+          </li>
+
+        </ul>
+
+        <p>
+          The dashboard is configured to load:
+          <b>data.json</b>
+        </p>
+
+      </div>
+
+    `;
+  }
+}
+
+
+/* =========================
    START
-   ========================================================= */
+========================= */
 
-loadData();
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    setupTabs();
+
+    if ($("search")) {
+
+      $("search").addEventListener(
+        "input",
+        e => {
+
+          renderTable(
+            enriched(),
+            e.target.value
+          );
+
+        }
+      );
+    }
+
+    if ($("refresh")) {
+
+      $("refresh").addEventListener(
+        "click",
+        load
+      );
+    }
+
+    load();
+
+  }
+);
