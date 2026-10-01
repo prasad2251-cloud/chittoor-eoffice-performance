@@ -2,8 +2,7 @@ let DATA = null;
 
 const $ = id => document.getElementById(id);
 
-const fmt = n =>
-  Number(n || 0).toLocaleString("en-IN");
+const fmt = n => Number(n || 0).toLocaleString("en-IN");
 
 const esc = s =>
   String(s ?? "").replace(/[&<>"']/g, m => ({
@@ -14,11 +13,6 @@ const esc = s =>
     "'": "&#039;"
   }[m]));
 
-
-/* =========================
-   NUMBER HELPER
-========================= */
-
 function num(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : 0;
@@ -26,8 +20,7 @@ function num(v) {
 
 
 /* =========================
-   NORMALIZE DATA
-   Supports new + old JSON
+   NORMALIZE RECORD
 ========================= */
 
 function normalizeRecord(r) {
@@ -97,13 +90,12 @@ function normalizeRecord(r) {
 
 
 /* =========================
-   NORMALIZE DISTRICT TOTAL
+   DISTRICT TOTAL
 ========================= */
 
 function normalizeTotal(t) {
 
   return {
-
     opening_balance:
       num(t.opening_balance ?? t.openingBalance),
 
@@ -192,7 +184,7 @@ function score(r) {
 
 
 /* =========================
-   RECORDS
+   ENRICH RECORDS
 ========================= */
 
 function enriched() {
@@ -215,14 +207,29 @@ function enriched() {
 
 
 /* =========================
-   AVERAGE PENDING
+   NAME
+========================= */
+
+function nameOf(r) {
+
+  return (
+    r.unit_designation ||
+    r.employee ||
+    "Unknown"
+  );
+}
+
+
+/* =========================
+   WEIGHTED AVG
 ========================= */
 
 function avgWeighted(records) {
 
   const totalPend =
     records.reduce(
-      (a, r) => a + num(r.total_pendency),
+      (a, r) =>
+        a + num(r.total_pendency),
       0
     );
 
@@ -239,20 +246,6 @@ function avgWeighted(records) {
 
 
 /* =========================
-   NAME
-========================= */
-
-function nameOf(r) {
-
-  return (
-    r.unit_designation ||
-    r.employee ||
-    "Unknown"
-  );
-}
-
-
-/* =========================
    TABS
 ========================= */
 
@@ -262,32 +255,37 @@ function setupTabs() {
     .querySelectorAll(".tab")
     .forEach(btn => {
 
-      btn.addEventListener("click", () => {
+      btn.addEventListener(
+        "click",
+        () => {
 
-        document
-          .querySelectorAll(".tab")
-          .forEach(b =>
-            b.classList.remove("active")
-          );
+          document
+            .querySelectorAll(".tab")
+            .forEach(b =>
+              b.classList.remove("active")
+            );
 
-        document
-          .querySelectorAll(".section")
-          .forEach(s =>
-            s.classList.remove("active-section")
-          );
+          document
+            .querySelectorAll(".section")
+            .forEach(s =>
+              s.classList.remove(
+                "active-section"
+              )
+            );
 
-        btn.classList.add("active");
+          btn.classList.add("active");
 
-        const target =
-          $(btn.dataset.target);
+          const target =
+            $(btn.dataset.target);
 
-        if (target) {
-          target.classList.add(
-            "active-section"
-          );
+          if (target) {
+            target.classList.add(
+              "active-section"
+            );
+          }
+
         }
-
-      });
+      );
 
     });
 }
@@ -309,9 +307,11 @@ function render() {
   if ($("period")) {
     $("period").textContent =
       "Reporting Period: " +
-      (DATA.reporting_period ||
-       DATA.period ||
-       "");
+      (
+        DATA.reporting_period ||
+        DATA.period ||
+        ""
+      );
   }
 
   if ($("unitCount")) {
@@ -366,7 +366,10 @@ function render() {
   renderChart(rows);
   renderPerformance(rows);
   renderTrends(t);
-  renderTable(rows);
+
+  /* IMPORTANT */
+  renderFullEOfficeTable(rows);
+
   renderReport(t);
 
   if ($("lastLoaded")) {
@@ -389,45 +392,42 @@ function renderRankings(rows) {
     );
 
   const item =
-    (r, i, bottom = false) => {
+    (r, i, bottom = false) => `
+      <div class="rank-item">
 
-      return `
-        <div class="rank-item">
-
-          <div class="rank-num">
-            ${
-              bottom
-                ? "#" + (rows.length - i)
-                : "🏅 " + (i + 1)
-            }
-          </div>
-
-          <div>
-            <div class="rank-name">
-              ${esc(nameOf(r))}
-            </div>
-
-            <div class="rank-meta">
-              ${esc(r.employee)}
-            </div>
-          </div>
-
-          <span class="badge ${bottom ? "red" : ""}">
-            ${
-              bottom
-                ? "Pend. " +
-                  fmt(r.total_pendency)
-                : "Score"
-            }
-          </span>
-
-          <div class="score">
-            ${r.score.toFixed(1)}
-          </div>
-
+        <div class="rank-num">
+          ${
+            bottom
+              ? "#" + (rows.length - i)
+              : "🏅 " + (i + 1)
+          }
         </div>
-      `;
-    };
+
+        <div>
+          <div class="rank-name">
+            ${esc(nameOf(r))}
+          </div>
+
+          <div class="rank-meta">
+            ${esc(r.employee)}
+          </div>
+        </div>
+
+        <span class="badge ${bottom ? "red" : ""}">
+          ${
+            bottom
+              ? "Pend. " +
+                fmt(r.total_pendency)
+              : "Score"
+          }
+        </span>
+
+        <div class="score">
+          ${r.score.toFixed(1)}
+        </div>
+
+      </div>
+    `;
 
   if ($("topList")) {
 
@@ -481,33 +481,33 @@ function renderChart(rows) {
     );
 
   $("barChart").innerHTML =
-    sorted
-      .map(r => {
+    sorted.map(r => {
 
-        const h =
-          Math.max(
-            8,
-            r.score / max * 220
-          );
+      const h =
+        Math.max(
+          8,
+          r.score / max * 220
+        );
 
-        return `
-          <div
-            class="bar"
-            style="height:${h}px"
-            title="${esc(nameOf(r))}: ${r.score.toFixed(1)}"
-          >
-            <span>
-              ${r.score.toFixed(0)}
-            </span>
+      return `
+        <div
+          class="bar"
+          style="height:${h}px"
+          title="${esc(nameOf(r))}: ${r.score.toFixed(1)}"
+        >
 
-            <label>
-              ${esc(nameOf(r))}
-            </label>
-          </div>
-        `;
+          <span>
+            ${r.score.toFixed(0)}
+          </span>
 
-      })
-      .join("");
+          <label>
+            ${esc(nameOf(r))}
+          </label>
+
+        </div>
+      `;
+
+    }).join("");
 }
 
 
@@ -525,62 +525,62 @@ function renderPerformance(rows) {
     );
 
   $("performanceGrid").innerHTML =
-    sorted
-      .map(r => {
+    sorted.map(r => {
 
-        const available =
-          num(r.opening_balance) +
-          num(r.created) +
-          num(r.received);
+      const available =
+        num(r.opening_balance) +
+        num(r.created) +
+        num(r.received);
 
-        const rate =
-          available
-            ? Math.min(
-                100,
-                num(r.disposed_total) /
-                available *
-                100
-              )
-            : 0;
+      const rate =
+        available
+          ? Math.min(
+              100,
+              num(r.disposed_total) /
+              available *
+              100
+            )
+          : 0;
 
-        return `
-          <div class="perf">
+      return `
+        <div class="perf">
 
-            <div class="perf-head">
+          <div class="perf-head">
 
-              <span>
-                ${esc(nameOf(r))}
-              </span>
+            <span>
+              ${esc(nameOf(r))}
+            </span>
 
-              <b>
-                ${r.score.toFixed(1)}
-              </b>
-
-            </div>
-
-            <div class="progress">
-              <i style="width:${rate}%"></i>
-            </div>
-
-            <small>
-              Disposal rate:
-              ${rate.toFixed(1)}%
-              • Pending:
-              ${fmt(r.total_pendency)}
-              • Avg days:
-              ${num(r.average_pending_days).toFixed(2)}
-            </small>
+            <b>
+              ${r.score.toFixed(1)}
+            </b>
 
           </div>
-        `;
 
-      })
-      .join("");
+          <div class="progress">
+            <i style="width:${rate}%"></i>
+          </div>
+
+          <small>
+            Disposal rate:
+            ${rate.toFixed(1)}%
+            • Pending:
+            ${fmt(r.total_pendency)}
+            • Avg days:
+            ${num(
+              r.average_pending_days
+            ).toFixed(2)}
+          </small>
+
+        </div>
+      `;
+
+    }).join("");
 }
 
 
 /* =========================
-   SUMMARY BARS
+   SUMMARY BAR
 ========================= */
 
 function barRows(items) {
@@ -591,38 +591,32 @@ function barRows(items) {
       1
     );
 
-  return items
-    .map(x => {
+  return items.map(x => `
+    <div class="summary-row">
 
-      return `
-        <div class="summary-row">
+      <span>
+        ${x.k}
+      </span>
 
-          <span>
-            ${x.k}
-          </span>
+      <div class="track">
 
-          <div class="track">
+        <i
+          style="
+            width:${Math.max(
+              2,
+              x.v / max * 100
+            )}%
+          "
+        ></i>
 
-            <i
-              style="
-                width:${Math.max(
-                  2,
-                  x.v / max * 100
-                )}%
-              "
-            ></i>
+      </div>
 
-          </div>
+      <strong>
+        ${fmt(x.v)}
+      </strong>
 
-          <strong>
-            ${fmt(x.v)}
-          </strong>
-
-        </div>
-      `;
-
-    })
-    .join("");
+    </div>
+  `).join("");
 }
 
 
@@ -705,98 +699,245 @@ function renderTrends(t) {
 }
 
 
-/* =========================
-   DETAIL TABLE
-========================= */
+/* =========================================================
+   FULL E-OFFICE DATA TABLE
+   THIS IS THE IMPORTANT FIX
+========================================================= */
 
-function renderTable(
-  rows,
-  filter = ""
-) {
+function renderFullEOfficeTable(rows) {
 
-  if (!$("dataTable")) return;
+  /* Find the table used by the current dashboard */
+  let table =
+    document.querySelector(
+      "#dataTable"
+    );
+
+  if (!table) {
+
+    table =
+      document.querySelector(
+        "#details tbody"
+      );
+  }
+
+  if (!table) {
+
+    table =
+      document.querySelector(
+        ".table-panel tbody"
+      );
+  }
+
+  if (!table) {
+
+    console.warn(
+      "E-Office data table tbody not found."
+    );
+
+    return;
+  }
+
+
+  /* Search filter */
+  const search =
+    $("search");
 
   const q =
-    filter
-      .toLowerCase()
-      .trim();
+    search
+      ? search.value
+          .toLowerCase()
+          .trim()
+      : "";
 
+
+  /* Filter */
   const list =
-    rows
-      .filter(r => {
+    rows.filter(r => {
 
-        const text =
-          (
-            r.employee +
-            " " +
-            r.unit_designation
-          ).toLowerCase();
+      const text =
+        (
+          r.employee +
+          " " +
+          r.unit_designation
+        ).toLowerCase();
 
-        return text.includes(q);
-      })
-      .sort(
-        (a, b) =>
-          b.score - a.score
-      );
+      return text.includes(q);
 
-  $("dataTable").innerHTML =
-    list.length
+    });
 
-      ? list.map((r, i) => {
 
-          return `
-            <tr>
+  /* Number of records */
+  updateDetailCount(list.length);
 
-              <td>
-                ${i + 1}
-              </td>
 
-              <td>
-                <b>
-                  ${esc(r.employee)}
-                </b>
-              </td>
+  /* No records */
+  if (!list.length) {
 
-              <td>
-                ${esc(r.unit_designation)}
-              </td>
+    table.innerHTML = `
+      <tr>
+        <td
+          colspan="18"
+          style="
+            text-align:center;
+            padding:25px;
+          "
+        >
+          No matching E-Office records found.
+        </td>
+      </tr>
+    `;
 
-              <td>
-                ${fmt(r.disposed_total)}
-              </td>
+    return;
+  }
 
-              <td>
-                ${fmt(r.total_pendency)}
-              </td>
 
-              <td>
-                ${num(
-                  r.average_pending_days
-                ).toFixed(2)}
-              </td>
+  /* ======================================================
+     FULL 18-COLUMN ROW
+  ====================================================== */
 
-              <td class="score-cell">
-                ${r.score.toFixed(1)}
-              </td>
+  table.innerHTML =
+    list.map((r, i) => {
 
-            </tr>
-          `;
-
-        }).join("")
-
-      : `
+      return `
         <tr>
-          <td
-            colspan="7"
-            style="
-              text-align:center;
-              padding:25px
-            "
-          >
-            No matching record found.
+
+          <td>
+            ${i + 1}
           </td>
+
+          <td>
+            <b>
+              ${esc(r.employee)}
+            </b>
+          </td>
+
+          <td>
+            ${esc(r.unit_designation)}
+          </td>
+
+          <td>
+            ${fmt(r.opening_balance)}
+          </td>
+
+          <td>
+            ${fmt(r.created)}
+          </td>
+
+          <td>
+            ${fmt(r.received)}
+          </td>
+
+          <td>
+            ${fmt(r.disposed_closed)}
+          </td>
+
+          <td>
+            ${fmt(r.disposed_forwarded)}
+          </td>
+
+          <td>
+            ${fmt(r.disposed_total)}
+          </td>
+
+          <td>
+            ${fmt(r.parked)}
+          </td>
+
+          <td>
+            ${fmt(r.merged)}
+          </td>
+
+          <td>
+            ${fmt(r.pendency_0_7_days)}
+          </td>
+
+          <td>
+            ${fmt(r.pendency_8_15_days)}
+          </td>
+
+          <td>
+            ${fmt(r.pendency_16_30_days)}
+          </td>
+
+          <td>
+            ${fmt(r.pendency_31_60_days)}
+          </td>
+
+          <td>
+            ${fmt(r.pendency_over_60_days)}
+          </td>
+
+          <td>
+            ${fmt(r.total_pendency)}
+          </td>
+
+          <td>
+            ${num(
+              r.average_pending_days
+            ).toFixed(2)}
+          </td>
+
+          <td class="score-cell">
+            ${r.score.toFixed(1)}
+          </td>
+
         </tr>
       `;
+
+    }).join("");
+}
+
+
+/* =========================================================
+   UPDATE "0 RECORDS" LABEL
+========================================================= */
+
+function updateDetailCount(count) {
+
+  const ids = [
+    "detailCount",
+    "tableCount",
+    "dataCount",
+    "employeeCount",
+    "fullDataCount",
+    "recordsCount"
+  ];
+
+  ids.forEach(id => {
+
+    const el = $(id);
+
+    if (el) {
+
+      el.textContent =
+        fmt(count) +
+        (
+          count === 1
+            ? " record"
+            : " records"
+        );
+
+    }
+
+  });
+
+
+  /* Also update common span used by current dashboard */
+  document
+    .querySelectorAll(
+      ".table-panel .panel-head span"
+    )
+    .forEach(el => {
+
+      el.textContent =
+        fmt(count) +
+        (
+          count === 1
+            ? " record"
+            : " records"
+        );
+
+    });
 }
 
 
@@ -922,9 +1063,9 @@ function renderReport(t) {
 }
 
 
-/* =========================
+/* =========================================================
    LOAD DATA.JSON
-========================= */
+========================================================= */
 
 async function load() {
 
@@ -934,14 +1075,14 @@ async function load() {
       "Loading Chittoor E-Office data.json..."
     );
 
-    const url =
-      "data.json?cache=" +
-      Date.now();
-
     const res =
-      await fetch(url, {
-        cache: "no-store"
-      });
+      await fetch(
+        "data.json?cache=" +
+        Date.now(),
+        {
+          cache: "no-store"
+        }
+      );
 
     if (!res.ok) {
 
@@ -954,18 +1095,22 @@ async function load() {
     const json =
       await res.json();
 
-    if (!json) {
+    if (
+      !json ||
+      !Array.isArray(json.records)
+    ) {
 
       throw new Error(
-        "data.json is empty."
+        "data.json loaded, but the records array is missing."
       );
     }
 
     DATA = json;
 
     console.log(
-      "data.json loaded successfully",
-      DATA
+      "E-Office data loaded:",
+      DATA.records.length,
+      "records"
     );
 
     render();
@@ -998,36 +1143,13 @@ async function load() {
           ${esc(e.message)}
         </p>
 
-        <hr>
-
         <p>
-          Please make sure these files are
-          in the same GitHub root folder:
-        </p>
-
-        <ul>
-
-          <li>
-            <b>index.html</b>
-          </li>
-
-          <li>
-            <b>script.js</b>
-          </li>
-
-          <li>
-            <b>style.css</b>
-          </li>
-
-          <li>
-            <b>data.json</b>
-          </li>
-
-        </ul>
-
-        <p>
-          The dashboard is configured to load:
-          <b>data.json</b>
+          Please make sure
+          <b>data.json</b>,
+          <b>index.html</b>,
+          <b>script.js</b> and
+          <b>style.css</b>
+          are in the GitHub root folder.
         </p>
 
       </div>
@@ -1037,9 +1159,9 @@ async function load() {
 }
 
 
-/* =========================
+/* =========================================================
    START
-========================= */
+========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
@@ -1047,27 +1169,30 @@ document.addEventListener(
 
     setupTabs();
 
+    /* Search */
     if ($("search")) {
 
       $("search").addEventListener(
         "input",
-        e => {
+        () => {
 
-          renderTable(
-            enriched(),
-            e.target.value
+          renderFullEOfficeTable(
+            enriched()
           );
 
         }
       );
+
     }
 
+    /* Refresh */
     if ($("refresh")) {
 
       $("refresh").addEventListener(
         "click",
         load
       );
+
     }
 
     load();
