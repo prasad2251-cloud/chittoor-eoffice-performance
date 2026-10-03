@@ -1,94 +1,946 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Chittoor Police — E-Office Performance Dashboard</title>
-<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Chittoor Police - E-Office Performance</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    padding:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#eef4fc;
+    color:#172033;
+}
+
+/* MAIN CONTAINER */
+
+.container{
+    width:96%;
+    margin:20px auto;
+}
+
+/* CARD */
+
+.card{
+    background:#ffffff;
+    border-radius:14px;
+    box-shadow:0 3px 15px rgba(0,0,0,0.08);
+    overflow:hidden;
+}
+
+/* TITLE */
+
+.title-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 22px;
+    border-bottom:1px solid #e4e8ef;
+}
+
+.title{
+    font-size:18px;
+    font-weight:700;
+    color:#172033;
+}
+
+.title span{
+    font-size:13px;
+    color:#718096;
+    font-weight:400;
+}
+
+/* SEARCH */
+
+.controls{
+    display:flex;
+    gap:10px;
+    padding:12px;
+    align-items:center;
+}
+
+.search-box{
+    flex:1;
+    height:42px;
+    border:1px solid #d4dce8;
+    border-radius:10px;
+    padding:0 16px;
+    font-size:14px;
+    outline:none;
+    background:#fff;
+}
+
+.search-box:focus{
+    border-color:#24459c;
+    box-shadow:0 0 0 2px rgba(36,69,156,0.10);
+}
+
+.refresh-btn{
+    height:42px;
+    padding:0 20px;
+    border:0;
+    border-radius:10px;
+    background:#2854b5;
+    color:white;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.refresh-btn:hover{
+    background:#193e91;
+}
+
+/* TABLE WRAPPER */
+
+.table-wrapper{
+    width:100%;
+    overflow-x:auto;
+}
+
+/* TABLE */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1250px;
+}
+
+/* HEADER */
+
+thead th{
+    background:#183c91;
+    color:#ffffff;
+    font-size:10px;
+    font-weight:700;
+    padding:9px 7px;
+    text-align:center;
+    white-space:nowrap;
+    border-right:1px solid rgba(255,255,255,0.18);
+}
+
+thead th:first-child{
+    text-align:center;
+}
+
+/* BODY */
+
+tbody td{
+    font-size:11px;
+    padding:8px 7px;
+    text-align:center;
+    border-bottom:1px solid #dfe5ed;
+    border-right:1px solid #edf0f5;
+    white-space:nowrap;
+    font-weight:500;
+}
+
+/* FIRST COLUMNS */
+
+tbody td:nth-child(2),
+tbody td:nth-child(3){
+    text-align:left;
+    font-weight:700;
+}
+
+/* SERIAL NUMBER */
+
+.serial{
+    color:#183c91;
+    font-weight:700;
+}
+
+/* =========================================================
+   SMART POLICING COLOURS
+   ========================================================= */
+
+/* GREEN */
+
+.good{
+    background:#b7e4cf !important;
+    color:#111827;
+}
+
+/* YELLOW */
+
+.medium{
+    background:#f5e6b8 !important;
+    color:#111827;
+}
+
+/* RED / PINK */
+
+.bad{
+    background:#f3c2bd !important;
+    color:#111827;
+}
+
+/* ZERO / EMPTY */
+
+.zero{
+    background:#b7e4cf !important;
+    color:#111827;
+}
+
+/* PENDENCY ZERO */
+
+.pending-zero{
+    background:#b7e4cf !important;
+}
+
+/* PENDENCY LOW */
+
+.pending-low{
+    background:#f5e6b8 !important;
+}
+
+/* PENDENCY HIGH */
+
+.pending-high{
+    background:#f3c2bd !important;
+}
+
+/* ROW HOVER */
+
+tbody tr:hover td{
+    filter:brightness(0.98);
+}
+
+/* LOADING */
+
+.loading{
+    padding:30px;
+    text-align:center;
+    color:#596579;
+    font-size:14px;
+}
+
+/* ERROR */
+
+.error{
+    padding:30px;
+    text-align:center;
+    color:#b42318;
+    font-weight:700;
+}
+
+/* NO DATA */
+
+.no-data{
+    padding:30px;
+    text-align:center;
+    color:#687386;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+    .container{
+        width:99%;
+        margin:8px auto;
+    }
+
+    .title-row{
+        padding:14px;
+    }
+
+    .controls{
+        flex-direction:column;
+    }
+
+    .search-box{
+        width:100%;
+    }
+
+    .refresh-btn{
+        width:100%;
+    }
+}
+
+</style>
 </head>
+
+
 <body>
-<div class="page">
-<header class="hero">
-  <div class="brand">
-    <div class="image-row">
-      <div class="header-image logo-img"><img src="2222.png" alt="AP Police"></div>
-      <div class="header-image officer"><img src="3333.png" alt="SP"></div>
-      <div class="header-image officer"><img src="4444.png" alt="DGP"></div>
+
+<div class="container">
+
+<div class="card">
+
+    <!-- TITLE -->
+
+    <div class="title-row">
+
+        <div class="title">
+            📊 Full E-Office Data
+            <span id="recordCount">0 records</span>
+        </div>
+
     </div>
-    <div class="title-block">
-      <div class="eyebrow">ANDHRA PRADESH POLICE</div>
-      <h1>Chittoor Police — E-Office Performance Dashboard</h1>
-      <p>E-Office Files • Disposal Monitoring • Pendency • Final Score</p>
-      <span class="period" id="period">Loading...</span>
+
+
+    <!-- SEARCH -->
+
+    <div class="controls">
+
+        <input
+            type="text"
+            id="searchInput"
+            class="search-box"
+            placeholder="🔎 Search employee, police station or designation..."
+            autocomplete="off"
+        >
+
+        <button
+            class="refresh-btn"
+            onclick="loadData()">
+            ↻ Refresh
+        </button>
+
     </div>
-  </div>
-  <div class="hero-stats">
-    <div><strong id="unitCount">0</strong><span>RECORDS</span></div>
-    <div><strong id="disposedHero">0</strong><span>DISPOSED</span></div>
-    <div><strong id="pendencyHero">0</strong><span>PENDING</span></div>
-  </div>
-</header>
-<nav class="tabs">
-<button class="tab active" data-target="rankings">🏆 Rankings</button>
-<button class="tab" data-target="performance">🔥 Performance</button>
-<button class="tab" data-target="trends">📈 Trends</button>
-<button class="tab" data-target="details">🔎 Police Station / Employee Detail</button>
-<button class="tab" data-target="reports">📋 Reports</button>
-<button class="tab" onclick="location.href='subdivision.html'">🏛️ Sub-Division Performance</button>
-<button class="tab" onclick="location.href='quicklinks.html'">🔗 Quick Access</button>
-</nav>
-<main>
-<section id="rankings" class="section active">
-<div class="section-title"><h2>🏆 Rankings</h2><span>Final Score = 60% Disposal Performance + 40% Pendency Performance</span></div>
-<div class="cards">
-<article><span>📁 Total Files Disposed</span><strong id="disposedTotal">0</strong><small>Closed + Forwarded</small></article>
-<article><span>📥 Total Files Received</span><strong id="receivedTotal">0</strong><small>Received during period</small></article>
-<article><span>⏳ Total Pendency</span><strong id="pendencyTotal">0</strong><small>At the end of the reporting period</small></article>
-<article><span>🕐 Avg. Pending Days</span><strong id="avgPending">0.00</strong><small>For records with pending files</small></article>
+
+
+    <!-- TABLE -->
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>S.No</th>
+                    <th>Employee</th>
+                    <th>Police Station / Designation</th>
+
+                    <th>Opening</th>
+                    <th>Created</th>
+                    <th>Received</th>
+                    <th>Closed</th>
+                    <th>Forwarded</th>
+                    <th>Disposed</th>
+                    <th>Parked</th>
+                    <th>Merged</th>
+
+                    <th>0–7 Days</th>
+                    <th>8–15 Days</th>
+                    <th>16–30 Days</th>
+                    <th>31–60 Days</th>
+                    <th>&gt;60 Days</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="tableBody">
+
+                <tr>
+                    <td colspan="16" class="loading">
+                        Loading E-Office data...
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
 </div>
-<div class="two-col">
-<div class="panel"><div class="panel-head"><h3>🥇 Top 5 Performers</h3><span>Higher final score</span></div><div id="topList"></div></div>
-<div class="panel"><div class="panel-head"><h3>⚠️ Bottom 5 — Need Attention</h3><span>Lower final score</span></div><div id="bottomList"></div></div>
+
 </div>
-<div class="panel chart-panel">
-<div class="panel-head"><h3>Final Score — All E-Office Records</h3><span id="chartNote"></span></div>
-<div class="chart-scroll"><div id="barChart" class="bar-chart"></div></div>
-</div>
-<div class="panel">
-<div class="panel-head"><h3>📊 Full E-Office Data</h3><span id="tableCount">0 records</span></div>
-<div class="toolbar"><input id="searchRank" placeholder="🔎 Search employee, police station or designation..."><button id="refresh" class="refresh">↻ Refresh</button></div>
-<div class="table-wrap"><table>
-<thead><tr>
-<th>S.No</th><th>Employee</th><th>Police Station / Designation</th>
-<th>Opening</th><th>Created</th><th>Received</th><th>Closed</th><th>Forwarded</th><th>Disposed</th>
-<th>Parked</th><th>Merged</th><th>0–7 Days</th><th>8–15 Days</th><th>16–30 Days</th><th>31–60 Days</th><th>&gt;60 Days</th>
-<th>Total Pendency</th><th>Avg. Pending Days</th><th>Final Score</th>
-</tr></thead><tbody id="rankingTable"></tbody></table></div>
-</div>
-</section>
-<section id="performance" class="section">
-<div class="section-title"><h2>🔥 Performance</h2><span>Disposal performance + pending files</span></div>
-<div class="panel"><div class="toolbar"><input id="perfSearch" placeholder="Search employee / designation / station"></div><div id="performanceGrid" class="performance-grid"></div></div>
-</section>
-<section id="trends" class="section">
-<div class="section-title"><h2>📈 Trends & Summary</h2><span>Reporting-period summary</span></div>
-<div class="two-col">
-<div class="panel"><div class="panel-head"><h3>File Movement</h3></div><div id="movementBars" class="simple-bars"></div></div>
-<div class="panel"><div class="panel-head"><h3>Pendency Age</h3></div><div id="pendencyBars" class="simple-bars"></div></div>
-</div>
-</section>
-<section id="details" class="section">
-<div class="section-title"><h2>🔎 Police Station / Employee Detail</h2><span>Search every E-Office record</span></div>
-<div class="panel"><div class="toolbar"><input id="searchDetail" placeholder="🔎 Search employee, station or designation"></div><div class="table-wrap"><table>
-<thead><tr><th>S.No</th><th>Employee</th><th>Station / Designation</th><th>Opening</th><th>Created</th><th>Received</th><th>Closed</th><th>Forwarded</th><th>Disposed</th><th>Parked</th><th>Merged</th><th>Pendency</th><th>Avg Days</th><th>Final Score</th></tr></thead>
-<tbody id="detailTable"></tbody></table></div></div>
-</section>
-<section id="reports" class="section">
-<div class="section-title"><h2>📋 Reports</h2><span>All figures calculated from raw E-Office data</span></div>
-<div class="cards" id="reportCards"></div>
-</section>
-</main>
-<footer>Chittoor District Police • E-Office Performance Dashboard <span id="lastLoaded"></span></footer>
-</div>
-<script src="script.js"></script>
+
+
+<script>
+
+/* =========================================================
+   JSON FILE
+   =========================================================
+
+   IMPORTANT:
+
+   If your JSON file has another name, change only this line.
+
+   Example:
+   data.json
+   eoffice.json
+   eoffice-data.json
+
+========================================================= */
+
+const DATA_URL = "eoffice.json";
+
+
+/* =========================================================
+   GLOBAL DATA
+========================================================= */
+
+let allData = [];
+
+
+/* =========================================================
+   NUMBER CONVERSION
+========================================================= */
+
+function num(value){
+
+    if(value === null || value === undefined || value === ""){
+        return 0;
+    }
+
+    let cleaned = String(value)
+        .replace(/,/g,"")
+        .replace(/%/g,"")
+        .trim();
+
+    let n = parseFloat(cleaned);
+
+    return isNaN(n) ? 0 : n;
+}
+
+
+/* =========================================================
+   NORMALIZE COLUMN NAME
+========================================================= */
+
+function normalizeKey(key){
+
+    return String(key)
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g,"");
+
+}
+
+
+/* =========================================================
+   GET VALUE FROM DIFFERENT POSSIBLE COLUMN NAMES
+========================================================= */
+
+function getValue(row, names){
+
+    const keys = Object.keys(row);
+
+    for(let wanted of names){
+
+        const wantedNorm = normalizeKey(wanted);
+
+        for(let key of keys){
+
+            if(normalizeKey(key) === wantedNorm){
+
+                return row[key];
+
+            }
+
+        }
+
+    }
+
+    return "";
+
+}
+
+
+/* =========================================================
+   GET EMPLOYEE
+========================================================= */
+
+function getEmployee(row){
+
+    return getValue(row,[
+
+        "Employee",
+        "Employee Name",
+        "Name",
+        "EMPLOYEE",
+        "EMPLOYEE NAME"
+
+    ]);
+
+}
+
+
+/* =========================================================
+   GET POLICE STATION / DESIGNATION
+========================================================= */
+
+function getStation(row){
+
+    return getValue(row,[
+
+        "Police Station / Designation",
+        "Police Station/Designation",
+        "Police Station",
+        "Designation",
+        "PS Name",
+        "PS"
+
+    ]);
+
+}
+
+
+/* =========================================================
+   NORMAL PERFORMANCE COLOUR
+=========================================================
+
+   80–100  = GREEN
+   50–79   = YELLOW
+   0–49    = RED
+
+========================================================= */
+
+function performanceClass(value){
+
+    const n = num(value);
+
+    if(n >= 80){
+        return "good";
+    }
+
+    if(n >= 50){
+        return "medium";
+    }
+
+    return "bad";
+
+}
+
+
+/* =========================================================
+   PENDENCY COLOUR
+=========================================================
+
+   LOWER IS BETTER
+
+   0       = GREEN
+   1–5     = YELLOW
+   >5      = RED
+
+========================================================= */
+
+function pendingClass(value){
+
+    const n = num(value);
+
+    if(n === 0){
+        return "pending-zero";
+    }
+
+    if(n <= 5){
+        return "pending-low";
+    }
+
+    return "pending-high";
+
+}
+
+
+/* =========================================================
+   NORMAL DATA COLUMNS
+========================================================= */
+
+const normalColumns = [
+
+    ["Opening",[
+        "Opening",
+        "opening"
+    ]],
+
+    ["Created",[
+        "Created",
+        "created"
+    ]],
+
+    ["Received",[
+        "Received",
+        "received"
+    ]],
+
+    ["Closed",[
+        "Closed",
+        "closed"
+    ]],
+
+    ["Forwarded",[
+        "Forwarded",
+        "forwarded"
+    ]],
+
+    ["Disposed",[
+        "Disposed",
+        "disposed"
+    ]],
+
+    ["Parked",[
+        "Parked",
+        "parked"
+    ]],
+
+    ["Merged",[
+        "Merged",
+        "merged"
+    ]]
+
+];
+
+
+/* =========================================================
+   PENDENCY COLUMNS
+========================================================= */
+
+const pendingColumns = [
+
+    ["0–7 Days",[
+        "0–7 Days",
+        "0-7 Days",
+        "0 7 Days",
+        "0-7",
+        "0–7"
+    ]],
+
+    ["8–15 Days",[
+        "8–15 Days",
+        "8-15 Days",
+        "8 15 Days",
+        "8-15",
+        "8–15"
+    ]],
+
+    ["16–30 Days",[
+        "16–30 Days",
+        "16-30 Days",
+        "16 30 Days",
+        "16-30",
+        "16–30"
+    ]],
+
+    ["31–60 Days",[
+        "31–60 Days",
+        "31-60 Days",
+        "31 60 Days",
+        "31-60",
+        "31–60"
+    ]],
+
+    [">60 Days",[
+        ">60 Days",
+        "> 60 Days",
+        "60+ Days",
+        ">60"
+    ]]
+
+];
+
+
+/* =========================================================
+   CREATE ROW
+========================================================= */
+
+function createRow(row,index){
+
+    let html = "";
+
+    /* S.NO */
+
+    html += `
+        <td class="serial">
+            ${index + 1}
+        </td>
+    `;
+
+
+    /* EMPLOYEE */
+
+    html += `
+        <td>
+            ${escapeHTML(getEmployee(row))}
+        </td>
+    `;
+
+
+    /* STATION / DESIGNATION */
+
+    html += `
+        <td>
+            ${escapeHTML(getStation(row))}
+        </td>
+    `;
+
+
+    /* NORMAL COLUMNS */
+
+    normalColumns.forEach(column => {
+
+        const value = getValue(row,column[1]);
+
+        html += `
+            <td class="${performanceClass(value)}">
+                ${escapeHTML(value)}
+            </td>
+        `;
+
+    });
+
+
+    /* PENDENCY COLUMNS */
+
+    pendingColumns.forEach(column => {
+
+        const value = getValue(row,column[1]);
+
+        html += `
+            <td class="${pendingClass(value)}">
+                ${escapeHTML(value)}
+            </td>
+        `;
+
+    });
+
+
+    return `<tr>${html}</tr>`;
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value){
+
+    if(value === null || value === undefined){
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   DISPLAY DATA
+========================================================= */
+
+function displayData(data){
+
+    const tbody =
+        document.getElementById("tableBody");
+
+    tbody.innerHTML = "";
+
+
+    if(!data || data.length === 0){
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="16" class="no-data">
+                    No E-Office data found
+                </td>
+            </tr>
+        `;
+
+        document.getElementById("recordCount").textContent =
+            "0 records";
+
+        return;
+
+    }
+
+
+    data.forEach((row,index)=>{
+
+        tbody.insertAdjacentHTML(
+            "beforeend",
+            createRow(row,index)
+        );
+
+    });
+
+
+    document.getElementById("recordCount").textContent =
+        `${data.length} records`;
+
+}
+
+
+/* =========================================================
+   LOAD JSON
+========================================================= */
+
+async function loadData(){
+
+    const tbody =
+        document.getElementById("tableBody");
+
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="16" class="loading">
+                Loading E-Office data...
+            </td>
+        </tr>
+    `;
+
+
+    try{
+
+        const response =
+            await fetch(DATA_URL + "?v=" + Date.now());
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "JSON file could not be loaded"
+            );
+
+        }
+
+
+        const result =
+            await response.json();
+
+
+        /*
+
+        Handles both:
+
+        [
+            {...},
+            {...}
+        ]
+
+        and:
+
+        {
+            "data":[
+                {...}
+            ]
+        }
+
+        */
+
+        if(Array.isArray(result)){
+
+            allData = result;
+
+        }
+
+        else if(Array.isArray(result.data)){
+
+            allData = result.data;
+
+        }
+
+        else if(Array.isArray(result.records)){
+
+            allData = result.records;
+
+        }
+
+        else{
+
+            throw new Error(
+                "Invalid JSON structure"
+            );
+
+        }
+
+
+        displayData(allData);
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="16" class="error">
+                    Unable to load E-Office data.
+                    <br>
+                    Please check the JSON file.
+                </td>
+            </tr>
+        `;
+
+        document.getElementById("recordCount")
+            .textContent = "Data error";
+
+    }
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+document
+.getElementById("searchInput")
+.addEventListener("input",function(){
+
+    const search =
+        this.value
+        .toLowerCase()
+        .trim();
+
+
+    if(search === ""){
+
+        displayData(allData);
+
+        return;
+
+    }
+
+
+    const filtered =
+        allData.filter(row => {
+
+            const employee =
+                String(getEmployee(row))
+                .toLowerCase();
+
+            const station =
+                String(getStation(row))
+                .toLowerCase();
+
+
+            return employee.includes(search)
+                || station.includes(search);
+
+        });
+
+
+    displayData(filtered);
+
+});
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadData();
+
+</script>
+
 </body>
 </html>
