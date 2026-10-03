@@ -26,6 +26,10 @@ const esc = v =>
     );
 
 
+/* =========================================================
+   WORKLOAD
+========================================================= */
+
 const workload = r =>
     n(r.opening) +
     n(r.created) +
@@ -33,7 +37,7 @@ const workload = r =>
 
 
 /* =========================================================
-   SCORE CALCULATION
+   FINAL SCORE
 ========================================================= */
 
 function calcScore(r) {
@@ -69,9 +73,9 @@ function calcScore(r) {
         0,
         Math.min(
             100,
-            disposal * .50 +
-            pendency * .30 +
-            age * .20
+            disposal * 0.50 +
+            pendency * 0.30 +
+            age * 0.20
         )
     );
 }
@@ -101,167 +105,6 @@ const score = r => calcScore(r);
 
 
 /* =========================================================
-   COLOUR SYSTEM
-   SAME STYLE AS YOUR SMART POLICING TABLE
-========================================================= */
-
-function addColourStyles() {
-
-    if (document.getElementById("eoffice-colour-style")) {
-        return;
-    }
-
-    const style = document.createElement("style");
-
-    style.id = "eoffice-colour-style";
-
-    style.textContent = `
-
-        /* GOOD - GREEN */
-
-        .eo-green {
-            background:#b7e4cf !important;
-            color:#111827 !important;
-        }
-
-
-        /* MEDIUM - YELLOW */
-
-        .eo-yellow {
-            background:#f5e6b8 !important;
-            color:#111827 !important;
-        }
-
-
-        /* BAD - PINK/RED */
-
-        .eo-red {
-            background:#f3c2bd !important;
-            color:#111827 !important;
-        }
-
-
-        /* SCORE */
-
-        .eo-score-green {
-            background:#b7e4cf !important;
-            color:#087443 !important;
-            font-weight:800 !important;
-        }
-
-        .eo-score-yellow {
-            background:#f5e6b8 !important;
-            color:#8a6200 !important;
-            font-weight:800 !important;
-        }
-
-        .eo-score-red {
-            background:#f3c2bd !important;
-            color:#a51d1d !important;
-            font-weight:800 !important;
-        }
-
-    `;
-
-    document.head.appendChild(style);
-}
-
-
-/* =========================================================
-   NORMAL VALUE COLOUR
-   Higher value = better
-========================================================= */
-
-function valueClass(value, maximum) {
-
-    const v = n(value);
-
-    if (v <= 0) {
-        return "eo-red";
-    }
-
-    if (maximum <= 0) {
-        return "eo-green";
-    }
-
-    const pct = (v / maximum) * 100;
-
-    if (pct >= 70) {
-        return "eo-green";
-    }
-
-    if (pct >= 30) {
-        return "eo-yellow";
-    }
-
-    return "eo-red";
-}
-
-
-/* =========================================================
-   PENDENCY COLOUR
-   LOWER VALUE = BETTER
-========================================================= */
-
-function pendingColour(value, maximum) {
-
-    const v = n(value);
-
-    if (v === 0) {
-        return "eo-green";
-    }
-
-    if (maximum <= 0) {
-        return "eo-green";
-    }
-
-    const pct = (v / maximum) * 100;
-
-    if (pct <= 30) {
-        return "eo-yellow";
-    }
-
-    return "eo-red";
-}
-
-
-/* =========================================================
-   SCORE COLOUR
-========================================================= */
-
-function scoreColour(value) {
-
-    const v = n(value);
-
-    if (v >= 80) {
-        return "eo-score-green";
-    }
-
-    if (v >= 50) {
-        return "eo-score-yellow";
-    }
-
-    return "eo-score-red";
-}
-
-
-/* =========================================================
-   GET MAXIMUM VALUE FOR EACH COLUMN
-========================================================= */
-
-function columnMaximum(field) {
-
-    if (!DATA.records.length) {
-        return 0;
-    }
-
-    return Math.max(
-        ...DATA.records.map(r => n(r[field]))
-    );
-}
-
-
-/* =========================================================
    LOAD DATA
 ========================================================= */
 
@@ -269,38 +112,30 @@ async function loadData() {
 
     try {
 
-        const res =
-            await fetch(
-                "data.json?ts=" + Date.now(),
-                {
-                    cache: "no-store"
-                }
-            );
-
+        const res = await fetch(
+            "data.json?ts=" + Date.now(),
+            {
+                cache: "no-store"
+            }
+        );
 
         if (!res.ok) {
+
             throw new Error(
                 "data.json HTTP " + res.status
             );
         }
 
-
         DATA = await res.json();
-
 
         DATA.records =
             Array.isArray(DATA.records)
                 ? DATA.records
                 : [];
 
-
-        addColourStyles();
-
         render();
 
-    }
-
-    catch (e) {
+    } catch (e) {
 
         console.error(e);
 
@@ -309,7 +144,6 @@ async function loadData() {
             '<h2>Data could not be loaded</h2>' +
             '<p>Please keep the existing <b>data.json</b> in the repository root.</p>' +
             '</div>';
-
     }
 }
 
@@ -321,9 +155,7 @@ async function loadData() {
 function render() {
 
     const r = DATA.records;
-
     const p = DATA.reporting || {};
-
 
     const received =
         r.reduce(
@@ -331,13 +163,11 @@ function render() {
             0
         );
 
-
     const disposed =
         r.reduce(
             (a, x) => a + n(x.disposed),
             0
         );
-
 
     const pending =
         r.reduce(
@@ -345,12 +175,10 @@ function render() {
             0
         );
 
-
     const pd =
         r.filter(
             x => n(x.pending) > 0
         );
-
 
     const avg =
         pd.length
@@ -360,48 +188,36 @@ function render() {
             ) / pd.length
             : 0;
 
-
     $("unitCount").textContent =
         r.length;
-
 
     $("disposedHero").textContent =
         disposed.toLocaleString();
 
-
     $("pendencyHero").textContent =
         pending.toLocaleString();
-
 
     $("disposedTotal").textContent =
         disposed.toLocaleString();
 
-
     $("receivedTotal").textContent =
         received.toLocaleString();
-
 
     $("pendencyTotal").textContent =
         pending.toLocaleString();
 
-
     $("avgPending").textContent =
         avg.toFixed(2);
 
-
     $("period").textContent =
         `Reporting Period: ${p.from || "—"} TO ${p.to || "—"}`;
-
 
     $("chartNote").textContent =
         r.length +
         " records • Final Score = 50% Disposal + 30% Pendency + 20% Ageing";
 
-
     $("lastLoaded").textContent =
-        " • " +
-        new Date().toLocaleString();
-
+        " • " + new Date().toLocaleString();
 
     renderRanks();
     renderTable();
@@ -412,7 +228,7 @@ function render() {
 
 
 /* =========================================================
-   RANKING ITEM
+   RANKING ITEMS
 ========================================================= */
 
 function rankItem(r, i, bottom) {
@@ -425,18 +241,14 @@ function rankItem(r, i, bottom) {
             </b>
 
             <div>
-
                 <div class="rank-name">
                     ${esc(r.designation || "")}
                 </div>
 
                 <div class="rank-meta">
                     ${esc(r.name || "")}
-                    ${r.section
-                        ? " • " + esc(r.section)
-                        : ""}
+                    ${r.section ? " • " + esc(r.section) : ""}
                 </div>
-
             </div>
 
             ${
@@ -469,14 +281,12 @@ function renderRanks() {
                     score(b) - score(a)
             );
 
-
     const bottom =
         [...DATA.records]
             .sort(
                 (a, b) =>
                     score(a) - score(b)
             );
-
 
     $("topList").innerHTML =
         top
@@ -487,7 +297,6 @@ function renderRanks() {
             )
             .join("");
 
-
     $("bottomList").innerHTML =
         bottom
             .slice(0, 5)
@@ -497,7 +306,6 @@ function renderRanks() {
             )
             .join("");
 
-
     const max =
         Math.max(
             ...top.map(
@@ -506,87 +314,267 @@ function renderRanks() {
             1
         );
 
-
     $("barChart").innerHTML =
         top
             .map(
-                r =>
-                    `<div
+                r => `
+                    <div
                         class="bar"
-                        style="height:${Math.max(
-                            8,
-                            score(r) / max * 100
-                        )}%"
+                        style="
+                            height:${Math.max(
+                                8,
+                                score(r) / max * 100
+                            )}%
+                        "
                     >
                         <span>
                             ${score(r).toFixed(1)}
                         </span>
-                    </div>`
+                    </div>
+                `
             )
             .join("");
 }
 
 
 /* =========================================================
-   FULL E-OFFICE TABLE
-   COLOURED CELLS
+   COLOUR STYLES
 ========================================================= */
 
-function fullRow(r, i) {
+function addColourStyles() {
 
-    const maxOpening =
-        columnMaximum("opening");
+    if (
+        document.getElementById(
+            "eoffice-colour-style"
+        )
+    ) {
+        return;
+    }
 
-    const maxCreated =
-        columnMaximum("created");
+    const style =
+        document.createElement("style");
 
-    const maxReceived =
-        columnMaximum("received");
+    style.id =
+        "eoffice-colour-style";
 
-    const maxClosed =
-        columnMaximum("disposedClosed");
+    style.textContent = `
 
-    const maxForwarded =
-        columnMaximum("disposedForwarded");
+        /* GREEN */
 
-    const maxDisposed =
-        columnMaximum("disposed");
+        .eo-green {
+            background: #b7e4cf !important;
+            color: #111827 !important;
+        }
 
-    const maxParked =
-        columnMaximum("parked");
 
-    const maxMerged =
-        columnMaximum("merged");
+        /* YELLOW */
 
-    const maxP07 =
-        columnMaximum("p0_7");
+        .eo-yellow {
+            background: #f5e6b8 !important;
+            color: #111827 !important;
+        }
 
-    const maxP815 =
-        columnMaximum("p8_15");
 
-    const maxP1630 =
-        columnMaximum("p16_30");
+        /* RED / PINK */
 
-    const maxP3160 =
-        columnMaximum("p31_60");
+        .eo-red {
+            background: #f3c2bd !important;
+            color: #111827 !important;
+        }
 
-    const maxP60 =
-        columnMaximum("p60");
 
+        /* SCORE */
+
+        .eo-score-green {
+            background: #b7e4cf !important;
+            color: #087443 !important;
+            font-weight: 800 !important;
+        }
+
+        .eo-score-yellow {
+            background: #f5e6b8 !important;
+            color: #8a6200 !important;
+            font-weight: 800 !important;
+        }
+
+        .eo-score-red {
+            background: #f3c2bd !important;
+            color: #a51d1d !important;
+            font-weight: 800 !important;
+        }
+
+    `;
+
+    document.head.appendChild(style);
+}
+
+
+/* =========================================================
+   OPENING COLOUR
+   0 = GOOD
+========================================================= */
+
+function openingColour(value) {
+
+    const v = n(value);
+
+    if (v === 0) {
+        return "eo-green";
+    }
+
+    return "eo-red";
+}
+
+
+/* =========================================================
+   DISPOSED COLOUR
+   BASED ON DISPOSAL PERFORMANCE
+========================================================= */
+
+function disposedColour(r) {
+
+    const rate =
+        disposalPct(r);
+
+    if (rate >= 80) {
+        return "eo-green";
+    }
+
+    if (rate >= 50) {
+        return "eo-yellow";
+    }
+
+    return "eo-red";
+}
+
+
+/* =========================================================
+   PARKED / MERGED COLOUR
+   LOWER = BETTER
+========================================================= */
+
+function lowIsGoodColour(value) {
+
+    const v = n(value);
+
+    if (v === 0) {
+        return "eo-green";
+    }
+
+    if (v <= 10) {
+        return "eo-yellow";
+    }
+
+    return "eo-red";
+}
+
+
+/* =========================================================
+   PENDENCY AGE COLOUR
+   LOWER = BETTER
+========================================================= */
+
+function ageColour(value) {
+
+    const v = n(value);
+
+    if (v === 0) {
+        return "eo-green";
+    }
+
+    if (v <= 5) {
+        return "eo-yellow";
+    }
+
+    return "eo-red";
+}
+
+
+/* =========================================================
+   PENDING TOTAL COLOUR
+========================================================= */
+
+function pendingTotalColour(value) {
+
+    const v = n(value);
+
+    if (v === 0) {
+        return "eo-green";
+    }
+
+    if (v <= 10) {
+        return "eo-yellow";
+    }
+
+    return "eo-red";
+}
+
+
+/* =========================================================
+   PENDING DAYS COLOUR
+========================================================= */
+
+function pendingDaysColour(value) {
+
+    const v = n(value);
+
+    if (v === 0) {
+        return "eo-green";
+    }
+
+    if (v <= 15) {
+        return "eo-yellow";
+    }
+
+    return "eo-red";
+}
+
+
+/* =========================================================
+   SCORE COLOUR
+========================================================= */
+
+function scoreColour(value) {
+
+    const v = n(value);
+
+    if (v >= 80) {
+        return "eo-score-green";
+    }
+
+    if (v >= 50) {
+        return "eo-score-yellow";
+    }
+
+    return "eo-score-red";
+}
+
+
+/* =========================================================
+   COLOURED TABLE ROW
+========================================================= */
+
+function colouredFullRow(r, i) {
 
     return `
 
         <tr>
+
+            <!-- S.NO -->
 
             <td>
                 ${i + 1}
             </td>
 
 
+            <!-- EMPLOYEE -->
+
             <td>
                 ${esc(r.name)}
             </td>
 
+
+            <!-- STATION / DESIGNATION -->
 
             <td>
                 ${esc(
@@ -608,159 +596,112 @@ function fullRow(r, i) {
 
             <!-- OPENING -->
 
-            <td class="${valueClass(
-                r.opening,
-                maxOpening
-            )}">
+            <td class="${openingColour(r.opening)}">
                 ${n(r.opening)}
             </td>
 
 
             <!-- CREATED -->
 
-            <td class="${valueClass(
-                r.created,
-                maxCreated
-            )}">
+            <td>
                 ${n(r.created)}
             </td>
 
 
             <!-- RECEIVED -->
 
-            <td class="${valueClass(
-                r.received,
-                maxReceived
-            )}">
+            <td>
                 ${n(r.received)}
             </td>
 
 
             <!-- CLOSED -->
 
-            <td class="${valueClass(
-                r.disposedClosed,
-                maxClosed
-            )}">
+            <td>
                 ${n(r.disposedClosed)}
             </td>
 
 
             <!-- FORWARDED -->
 
-            <td class="${valueClass(
-                r.disposedForwarded,
-                maxForwarded
-            )}">
+            <td>
                 ${n(r.disposedForwarded)}
             </td>
 
 
             <!-- DISPOSED -->
 
-            <td class="${valueClass(
-                r.disposed,
-                maxDisposed
-            )}">
+            <td class="${disposedColour(r)}">
                 ${n(r.disposed)}
             </td>
 
 
             <!-- PARKED -->
 
-            <td class="${pendingColour(
-                r.parked,
-                maxParked
-            )}">
+            <td class="${lowIsGoodColour(r.parked)}">
                 ${n(r.parked)}
             </td>
 
 
             <!-- MERGED -->
 
-            <td class="${valueClass(
-                r.merged,
-                maxMerged
-            )}">
+            <td class="${lowIsGoodColour(r.merged)}">
                 ${n(r.merged)}
             </td>
 
 
             <!-- 0-7 DAYS -->
 
-            <td class="${pendingColour(
-                r.p0_7,
-                maxP07
-            )}">
+            <td class="${ageColour(r.p0_7)}">
                 ${n(r.p0_7)}
             </td>
 
 
             <!-- 8-15 DAYS -->
 
-            <td class="${pendingColour(
-                r.p8_15,
-                maxP815
-            )}">
+            <td class="${ageColour(r.p8_15)}">
                 ${n(r.p8_15)}
             </td>
 
 
             <!-- 16-30 DAYS -->
 
-            <td class="${pendingColour(
-                r.p16_30,
-                maxP1630
-            )}">
+            <td class="${ageColour(r.p16_30)}">
                 ${n(r.p16_30)}
             </td>
 
 
             <!-- 31-60 DAYS -->
 
-            <td class="${pendingColour(
-                r.p31_60,
-                maxP3160
-            )}">
+            <td class="${ageColour(r.p31_60)}">
                 ${n(r.p31_60)}
             </td>
 
 
             <!-- >60 DAYS -->
 
-            <td class="${pendingColour(
-                r.p60,
-                maxP60
-            )}">
+            <td class="${ageColour(r.p60)}">
                 ${n(r.p60)}
             </td>
 
 
             <!-- TOTAL PENDENCY -->
 
-            <td class="${pendingColour(
-                r.pending,
-                columnMaximum("pending")
-            )}">
+            <td class="${pendingTotalColour(r.pending)}">
                 ${n(r.pending)}
             </td>
 
 
-            <!-- AVG DAYS -->
+            <!-- PENDING DAYS -->
 
-            <td class="${pendingColour(
-                r.pendingDays,
-                columnMaximum("pendingDays")
-            )}">
+            <td class="${pendingDaysColour(r.pendingDays)}">
                 ${n(r.pendingDays).toFixed(2)}
             </td>
 
 
-            <!-- SCORE -->
+            <!-- FINAL SCORE -->
 
-            <td class="${scoreColour(
-                score(r)
-            )}">
+            <td class="${scoreColour(score(r))}">
                 <b>
                     ${score(r).toFixed(1)}
                 </b>
@@ -773,7 +714,7 @@ function fullRow(r, i) {
 
 
 /* =========================================================
-   FULL TABLE SEARCH
+   MAIN TABLE
 ========================================================= */
 
 function renderTable() {
@@ -781,7 +722,6 @@ function renderTable() {
     const q =
         ($("searchRank").value || "")
             .toLowerCase();
-
 
     const rows =
         DATA.records.filter(
@@ -799,17 +739,17 @@ function renderTable() {
                 .includes(q)
         );
 
-
     $("tableCount").textContent =
         rows.length + " records";
 
-
     $("rankingTable").innerHTML =
         rows
-            .map(fullRow)
+            .map(
+                colouredFullRow
+            )
             .join("") ||
 
-        '<tr><td colspan="19">No records found</td></tr>';
+        '<tr><td colspan="20">No records found</td></tr>';
 }
 
 
@@ -823,7 +763,6 @@ function renderDetail() {
         ($("searchDetail").value || "")
             .toLowerCase();
 
-
     const rows =
         DATA.records.filter(
             r =>
@@ -840,78 +779,56 @@ function renderDetail() {
                 .includes(q)
         );
 
-
     $("detailTable").innerHTML =
-
         rows
             .map(
                 (r, i) => `
 
-                <tr>
+                    <tr>
 
-                    <td>
-                        ${i + 1}
-                    </td>
+                        <td>${i + 1}</td>
 
-                    <td>
-                        ${esc(r.name)}
-                    </td>
+                        <td>
+                            ${esc(r.name)}
+                        </td>
 
-                    <td>
-                        ${esc(
-                            r.station ||
-                            r.section ||
-                            r.designation
-                        )}
-                    </td>
+                        <td>
+                            ${esc(
+                                r.station ||
+                                r.section ||
+                                r.designation
+                            )}
+                        </td>
 
-                    <td>
-                        ${n(r.opening)}
-                    </td>
+                        <td>${n(r.opening)}</td>
 
-                    <td>
-                        ${n(r.created)}
-                    </td>
+                        <td>${n(r.created)}</td>
 
-                    <td>
-                        ${n(r.received)}
-                    </td>
+                        <td>${n(r.received)}</td>
 
-                    <td>
-                        ${n(r.disposedClosed)}
-                    </td>
+                        <td>${n(r.disposedClosed)}</td>
 
-                    <td>
-                        ${n(r.disposedForwarded)}
-                    </td>
+                        <td>${n(r.disposedForwarded)}</td>
 
-                    <td>
-                        ${n(r.disposed)}
-                    </td>
+                        <td>${n(r.disposed)}</td>
 
-                    <td>
-                        ${n(r.parked)}
-                    </td>
+                        <td>${n(r.parked)}</td>
 
-                    <td>
-                        ${n(r.merged)}
-                    </td>
+                        <td>${n(r.merged)}</td>
 
-                    <td>
-                        ${n(r.pending)}
-                    </td>
+                        <td>${n(r.pending)}</td>
 
-                    <td>
-                        ${n(r.pendingDays).toFixed(2)}
-                    </td>
+                        <td>
+                            ${n(r.pendingDays).toFixed(2)}
+                        </td>
 
-                    <td>
-                        ${score(r).toFixed(1)}
-                    </td>
+                        <td>
+                            ${score(r).toFixed(1)}
+                        </td>
 
-                </tr>
+                    </tr>
 
-            `
+                `
             )
             .join("");
 }
@@ -926,7 +843,6 @@ function renderPerformance() {
     const q =
         ($("perfSearch").value || "")
             .toLowerCase();
-
 
     const rows =
         [...DATA.records]
@@ -949,83 +865,88 @@ function renderPerformance() {
                     score(b) - score(a)
             );
 
-
     $("performanceGrid").innerHTML =
-
         rows
-            .map(r => {
+            .map(
+                r => {
 
-                const rate =
-                    disposalPct(r);
+                    const rate =
+                        disposalPct(r);
 
+                    return `
 
-                return `
+                        <div class="perf">
 
-                    <div class="perf">
+                            <div class="perf-head">
 
-                        <div class="perf-head">
+                                <span>
+                                    ${esc(r.name)}
+                                </span>
 
-                            <span>
-                                ${esc(r.name)}
-                            </span>
+                                <b>
+                                    ${score(r).toFixed(1)}
+                                </b>
 
-                            <b>
-                                ${score(r).toFixed(1)}
-                            </b>
+                            </div>
+
+                            <div class="perf-meta">
+
+                                ${esc(r.designation)}
+
+                                •
+
+                                ${esc(
+                                    r.section ||
+                                    r.station ||
+                                    ""
+                                )}
+
+                            </div>
+
+                            <div class="progress">
+
+                                <i
+                                    style="
+                                        width:${rate}%
+                                    "
+                                ></i>
+
+                            </div>
+
+                            <small>
+
+                                Workload:
+                                ${workload(r).toLocaleString()}
+
+                                •
+
+                                Disposed:
+                                ${n(r.disposed).toLocaleString()}
+
+                                •
+
+                                Disposal:
+                                ${rate.toFixed(2)}%
+
+                                •
+
+                                Pending:
+                                ${n(r.pending)}
+
+                                (${pendingPct(r).toFixed(2)}%)
+
+                                •
+
+                                Avg days:
+                                ${n(r.pendingDays).toFixed(2)}
+
+                            </small>
 
                         </div>
 
-
-                        <div class="perf-meta">
-
-                            ${esc(r.designation)}
-                            •
-                            ${esc(
-                                r.section ||
-                                r.station ||
-                                ""
-                            )}
-
-                        </div>
-
-
-                        <div class="progress">
-
-                            <i
-                                style="
-                                    width:${rate}%
-                                "
-                            ></i>
-
-                        </div>
-
-
-                        <small>
-
-                            Workload:
-                            ${workload(r).toLocaleString()}
-
-                            • Disposed:
-                            ${n(r.disposed).toLocaleString()}
-
-                            • Disposal:
-                            ${rate.toFixed(2)}%
-
-                            • Pending:
-                            ${n(r.pending)}
-
-                            (${pendingPct(r).toFixed(2)}%)
-
-                            • Avg days:
-                            ${n(r.pendingDays).toFixed(2)}
-
-                        </small>
-
-                    </div>
-
-                `;
-
-            })
+                    `;
+                }
+            )
             .join("");
 }
 
@@ -1063,7 +984,6 @@ function simple(label, value, max) {
             </b>
 
         </div>
-
     `;
 }
 
@@ -1074,8 +994,8 @@ function simple(label, value, max) {
 
 function renderTrends() {
 
-    const r = DATA.records;
-
+    const r =
+        DATA.records;
 
     const vals = [
 
@@ -1135,13 +1055,13 @@ function renderTrends() {
 
     ];
 
-
     const max =
         Math.max(
-            ...vals.map(x => x[1]),
+            ...vals.map(
+                x => x[1]
+            ),
             1
         );
-
 
     $("movementBars").innerHTML =
         vals
@@ -1205,13 +1125,13 @@ function renderTrends() {
 
     ];
 
-
     const m =
         Math.max(
-            ...age.map(x => x[1]),
+            ...age.map(
+                x => x[1]
+            ),
             1
         );
-
 
     $("pendencyBars").innerHTML =
         age
@@ -1233,8 +1153,8 @@ function renderTrends() {
 
 function renderReports() {
 
-    const r = DATA.records;
-
+    const r =
+        DATA.records;
 
     const workloadTotal =
         r.reduce(
@@ -1243,14 +1163,12 @@ function renderReports() {
             0
         );
 
-
     const received =
         r.reduce(
             (a, x) =>
                 a + n(x.received),
             0
         );
-
 
     const disposed =
         r.reduce(
@@ -1259,14 +1177,12 @@ function renderReports() {
             0
         );
 
-
     const pending =
         r.reduce(
             (a, x) =>
                 a + n(x.pending),
             0
         );
-
 
     const disposal =
         workloadTotal
@@ -1278,7 +1194,6 @@ function renderReports() {
             )
             : 0;
 
-
     const pendPct =
         workloadTotal
             ? Math.min(
@@ -1289,12 +1204,10 @@ function renderReports() {
             )
             : 0;
 
-
     const pendingRecords =
         r.filter(
             x => n(x.pending) > 0
         );
-
 
     const avgPendingDays =
         pendingRecords.reduce(
@@ -1302,8 +1215,10 @@ function renderReports() {
                 a + n(x.pendingDays),
             0
         ) /
-        (pendingRecords.length || 1);
-
+        (
+            pendingRecords.length ||
+            1
+        );
 
     const age =
         avgPendingDays
@@ -1319,12 +1234,10 @@ function renderReports() {
             )
             : 100;
 
-
     const finalScore =
-        disposal * .50 +
-        (100 - pendPct) * .30 +
-        age * .20;
-
+        disposal * 0.50 +
+        (100 - pendPct) * 0.30 +
+        age * 0.20;
 
     $("reportCards").innerHTML = [
 
@@ -1369,34 +1282,33 @@ function renderReports() {
         ]
 
     ]
+        .map(
+            x => `
 
-    .map(
-        x => `
+                <article>
 
-            <article>
+                    <span>
+                        ${x[0]}
+                    </span>
 
-                <span>
-                    ${x[0]}
-                </span>
+                    <strong>
+                        ${
+                            typeof x[1] === "number"
+                                ? x[1].toLocaleString()
+                                : x[1]
+                        }
+                    </strong>
 
-                <strong>
-                    ${
-                        typeof x[1] === "number"
-                            ? x[1].toLocaleString()
-                            : x[1]
-                    }
-                </strong>
+                </article>
 
-            </article>
-
-        `
-    )
-    .join("");
+            `
+        )
+        .join("");
 }
 
 
 /* =========================================================
-   TAB NAVIGATION
+   TAB BUTTONS
 ========================================================= */
 
 document
@@ -1405,6 +1317,7 @@ document
     )
     .forEach(
         b =>
+
             b.addEventListener(
                 "click",
                 () => {
@@ -1415,12 +1328,10 @@ document
                         )
                         .forEach(
                             x =>
-                                x.classList
-                                    .remove(
-                                        "active"
-                                    )
+                                x.classList.remove(
+                                    "active"
+                                )
                         );
-
 
                     document
                         .querySelectorAll(
@@ -1428,24 +1339,20 @@ document
                         )
                         .forEach(
                             x =>
-                                x.classList
-                                    .remove(
-                                        "active"
-                                    )
+                                x.classList.remove(
+                                    "active"
+                                )
                         );
-
 
                     b.classList.add(
                         "active"
                     );
-
 
                     $(
                         b.dataset.target
                     ).classList.add(
                         "active"
                     );
-
 
                     if (
                         b.dataset.target ===
@@ -1498,5 +1405,7 @@ $("refresh")
 /* =========================================================
    START
 ========================================================= */
+
+addColourStyles();
 
 loadData();
