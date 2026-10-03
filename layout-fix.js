@@ -1,26 +1,14 @@
+/* ============================================================
+   CHITTOOR POLICE E-OFFICE
+   FINAL AP SMART POLICING STYLE LAYOUT
+   ============================================================ */
+
 (function () {
   "use strict";
 
-  /*
-    CHITTOOR POLICE
-    FINAL E-OFFICE LAYOUT
-
-    IMPORTANT:
-    DATA is declared as a top-level let in script.js.
-    Therefore use DATA directly.
-    Do NOT use window.DATA.
-  */
-
-  /* =====================================================
-     HELPERS
-  ===================================================== */
-
   const $ = id => document.getElementById(id);
 
-  const txt = v =>
-    String(v ?? "")
-      .replace(/\s+/g, " ")
-      .trim();
+  const num = v => Number(v) || 0;
 
   const esc = v =>
     String(v ?? "").replace(/[&<>"']/g, m => ({
@@ -31,55 +19,114 @@
       "'": "&#039;"
     }[m]));
 
-  function getStation(r) {
-    return txt(
+  function station(r) {
+    return String(
       r.station ||
       r.policeStation ||
       r.psName ||
       ""
-    );
+    ).replace(/\s+/g, " ").trim();
   }
 
-  function getDesignation(r) {
-    return txt(
+  function designation(r) {
+    return String(
       r.designation ||
       r.post ||
-      r.section ||
       ""
+    ).replace(/\s+/g, " ").trim();
+  }
+
+  function workload(r) {
+    return num(r.opening) + num(r.created) + num(r.received);
+  }
+
+  function score(r) {
+
+    const w = workload(r);
+
+    const disposal = w
+      ? Math.min(100, num(r.disposed) / w * 100)
+      : (num(r.pending) > 0 ? 0 : 100);
+
+    const pendingPct = w
+      ? Math.min(100, num(r.pending) / w * 100)
+      : (num(r.pending) > 0 ? 100 : 0);
+
+    const pendency = Math.max(0, 100 - pendingPct);
+
+    const ageing = num(r.pending) > 0
+      ? Math.max(
+          0,
+          100 - Math.min(100, num(r.pendingDays) / 60 * 100)
+        )
+      : 100;
+
+    return Math.max(
+      0,
+      Math.min(
+        100,
+        disposal * 0.50 +
+        pendency * 0.30 +
+        ageing * 0.20
+      )
     );
   }
 
-  function getUnitName(r) {
+  /* ============================================================
+     SUB-DIVISIONS
+     ============================================================ */
 
-    const station = getStation(r);
-    const designation = getDesignation(r);
-
-    if (!station && !designation) return "—";
-
-    if (!station) return designation;
-
-    if (!designation) return station;
-
-    if (
-      station.toLowerCase() ===
-      designation.toLowerCase()
-    ) {
-      return station;
+  const SUBDIVISIONS = [
+    {
+      key: "chittoor",
+      name: "Chittoor Sub-Division",
+      leader: "J. VENKATANARAYANA"
+    },
+    {
+      key: "palamaner",
+      name: "Palamaner Sub-Division",
+      leader: "D. PRABHAKAR"
+    },
+    {
+      key: "kuppam",
+      name: "Kuppam Sub-Division",
+      leader: "B. HEMANTH, ASST. SUPDT. OF POLICE"
+    },
+    {
+      key: "nagari",
+      name: "Nagari Sub-Division",
+      leader: "S. CHANDRA SEKHAR"
     }
+  ];
 
-    return station + " / " + designation;
-  }
+  const SPECIAL_WORDS = [
+    "DCRB",
+    "CRIME RECORDS",
+    "CCS",
+    "SPECIAL BRANCH",
+    " SB ",
+    "DTC",
+    "DTRB",
+    "PCR",
+    "TRAFFIC",
+    " AR ",
+    " VR ",
+    "MAHILA",
+    "WOMEN",
+    "CYBER",
+    "HOME GUARD",
+    "HOME GUARDS",
+    "COMMUNICATION",
+    "CONTROL ROOM"
+  ];
 
   function rawText(r) {
 
     return [
       r.name,
       r.designation,
-      r.post,
       r.section,
       r.station,
-      r.policeStation,
-      r.psName,
       r.unit,
       r.office,
       r.subdivision,
@@ -89,159 +136,59 @@
     ]
       .filter(Boolean)
       .join(" ")
-      .toLowerCase();
+      .toUpperCase();
   }
 
-  /* =====================================================
-     SCORE
-  ===================================================== */
+  function isSubdivision(r) {
 
-  function getScore(r) {
+    const s = rawText(r);
 
-    if (typeof score === "function") {
-      return Number(score(r)) || 0;
-    }
+    if (station(r)) return null;
 
-    return 0;
-  }
+    for (const x of SUBDIVISIONS) {
 
-  function average(rows) {
+      if (
+        new RegExp(
+          "\\b" + x.key + "\\b",
+          "i"
+        ).test(s)
+      ) {
+        return x;
+      }
 
-    if (!rows.length) return 0;
-
-    return rows.reduce(
-      (total, r) => total + getScore(r),
-      0
-    ) / rows.length;
-  }
-
-  function cls(v) {
-
-    if (v >= 80) return "good";
-
-    if (v >= 50) return "medium";
-
-    return "poor";
-  }
-
-  function num(v) {
-
-    return Number(v) || 0;
-  }
-
-  /* =====================================================
-     SUB-DIVISIONS
-  ===================================================== */
-
-  const SUBDIVISION_ORDER = [
-    "Chittoor Sub-Division",
-    "Palamaner Sub-Division",
-    "Kuppam Sub-Division",
-    "Nagari Sub-Division"
-  ];
-
-  const SDPO = {
-
-    "Chittoor Sub-Division":
-      "J. VENKATANARAYANA",
-
-    "Palamaner Sub-Division":
-      "D. PRABHAKAR",
-
-    "Kuppam Sub-Division":
-      "B. HEMANTH, ASST. SUPDT. OF POLICE",
-
-    "Nagari Sub-Division":
-      "S. CHANDRA SEKHAR"
-
-  };
-
-  function findSubdivision(r) {
-
-    const x = rawText(r);
-
-    if (
-      !getStation(r) &&
-      /\bchittoor\b/i.test(x)
-    ) {
-      return "Chittoor Sub-Division";
-    }
-
-    if (
-      !getStation(r) &&
-      /\bpalamaner(?:u)?\b/i.test(x)
-    ) {
-      return "Palamaner Sub-Division";
-    }
-
-    if (
-      !getStation(r) &&
-      /\bkuppam\b/i.test(x)
-    ) {
-      return "Kuppam Sub-Division";
-    }
-
-    if (
-      !getStation(r) &&
-      /\bnagari\b/i.test(x)
-    ) {
-      return "Nagari Sub-Division";
     }
 
     return null;
   }
 
-  /* =====================================================
-     SPECIAL UNITS
-  ===================================================== */
+  function isSpecial(r) {
 
-  const SPECIAL = [
+    const s = " " + rawText(r) + " ";
 
-    [/DCRB/i, "DCRB"],
-    [/CRIME RECORDS/i, "DCRB"],
-    [/CCS/i, "CCS"],
-    [/SPECIAL BRANCH/i, "SB"],
-    [/\bSB\b/i, "SB"],
-    [/DTC/i, "DTC"],
-    [/DTRB/i, "DTRB"],
-    [/PCR/i, "PCR"],
-    [/TRAFFIC/i, "Traffic"],
-    [/\bAR\b/i, "AR"],
-    [/\bVR\b/i, "VR"],
-    [/MAHILA|WOMEN/i, "Mahila"],
-    [/CYBER/i, "Cyber"],
-    [/HOME GUARD/i, "Home Guards"],
-    [/COMMUNICATION/i, "Communication"],
-    [/CONTROL ROOM/i, "PCR"]
+    if (station(r)) return null;
 
-  ];
+    for (const word of SPECIAL_WORDS) {
 
-  function findSpecial(r) {
+      if (s.includes(word)) {
+        return true;
+      }
 
-    const x = rawText(r);
+    }
 
-    const hit =
-      SPECIAL.find(([regex]) =>
-        regex.test(x)
-      );
-
-    return hit ? hit[1] : null;
+    return false;
   }
-
-  /* =====================================================
-     OFFICE STAFF
-  ===================================================== */
 
   function isOffice(r) {
 
-    const x = rawText(r).toUpperCase();
+    if (station(r)) return false;
 
-    return [
+    const s = rawText(r);
 
+    const words = [
       "DPO",
       "DISTRICT POLICE OFFICE",
-      "ADMINISTRATIVE OFFICER",
       "SUPERINTENDENT",
+      "ADMINISTRATIVE",
       "ESTABLISHMENT",
       "MINISTERIAL",
       "OFFICE STAFF",
@@ -249,179 +196,196 @@
       "LEGAL CELL",
       "COURT MONITORING",
       "RECORD ROOM"
+    ];
 
-    ].some(k => x.includes(k));
+    return words.some(x => s.includes(x));
   }
 
-  /* =====================================================
-     CREATE FOUR GROUPS
-  ===================================================== */
+  /* ============================================================
+     GROUP RECORDS
+     ============================================================ */
 
   function makeGroups(records) {
 
     const groups = {
-
       stations: new Map(),
-
       subdivisions: new Map(),
-
       office: new Map(),
-
       special: new Map()
-
     };
 
     records.forEach(r => {
 
-      const station =
-        getStation(r);
+      const st = station(r);
 
-      const sub =
-        findSubdivision(r);
+      /* POLICE STATIONS */
 
-      const special =
-        findSpecial(r);
+      if (st) {
 
-      let type;
-      let name;
+        if (!groups.stations.has(st)) {
+          groups.stations.set(st, []);
+        }
+
+        groups.stations.get(st).push(r);
+
+        return;
+      }
+
+      /* SUB-DIVISIONS */
+
+      const sub = isSubdivision(r);
 
       if (sub) {
 
-        type = "subdivisions";
-        name = sub;
+        if (!groups.subdivisions.has(sub.name)) {
+          groups.subdivisions.set(sub.name, []);
+        }
 
-      } else if (station) {
+        groups.subdivisions.get(sub.name).push(r);
 
-        type = "stations";
-        name = station;
-
-      } else if (special) {
-
-        type = "special";
-        name = special;
-
-      } else {
-
-        type = "office";
-
-        name =
-          txt(
-            r.section ||
-            r.designation ||
-            r.post ||
-            r.unit
-          ) || "Office Staff";
-
+        return;
       }
 
-      if (!groups[type].has(name)) {
+      /* SPECIAL UNITS */
 
-        groups[type].set(
-          name,
-          []
-        );
+      if (isSpecial(r)) {
 
+        let unit =
+          r.section ||
+          r.unit ||
+          r.office ||
+          r.designation ||
+          "Special Unit / Wing";
+
+        unit = String(unit)
+          .replace(/\s+/g, " ")
+          .trim();
+
+        if (!groups.special.has(unit)) {
+          groups.special.set(unit, []);
+        }
+
+        groups.special.get(unit).push(r);
+
+        return;
       }
 
-      groups[type]
-        .get(name)
-        .push(r);
+      /* OFFICE STAFF */
+
+      if (isOffice(r)) {
+
+        let unit =
+          r.section ||
+          r.office ||
+          r.unit ||
+          r.designation ||
+          "Office Staff";
+
+        unit = String(unit)
+          .replace(/\s+/g, " ")
+          .trim();
+
+        if (!groups.office.has(unit)) {
+          groups.office.set(unit, []);
+        }
+
+        groups.office.get(unit).push(r);
+
+        return;
+      }
+
+      /* REMAINING RECORDS */
+
+      let unit =
+        r.section ||
+        r.office ||
+        r.unit ||
+        "Office Staff";
+
+      unit = String(unit)
+        .replace(/\s+/g, " ")
+        .trim();
+
+      if (!groups.office.has(unit)) {
+        groups.office.set(unit, []);
+      }
+
+      groups.office.get(unit).push(r);
 
     });
 
     return groups;
   }
 
-  /* =====================================================
-     CHART
-  ===================================================== */
+  /* ============================================================
+     SCORE COLOUR
+     ============================================================ */
 
-  function chart(entries) {
+  function scoreClass(v) {
 
-    return `
-      <div class="final-chart">
+    if (v >= 80) return "score-green";
 
-        <div class="final-scale">
-          <span>100</span>
-          <span>75</span>
-          <span>50</span>
-          <span>25</span>
-          <span>0</span>
-        </div>
+    if (v >= 50) return "score-yellow";
 
-        <div class="final-bars">
-
-          ${entries.map(
-            ([name, rows]) => {
-
-              const value =
-                average(rows);
-
-              return `
-
-                <div class="final-bar-item">
-
-                  <div class="final-value">
-                    ${value.toFixed(1)}
-                  </div>
-
-                  <div
-                    class="final-bar ${cls(value)}"
-                    style="
-                      height:${Math.max(
-                        5,
-                        value
-                      )}%
-                    "
-                  ></div>
-
-                  <div
-                    class="final-bar-name"
-                    title="${esc(name)}"
-                  >
-                    ${esc(name)}
-                  </div>
-
-                </div>
-
-              `;
-
-            }
-          ).join("")}
-
-        </div>
-
-      </div>
-    `;
+    return "score-red";
   }
 
-  /* =====================================================
-     COMBINED TABLE
-  ===================================================== */
+  function cellClass(v, type) {
 
-  function table(rows) {
+    const n = num(v);
 
-    const sorted =
-      [...rows].sort(
-        (a, b) =>
-          getScore(b) -
-          getScore(a)
-      );
+    if (type === "opening") {
+      return n === 0 ? "good" : "bad";
+    }
+
+    if (type === "disposed") {
+      return n >= 80
+        ? "good"
+        : n >= 50
+          ? "warn"
+          : "bad";
+    }
+
+    if (type === "pending") {
+      return n === 0
+        ? "good"
+        : n <= 10
+          ? "warn"
+          : "bad";
+    }
+
+    if (type === "days") {
+      return n === 0
+        ? "good"
+        : n <= 15
+          ? "warn"
+          : "bad";
+    }
+
+    return "";
+  }
+
+  /* ============================================================
+     TABLE
+     ============================================================ */
+
+  function makeTable(rows) {
+
+    const sorted = [...rows].sort(
+      (a, b) => score(b) - score(a)
+    );
 
     return `
-
-      <div class="final-table-wrapper">
+      <div class="final-table-wrap">
 
         <table class="final-table">
 
           <thead>
 
             <tr>
-
               <th>Rank</th>
               <th>Employee</th>
               <th>Police Station / Designation</th>
-
               <th>Opening</th>
               <th>Created</th>
               <th>Received</th>
@@ -430,802 +394,833 @@
               <th>Disposed</th>
               <th>Parked</th>
               <th>Merged</th>
-
               <th>0–7 Days</th>
               <th>8–15 Days</th>
               <th>16–30 Days</th>
               <th>31–60 Days</th>
               <th>&gt;60 Days</th>
-
               <th>Total Pendency</th>
               <th>Avg. Pending Days</th>
               <th>Score</th>
-
             </tr>
 
           </thead>
 
           <tbody>
 
-            ${sorted.map(
-              (r, i) => {
+            ${sorted.map((r, i) => {
 
-                const s =
-                  getScore(r);
+              const st = station(r);
+              const des = designation(r);
 
-                return `
+              let org = "";
 
-                  <tr>
+              if (st && des) {
 
-                    <td>${i + 1}</td>
+                if (
+                  st.toLowerCase() ===
+                  des.toLowerCase()
+                ) {
+                  org = st;
+                } else {
+                  org = st + " / " + des;
+                }
 
-                    <td>
-                      ${esc(r.name)}
-                    </td>
+              } else {
 
-                    <td>
-                      ${esc(
-                        getUnitName(r)
-                      )}
-                    </td>
-
-                    <td>${num(r.opening)}</td>
-                    <td>${num(r.created)}</td>
-                    <td>${num(r.received)}</td>
-                    <td>${num(r.disposedClosed)}</td>
-                    <td>${num(r.disposedForwarded)}</td>
-                    <td>${num(r.disposed)}</td>
-                    <td>${num(r.parked)}</td>
-                    <td>${num(r.merged)}</td>
-
-                    <td>${num(r.p0_7)}</td>
-                    <td>${num(r.p8_15)}</td>
-                    <td>${num(r.p16_30)}</td>
-                    <td>${num(r.p31_60)}</td>
-                    <td>${num(r.p60)}</td>
-
-                    <td>${num(r.pending)}</td>
-
-                    <td>
-                      ${num(
-                        r.pendingDays
-                      ).toFixed(2)}
-                    </td>
-
-                    <td>
-                      <b class="${cls(s)}">
-                        ${s.toFixed(1)}
-                      </b>
-                    </td>
-
-                  </tr>
-
-                `;
+                org =
+                  st ||
+                  des ||
+                  r.section ||
+                  "";
 
               }
-            ).join("")}
+
+              return `
+                <tr>
+
+                  <td>${i + 1}</td>
+
+                  <td class="employee">
+                    ${esc(r.name || "")}
+                  </td>
+
+                  <td>
+                    ${esc(org)}
+                  </td>
+
+                  <td class="${cellClass(r.opening, "opening")}">
+                    ${num(r.opening)}
+                  </td>
+
+                  <td>${num(r.created)}</td>
+
+                  <td>${num(r.received)}</td>
+
+                  <td>${num(r.disposedClosed)}</td>
+
+                  <td>${num(r.disposedForwarded)}</td>
+
+                  <td>
+                    ${num(r.disposed)}
+                  </td>
+
+                  <td>${num(r.parked)}</td>
+
+                  <td>${num(r.merged)}</td>
+
+                  <td>${num(r.p0_7)}</td>
+
+                  <td>${num(r.p8_15)}</td>
+
+                  <td>${num(r.p16_30)}</td>
+
+                  <td>${num(r.p31_60)}</td>
+
+                  <td>${num(r.p60)}</td>
+
+                  <td class="${cellClass(r.pending, "pending")}">
+                    ${num(r.pending)}
+                  </td>
+
+                  <td class="${cellClass(r.pendingDays, "days")}">
+                    ${num(r.pendingDays).toFixed(2)}
+                  </td>
+
+                  <td class="${scoreClass(score(r))}">
+                    <b>${score(r).toFixed(1)}</b>
+                  </td>
+
+                </tr>
+              `;
+
+            }).join("")}
 
           </tbody>
 
         </table>
 
       </div>
-
     `;
   }
 
-  /* =====================================================
-     SUB-DIVISION LEADERS
-  ===================================================== */
+  /* ============================================================
+     BAR CHART
+     ============================================================ */
 
-  function leaders() {
+  function makeChart(entries) {
+
+    const units = [...entries.entries()]
+      .map(([name, rows]) => {
+
+        const avg =
+          rows.reduce(
+            (sum, r) => sum + score(r),
+            0
+          ) /
+          (rows.length || 1);
+
+        return {
+          name,
+          rows,
+          score: avg
+        };
+
+      })
+      .sort(
+        (a, b) => b.score - a.score
+      );
+
+    if (!units.length) {
+      return `
+        <div class="no-data">
+          No data available
+        </div>
+      `;
+    }
 
     return `
+      <div class="final-chart-scroll">
 
-      <div class="sdpo-list">
+        <div class="final-chart">
 
-        <span>
-          Chittoor:
-          J. VENKATANARAYANA
-        </span>
+          ${units.map(u => {
 
-        <span>
-          Palamaner:
-          D. PRABHAKAR
-        </span>
+            const height =
+              Math.max(
+                6,
+                Math.min(
+                  100,
+                  u.score
+                )
+              );
 
-        <span>
-          Kuppam:
-          B. HEMANTH,
-          ASST. SUPDT. OF POLICE
-        </span>
+            return `
+              <div class="final-bar-item">
 
-        <span>
-          Nagari:
-          S. CHANDRA SEKHAR
-        </span>
+                <div class="final-bar-value">
+                  ${u.score.toFixed(1)}
+                </div>
+
+                <div
+                  class="final-bar ${scoreClass(u.score)}"
+                  style="height:${height}%"
+                ></div>
+
+                <div class="final-bar-label">
+                  ${esc(u.name)}
+                </div>
+
+              </div>
+            `;
+
+          }).join("")}
+
+        </div>
 
       </div>
-
     `;
   }
 
-  /* =====================================================
+  /* ============================================================
+     LEADER
+     ============================================================ */
+
+  function getLeader(type, rows) {
+
+    if (type === "subdivisions") {
+
+      return SUBDIVISIONS
+        .filter(x =>
+          rows.some(r => {
+
+            const sub =
+              isSubdivision(r);
+
+            return (
+              sub &&
+              sub.name === x.name
+            );
+
+          })
+        )
+        .map(x => x.leader)
+        .join("  •  ");
+    }
+
+    if (!rows.length) {
+      return "—";
+    }
+
+    const leader =
+      [...rows].sort(
+        (a, b) =>
+          score(b) - score(a)
+      )[0];
+
+    return leader.name || "—";
+  }
+
+  /* ============================================================
+     GROUP CARD
+     ============================================================ */
+
+  function makeGroup(
+    type,
+    title,
+    subtitle,
+    entries
+  ) {
+
+    const rows =
+      [...entries.values()].flat();
+
+    if (!rows.length) {
+      return "";
+    }
+
+    const leader =
+      getLeader(type, rows);
+
+    const unitCount =
+      entries.size;
+
+    return `
+      <section class="final-group ${type}">
+
+        <div class="final-group-header">
+
+          <div>
+
+            <div class="final-group-title">
+              ${esc(title)}
+            </div>
+
+            <div class="final-group-subtitle">
+              ${esc(subtitle)}
+              • ${unitCount} Units
+            </div>
+
+          </div>
+
+          <div class="final-leader">
+
+            <span>
+              LEADER / OFFICER
+            </span>
+
+            <strong>
+              ${esc(leader)}
+            </strong>
+
+          </div>
+
+        </div>
+
+        <div class="final-section-title">
+          UNIT PERFORMANCE
+        </div>
+
+        ${makeChart(entries)}
+
+        <div class="final-section-title table-title">
+          DETAILED E-OFFICE PERFORMANCE
+        </div>
+
+        ${makeTable(rows)}
+
+      </section>
+    `;
+  }
+
+  /* ============================================================
+     CSS
+     ============================================================ */
+
+  function addStyles() {
+
+    if ($("final-eoffice-layout-style")) {
+      return;
+    }
+
+    const style =
+      document.createElement("style");
+
+    style.id =
+      "final-eoffice-layout-style";
+
+    style.textContent = `
+
+      #barChart {
+        display:none !important;
+      }
+
+      #rankings > .chart-panel {
+        display:none !important;
+      }
+
+      .group-summary-tabs {
+        display:none !important;
+      }
+
+      .organisation-tabs,
+      .organization-tabs,
+      .organisation-filter,
+      .organization-filter {
+        display:none !important;
+      }
+
+      #groupedEoffice {
+        display:block !important;
+        width:100% !important;
+        margin:0 !important;
+        padding:0 !important;
+      }
+
+      .final-group {
+        margin:24px 0;
+        padding:0;
+        border-radius:18px;
+        overflow:hidden;
+        background:#fff;
+        border:1px solid #d8dee8;
+        box-shadow:0 8px 24px rgba(0,0,0,.08);
+      }
+
+      .final-group-header {
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:20px;
+        padding:22px 26px;
+        background:linear-gradient(
+          135deg,
+          #173b67,
+          #245c91
+        );
+        color:#fff;
+      }
+
+      .final-group.subdivisions
+      .final-group-header {
+        background:linear-gradient(
+          135deg,
+          #56358a,
+          #7951b3
+        );
+      }
+
+      .final-group.office
+      .final-group-header {
+        background:linear-gradient(
+          135deg,
+          #9a5a16,
+          #d28725
+        );
+      }
+
+      .final-group.special
+      .final-group-header {
+        background:linear-gradient(
+          135deg,
+          #176b55,
+          #29906e
+        );
+      }
+
+      .final-group-title {
+        font-size:25px;
+        font-weight:800;
+        letter-spacing:.3px;
+      }
+
+      .final-group-subtitle {
+        margin-top:6px;
+        font-size:13px;
+        opacity:.9;
+      }
+
+      .final-leader {
+        min-width:260px;
+        text-align:right;
+        background:rgba(255,255,255,.13);
+        padding:10px 15px;
+        border-radius:10px;
+      }
+
+      .final-leader span {
+        display:block;
+        font-size:10px;
+        font-weight:700;
+        opacity:.8;
+        margin-bottom:4px;
+      }
+
+      .final-leader strong {
+        font-size:14px;
+      }
+
+      .final-section-title {
+        padding:15px 22px 8px;
+        font-size:14px;
+        font-weight:800;
+        color:#26364a;
+        letter-spacing:.5px;
+      }
+
+      .table-title {
+        padding-top:22px;
+      }
+
+      .final-chart-scroll {
+        overflow-x:auto;
+        padding:8px 22px 20px;
+      }
+
+      .final-chart {
+        min-width:max-content;
+        height:260px;
+        display:flex;
+        align-items:flex-end;
+        gap:14px;
+        padding:20px 10px 0;
+        border-bottom:2px solid #cbd3df;
+        background:
+          repeating-linear-gradient(
+            to top,
+            transparent 0,
+            transparent 49px,
+            #e9edf3 50px
+          );
+      }
+
+      .final-bar-item {
+        width:76px;
+        height:230px;
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-end;
+        align-items:center;
+        position:relative;
+      }
+
+      .final-bar {
+        width:48px;
+        min-height:8px;
+        border-radius:7px 7px 0 0;
+        transition:.2s;
+      }
+
+      .final-bar:hover {
+        opacity:.8;
+        transform:scaleY(1.02);
+      }
+
+      .final-bar-value {
+        font-size:11px;
+        font-weight:800;
+        margin-bottom:4px;
+      }
+
+      .final-bar-label {
+        width:90px;
+        margin-top:8px;
+        font-size:10px;
+        font-weight:700;
+        text-align:center;
+        line-height:1.2;
+        word-break:break-word;
+      }
+
+      .score-green {
+        background:#159447 !important;
+        color:#08752f;
+      }
+
+      .score-yellow {
+        background:#e6a21b !important;
+        color:#996b00;
+      }
+
+      .score-red {
+        background:#d94141 !important;
+        color:#b51f1f;
+      }
+
+      .final-table-wrap {
+        width:100%;
+        overflow-x:auto;
+        padding:0 20px 24px;
+        box-sizing:border-box;
+      }
+
+      .final-table {
+        width:100%;
+        min-width:1550px;
+        border-collapse:collapse;
+        font-size:12px;
+      }
+
+      .final-table th {
+        background:#24364b;
+        color:#fff;
+        padding:10px 8px;
+        border:1px solid #526174;
+        white-space:nowrap;
+        text-align:center;
+      }
+
+      .final-table td {
+        padding:8px 7px;
+        border:1px solid #d8dee7;
+        text-align:center;
+        white-space:nowrap;
+      }
+
+      .final-table tbody tr:nth-child(even) {
+        background:#f7f9fb;
+      }
+
+      .final-table tbody tr:hover {
+        background:#eef5ff;
+      }
+
+      .final-table .employee {
+        text-align:left;
+        font-weight:700;
+      }
+
+      .good {
+        background:#d9f4df !important;
+        color:#137333;
+        font-weight:700;
+      }
+
+      .warn {
+        background:#fff0bd !important;
+        color:#8a6500;
+        font-weight:700;
+      }
+
+      .bad {
+        background:#ffdede !important;
+        color:#b42323;
+        font-weight:700;
+      }
+
+      .final-table td.score-green,
+      .final-table td.score-yellow,
+      .final-table td.score-red {
+        color:#fff;
+        font-weight:800;
+      }
+
+      .no-data {
+        padding:30px;
+        text-align:center;
+        color:#777;
+      }
+
+      @media(max-width:800px) {
+
+        .final-group-header {
+          flex-direction:column;
+          align-items:flex-start;
+        }
+
+        .final-leader {
+          width:100%;
+          min-width:0;
+          text-align:left;
+          box-sizing:border-box;
+        }
+
+        .final-group-title {
+          font-size:20px;
+        }
+
+      }
+
+    `;
+
+    document.head.appendChild(style);
+  }
+
+  /* ============================================================
+     HIDE OLD COMPOSITE SCORE / CONTROLS
+     ============================================================ */
+
+  function hideOldPanels() {
+
+    const bar = $("barChart");
+
+    if (bar) {
+
+      const panel =
+        bar.closest(".chart-panel") ||
+        bar.closest(".panel") ||
+        bar.parentElement;
+
+      if (panel) {
+        panel.style.display = "none";
+      }
+
+    }
+
+    [
+      "groupSummaryTabs",
+      "tableCount",
+      "organisationControls",
+      "organizationControls"
+    ].forEach(id => {
+
+      const el = $(id);
+
+      if (el) {
+        el.style.display = "none";
+      }
+
+    });
+
+  }
+
+  /* ============================================================
      FINAL RENDER
-  ===================================================== */
+     ============================================================ */
 
   function renderFinal() {
 
+    const root =
+      $("groupedEoffice");
+
+    if (!root) {
+      return;
+    }
+
     if (
       typeof DATA === "undefined" ||
+      !DATA ||
       !Array.isArray(DATA.records) ||
       !DATA.records.length
     ) {
       return;
     }
 
-    const root =
-      $("groupedEoffice");
+    addStyles();
 
-    if (!root) return;
+    hideOldPanels();
 
     const groups =
-      makeGroups(
-        DATA.records
-      );
-
-    const definitions = [
-
-      [
-        "stations",
-        "🚔",
-        "GROUP 1: POLICE STATIONS",
-        "Police Station-wise E-Office Performance"
-      ],
-
-      [
-        "subdivisions",
-        "🏛️",
-        "GROUP 2: SUB-DIVISIONS",
-        "Sub-Division-wise E-Office Performance"
-      ],
-
-      [
-        "office",
-        "🗂️",
-        "GROUP 3: OFFICE STAFF",
-        "Office Staff / DPO E-Office Performance"
-      ],
-
-      [
-        "special",
-        "⭐",
-        "GROUP 4: SPECIAL UNITS / WINGS",
-        "Special Units and Wings E-Office Performance"
-      ]
-
-    ];
+      makeGroups(DATA.records);
 
     let html = "";
 
-    definitions.forEach(
-      ([type, icon, title, subtitle], index) => {
+    html += makeGroup(
+      "stations",
+      "GROUP 1: POLICE STATIONS",
+      "Police Station-wise E-Office Performance",
+      groups.stations
+    );
 
-        let entries =
-          [...groups[type].entries()];
+    html += makeGroup(
+      "subdivisions",
+      "GROUP 2: SUB-DIVISIONS",
+      "Sub-Division-wise E-Office Performance",
+      groups.subdivisions
+    );
 
-        if (
-          type ===
-          "subdivisions"
-        ) {
+    html += makeGroup(
+      "office",
+      "GROUP 3: OFFICE STAFF",
+      "DPO / Office Staff E-Office Performance",
+      groups.office
+    );
 
-          entries.sort(
-            (a, b) =>
-              SUBDIVISION_ORDER.indexOf(
-                a[0]
-              ) -
-              SUBDIVISION_ORDER.indexOf(
-                b[0]
-              )
-          );
-
-        } else {
-
-          entries.sort(
-            (a, b) =>
-              a[0].localeCompare(
-                b[0]
-              )
-          );
-
-        }
-
-        if (!entries.length)
-          return;
-
-        const rows =
-          entries.flatMap(
-            x => x[1]
-          );
-
-        html += `
-
-          <section
-            class="final-group group-${index + 1}"
-          >
-
-            <div class="final-header">
-
-              <div>
-
-                <h2>
-                  ${icon}
-                  ${title}
-                </h2>
-
-                <p>
-                  ${entries.length}
-                  Units
-                  •
-                  ${subtitle}
-                </p>
-
-              </div>
-
-              ${
-                type ===
-                "subdivisions"
-                  ? leaders()
-                  : ""
-              }
-
-            </div>
-
-            ${chart(entries)}
-
-            ${table(rows)}
-
-          </section>
-
-        `;
-
-      }
+    html += makeGroup(
+      "special",
+      "GROUP 4: SPECIAL UNITS / WINGS",
+      "Special Units and Wings E-Office Performance",
+      groups.special
     );
 
     root.innerHTML =
-      html;
+      html ||
+      `
+        <div class="no-data">
+          No E-Office records found.
+        </div>
+      `;
+
+    root.dataset.finalLayout =
+      "yes";
   }
 
-  /* =====================================================
-     REMOVE OLD COMPOSITE SCORE
-  ===================================================== */
+  /* ============================================================
+     START
+     ============================================================ */
 
-  function hideOldComposite() {
+  function start() {
 
-    const chart =
-      $("barChart");
+    addStyles();
 
-    if (chart) {
+    let attempts = 0;
 
-      const panel =
-        chart.closest(
-          ".chart-panel"
-        );
+    const timer =
+      setInterval(() => {
 
-      if (panel) {
+        attempts++;
 
-        panel.style.setProperty(
-          "display",
-          "none",
-          "important"
-        );
-
-      }
-
-    }
-
-    /* Extra protection */
-
-    document
-      .querySelectorAll(
-        "#rankings > .chart-panel"
-      )
-      .forEach(el => {
-
-        el.style.setProperty(
-          "display",
-          "none",
-          "important"
-        );
-
-      });
-
-  }
-
-  /* =====================================================
-     CSS
-  ===================================================== */
-
-  const style =
-    document.createElement(
-      "style"
-    );
-
-  style.id =
-    "FINAL-CHITTOOR-EOFFICE-LAYOUT";
-
-  style.textContent = `
-
-    /* REMOVE OLD COMPOSITE PANEL */
-
-    #rankings > .chart-panel {
-      display:none !important;
-    }
-
-
-    /* FINAL GROUP */
-
-    .final-group {
-
-      background:#fff;
-
-      border:1px solid #dce4ef;
-
-      border-top:5px solid #2457c5;
-
-      border-radius:14px;
-
-      margin:0 0 22px;
-
-      overflow:hidden;
-
-      box-shadow:
-        0 3px 14px
-        rgba(30,60,100,.08);
-
-    }
-
-    .group-2 {
-      border-top-color:#6941c6;
-    }
-
-    .group-3 {
-      border-top-color:#e58a16;
-    }
-
-    .group-4 {
-      border-top-color:#159b70;
-    }
-
-
-    /* HEADER */
-
-    .final-header {
-
-      display:flex;
-
-      justify-content:space-between;
-
-      align-items:center;
-
-      gap:20px;
-
-      padding:18px 20px 14px;
-
-    }
-
-    .final-header h2 {
-
-      margin:0;
-
-      color:#17396e;
-
-      font-size:20px;
-
-      font-weight:800;
-
-    }
-
-    .final-header p {
-
-      margin:5px 0 0;
-
-      color:#70809a;
-
-      font-size:13px;
-
-    }
-
-
-    /* SDPO */
-
-    .sdpo-list {
-
-      display:flex;
-
-      flex-wrap:wrap;
-
-      justify-content:flex-end;
-
-      gap:6px;
-
-      max-width:800px;
-
-    }
-
-    .sdpo-list span {
-
-      background:#edf4ff;
-
-      color:#2151a5;
-
-      border-radius:7px;
-
-      padding:7px 9px;
-
-      font-size:11px;
-
-      font-weight:800;
-
-    }
-
-
-    /* CHART */
-
-    .final-chart {
-
-      position:relative;
-
-      height:260px;
-
-      margin:0 14px;
-
-      border-top:1px solid #e5ebf3;
-
-      border-bottom:1px solid #e5ebf3;
-
-      overflow:hidden;
-
-      padding-bottom:45px;
-
-    }
-
-    .final-scale {
-
-      position:absolute;
-
-      left:0;
-
-      top:10px;
-
-      bottom:45px;
-
-      width:30px;
-
-      display:flex;
-
-      flex-direction:column;
-
-      justify-content:space-between;
-
-      color:#70809a;
-
-      font-size:10px;
-
-      text-align:right;
-
-    }
-
-    .final-bars {
-
-      position:absolute;
-
-      left:40px;
-
-      right:0;
-
-      top:10px;
-
-      bottom:45px;
-
-      display:flex;
-
-      align-items:flex-end;
-
-      gap:8px;
-
-      overflow-x:auto;
-
-      border-bottom:1px solid #cfd8e5;
-
-    }
-
-    .final-bar-item {
-
-      min-width:60px;
-
-      height:100%;
-
-      position:relative;
-
-      display:flex;
-
-      flex-direction:column;
-
-      align-items:center;
-
-      justify-content:flex-end;
-
-    }
-
-    .final-bar {
-
-      width:42px;
-
-      min-height:5px;
-
-      border-radius:4px 4px 0 0;
-
-    }
-
-    .final-bar.good {
-      background:#16b77e;
-    }
-
-    .final-bar.medium {
-      background:#f5b820;
-    }
-
-    .final-bar.poor {
-      background:#e76b63;
-    }
-
-    .final-value {
-
-      font-size:9px;
-
-      font-weight:800;
-
-      color:#263b5e;
-
-      margin-bottom:2px;
-
-    }
-
-    .final-bar-name {
-
-      position:absolute;
-
-      bottom:-37px;
-
-      width:80px;
-
-      text-align:center;
-
-      font-size:8px;
-
-      color:#52627b;
-
-      white-space:nowrap;
-
-      overflow:hidden;
-
-      text-overflow:ellipsis;
-
-      transform:rotate(-35deg);
-
-      transform-origin:top center;
-
-    }
-
-
-    /* TABLE */
-
-    .final-table-wrapper {
-
-      width:100%;
-
-      overflow:auto;
-
-    }
-
-    .final-table {
-
-      width:100%;
-
-      min-width:1450px;
-
-      border-collapse:collapse;
-
-    }
-
-    .final-table thead th {
-
-      background:#102e5b;
-
-      color:#fff;
-
-      font-size:11px;
-
-      padding:10px 7px;
-
-      white-space:nowrap;
-
-      text-align:center;
-
-    }
-
-    .final-table tbody td {
-
-      font-size:11px;
-
-      padding:8px 7px;
-
-      white-space:nowrap;
-
-      text-align:center;
-
-      border-bottom:1px solid #edf0f5;
-
-    }
-
-    .final-table tbody tr:hover {
-
-      background:#f5f8fc;
-
-    }
-
-    .final-table b.good {
-      color:#0b9f6a;
-    }
-
-    .final-table b.medium {
-      color:#d48a00;
-    }
-
-    .final-table b.poor {
-      color:#d94d43;
-    }
-
-
-    @media(max-width:800px) {
-
-      .final-header {
-
-        flex-direction:column;
-
-        align-items:flex-start;
-
-      }
-
-      .sdpo-list {
-
-        justify-content:flex-start;
-
-      }
-
-    }
-
-  `;
-
-  document.head.appendChild(
-    style
-  );
-
-
-  /* =====================================================
-     KEEP OVERRIDING OLD SCRIPT
-     
-     IMPORTANT:
-     script.js calls render() after data loads.
-     render() calls the OLD renderGroupedEoffice().
-     
-     Therefore we keep applying our final layout.
-  ===================================================== */
-
-  function applyFinalLayout() {
-
-    try {
-
-      hideOldComposite();
-
-      if (
-        typeof DATA !== "undefined" &&
-        Array.isArray(DATA.records) &&
-        DATA.records.length
-      ) {
-
-        renderFinal();
-
-      }
-
-    } catch (e) {
-
-      console.error(
-        "Final E-Office layout error:",
-        e
-      );
-
-    }
-
-  }
-
-
-  /* First attempts */
-
-  setTimeout(
-    applyFinalLayout,
-    100
-  );
-
-  setTimeout(
-    applyFinalLayout,
-    500
-  );
-
-  setTimeout(
-    applyFinalLayout,
-    1000
-  );
-
-  setTimeout(
-    applyFinalLayout,
-    2000
-  );
-
-  setTimeout(
-    applyFinalLayout,
-    4000
-  );
-
-
-  /* =====================================================
-     WATCH FOR script.js RE-RENDERING
-  ===================================================== */
-
-  const target =
-    $("rankings");
-
-  if (target) {
-
-    const observer =
-      new MutationObserver(
-        function () {
-
-          hideOldComposite();
+        try {
 
           if (
             typeof DATA !== "undefined" &&
+            DATA &&
             Array.isArray(DATA.records) &&
             DATA.records.length
           ) {
-
-            const root =
-              $("groupedEoffice");
-
-            if (
-              root &&
-              !root.querySelector(
-                ".final-group"
-              )
-            ) {
-
-              renderFinal();
-
-            }
-
+            renderFinal();
           }
 
+        } catch (e) {
+
+          console.error(
+            "E-Office layout fix:",
+            e
+          );
+
         }
-      );
+
+        if (attempts > 120) {
+          clearInterval(timer);
+        }
+
+      }, 500);
+
+    const observer =
+      new MutationObserver(() => {
+
+        const root =
+          $("groupedEoffice");
+
+        if (!root) {
+          return;
+        }
+
+        if (
+          typeof DATA === "undefined" ||
+          !DATA ||
+          !Array.isArray(DATA.records) ||
+          !DATA.records.length
+        ) {
+          return;
+        }
+
+        if (
+          root.dataset.finalLayout !== "yes" ||
+          !root.querySelector(".final-group")
+        ) {
+
+          setTimeout(() => {
+
+            if (
+              root.dataset.finalLayout !== "yes" ||
+              !root.querySelector(".final-group")
+            ) {
+              renderFinal();
+            }
+
+          }, 50);
+
+        }
+
+      });
 
     observer.observe(
-      target,
+      document.body,
       {
         childList:true,
         subtree:true
       }
     );
+
+  }
+
+  /* ============================================================
+     RUN
+     ============================================================ */
+
+  if (
+    document.readyState === "loading"
+  ) {
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      start
+    );
+
+  } else {
+
+    start();
 
   }
 
