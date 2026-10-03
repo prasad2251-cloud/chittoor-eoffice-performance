@@ -8,9 +8,9 @@
     "pendencyWeight": 0.3,
     "ageingWeight": 0.2,
     "description": "Final Score = 50% Disposal Performance + 30% Pendency Control + 20% Ageing Control",
-    "disposalPerformance": "min(100, Disposed / (Opening + Created + Received) \u00d7 100)",
-    "pendencyPerformance": "max(0, 100 - Pending / (Opening + Created + Received) \u00d7 100)",
-    "ageingPerformance": "100 when no files are pending; otherwise max(0, 100 - Average Pending Days / 60 \u00d7 100)"
+    "disposalPerformance": "min(100, Disposed / (Opening + Created + Received) × 100)",
+    "pendencyPerformance": "max(0, 100 - Pending / (Opening + Created + Received) × 100)",
+    "ageingPerformance": "100 when no files are pending; otherwise max(0, 100 - Average Pending Days / 60 × 100)"
   },
   "subdivisions": [
     {
@@ -78,8 +78,8 @@
     },
     {
       "subdivision": "CHITTOOR",
-      "ps_count": 13,
-      "average_score": 99.8,
+      "ps_count": 14,
+      "average_score": 99.6,
       "aggregate_score": 99.6,
       "grade": "A+",
       "top_ps": "Chittoor Taluk PS",
@@ -285,6 +285,21 @@
           "score": 100,
           "disposal_pct": 100.0,
           "pending_pct": 0.0
+        },
+        {
+          "station": "Irala",
+          "employee": "B.JAYASREE",
+          "opening": 0.0,
+          "created": 1092.0,
+          "received": 869.0,
+          "disposed": 1950.0,
+          "parked": 3.0,
+          "merged": 0.0,
+          "pendency": 11.0,
+          "average_pending_days": 5.5,
+          "score": 97.7,
+          "disposal_pct": 99.44,
+          "pending_pct": 0.56
         }
       ],
       "rank": 2
@@ -572,21 +587,6 @@
           "created": 2004.0,
           "received": 24.0,
           "disposed": 2028.0,
-          "parked": 0.0,
-          "merged": 0.0,
-          "pendency": 0.0,
-          "average_pending_days": 0.0,
-          "score": 100,
-          "disposal_pct": 100.0,
-          "pending_pct": 0.0
-        },
-        {
-          "station": "Palasamudram",
-          "employee": "K.SIVA SANKARA",
-          "opening": 0.0,
-          "created": 1741.0,
-          "received": 75.0,
-          "disposed": 1816.0,
           "parked": 0.0,
           "merged": 0.0,
           "pendency": 0.0,
