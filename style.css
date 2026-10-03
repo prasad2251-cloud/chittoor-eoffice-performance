@@ -1,0 +1,135 @@
+*{box-sizing:border-box}
+:root{
+  --navy:#0b2a63;--blue:#1f4fc4;--blue2:#3f6fe0;--bg:#eef4fc;
+  --text:#12264a;--muted:#61718d;--white:#fff;--line:#d9e4f2;
+  --green:#11a86b;--red:#e45d68;--gold:#f2b632;--shadow:0 10px 28px rgba(18,49,105,.12)
+}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#e8f0fb 0,#f8faff 70%);color:var(--text)}
+.page{width:min(1500px,94%);margin:20px auto 40px}
+.hero{background:linear-gradient(135deg,#09245a 0%,#123d88 48%,#285bd0 100%);color:#fff;border-radius:22px;padding:22px 28px;box-shadow:0 12px 30px rgba(10,43,105,.24);display:flex;justify-content:space-between;gap:25px;align-items:center}
+.brand{display:flex;align-items:center;gap:18px}.logo-row{display:flex;gap:7px}.logo-circle{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.7);display:grid;place-items:center;font-weight:800;font-size:14px}
+.eyebrow{font-size:13px;letter-spacing:2px;font-weight:800;color:#f6da86}.hero h1{margin:4px 0 7px;font-size:26px}.hero p{margin:0 0 12px;font-size:13px;opacity:.92}.period{display:inline-block;background:rgba(255,255,255,.13);padding:7px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.hero-stats{display:flex;gap:10px}.hero-stats div{min-width:105px;text-align:center;padding:14px 12px;border:1px solid rgba(255,255,255,.24);border-radius:14px;background:rgba(255,255,255,.11)}.hero-stats strong{display:block;font-size:24px}.hero-stats span{font-size:9px;font-weight:800;letter-spacing:.7px;opacity:.88}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.tab{border:1px solid #d9e3f2;background:#fff;color:#234170;padding:11px 18px;border-radius:22px;font-weight:700;box-shadow:0 3px 12px rgba(35,57,100,.08);cursor:pointer}.tab.active{background:linear-gradient(135deg,#1746b4,#2e63d3);color:#fff;border-color:#1746b4}.tab:hover{transform:translateY(-1px);border-color:#8eabe0}
+.section{display:none}.active-section{display:block}.section-title{display:flex;justify-content:space-between;align-items:center;margin:10px 0 14px}.section-title>div{display:flex;align-items:center;gap:9px}.section-title h2{margin:0;font-size:22px;color:#102d62}.section-icon{font-size:22px}.subtext{font-size:12px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}.metric-card,.panel{background:#fff;border:1px solid rgba(208,221,239,.95);border-radius:17px;box-shadow:var(--shadow)}.metric-card{padding:18px}.metric-card span{display:block;color:#566b8f;font-size:12px}.metric-card strong{display:block;color:#1748a7;font-size:29px;margin:9px 0 5px}.metric-card small{color:#74839c}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{overflow:hidden}.panel-head{display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,#fbfdff)}.panel-head h3{margin:0;font-size:15px;color:#173b73}.panel-head span{font-size:11px;color:var(--muted)}
+.rank-list{padding:9px 14px 14px;background:#fbfdff}.rank-item{display:grid;grid-template-columns:42px 1fr auto auto;gap:9px;align-items:center;background:linear-gradient(180deg,#f7faff,#eef4fb);border:1px solid #d9e4f2;border-radius:13px;padding:10px 12px;margin-top:8px;box-shadow:0 2px 7px rgba(30,65,120,.06)}.rank-num{font-weight:800;color:#244aa7}.rank-name{font-weight:800;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#17396f}.rank-meta{font-size:10px;color:var(--muted)}.score{font-weight:900;color:#079861}.badge{padding:4px 7px;border-radius:6px;font-size:10px;font-weight:800;background:#dff5ea;color:#098d5b}.badge.red{background:#fde5e7;color:#d94750}
+.chart-panel{margin-top:16px}.bar-chart{height:300px;display:flex;align-items:flex-end;gap:5px;padding:22px 18px 18px;overflow-x:auto}.bar{min-width:22px;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,#4b78e4,#1747b5);position:relative}.bar:hover{background:#123c9d}.bar span{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:800;color:#183b76}.bar label{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%) rotate(-55deg);transform-origin:top left;font-size:8px;white-space:nowrap;color:#5d6b83}
+.performance-grid{padding:14px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.perf{padding:13px;border:1px solid var(--line);border-radius:12px;background:#f7faff}.perf-head{display:flex;justify-content:space-between;font-weight:800;font-size:12px}.progress{height:8px;background:#e4ebf5;border-radius:10px;margin:9px 0 5px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,#12a66a,#20c486);border-radius:10px}.perf small{color:var(--muted)}
+.summary-bars{padding:18px}.summary-row{display:grid;grid-template-columns:150px 1fr 65px;align-items:center;gap:10px;margin:13px 0;font-size:12px}.summary-row .track{height:12px;background:#e8eef7;border-radius:10px;overflow:hidden}.summary-row i{display:block;height:100%;background:linear-gradient(90deg,#2858c8,#4c78e4);border-radius:10px}.summary-row strong{text-align:right}
+.toolbar{display:flex;gap:10px;margin-bottom:12px}.toolbar input{flex:1;border:1px solid #cddbeb;border-radius:12px;padding:12px 14px;font-size:14px;outline:none}.toolbar input:focus{border-color:#4770d8;box-shadow:0 0 0 3px rgba(71,112,216,.10)}.refresh{border:0;border-radius:12px;padding:0 18px;background:linear-gradient(135deg,#1748ae,#2d62cf);color:#fff;font-weight:800;cursor:pointer}
+.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:12px}th{background:linear-gradient(90deg,#102f70,#19499f);color:#fff;padding:12px;text-align:left;position:sticky;top:0}td{padding:11px;border-bottom:1px solid #e5ecf5}tr:hover td{background:#f3f7fd}.score-cell{font-weight:900;color:#079861}
+.report-box{padding:20px}.report-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.report-item{background:#f5f8fd;border:1px solid var(--line);border-radius:12px;padding:14px}.report-item span{display:block;color:var(--muted);font-size:11px}.report-item strong{display:block;font-size:20px;color:#19449d;margin-top:5px}
+footer{display:flex;justify-content:space-between;color:#6b7890;font-size:11px;padding:18px 4px}
+@media(max-width:900px){.hero{flex-direction:column;align-items:flex-start}.hero-stats{width:100%}.hero-stats div{flex:1}.cards{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}.performance-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.page{width:96%}.brand{align-items:flex-start}.logo-row{display:none}.hero h1{font-size:21px}.cards{grid-template-columns:1fr}.hero-stats{gap:5px}.hero-stats div{min-width:0}.tabs{gap:5px}.tab{padding:9px 11px;font-size:11px}.section-title{display:block}.subtext{display:block;margin-top:5px}.report-grid{grid-template-columns:1fr}}
+
+
+/* =========================================================
+   COMPACT HEADER IMAGES
+   Keeps the 3 header images small and aligned like a
+   professional Smart Policing dashboard.
+========================================================= */
+.image-row{
+  display:flex !important;
+  align-items:center !important;
+  gap:8px !important;
+  flex:0 0 auto !important;
+  height:78px !important;
+}
+.header-image{
+  height:78px !important;
+  width:78px !important;
+  border-radius:50% !important;
+  overflow:hidden !important;
+  background:rgba(255,255,255,.12) !important;
+  border:2px solid rgba(255,255,255,.75) !important;
+  box-shadow:0 3px 10px rgba(0,0,0,.18) !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+.header-image.logo-img{
+  width:72px !important;
+  height:72px !important;
+}
+.header-image img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  display:block !important;
+}
+.header-image.logo-img img{
+  object-fit:contain !important;
+  padding:5px !important;
+}
+.brand{
+  min-width:0 !important;
+  align-items:center !important;
+}
+.title-block{
+  min-width:0 !important;
+}
+.title-block h1{
+  line-height:1.12 !important;
+}
+@media(max-width:900px){
+  .image-row{
+    height:64px !important;
+  }
+  .header-image,
+  .header-image.logo-img{
+    width:58px !important;
+    height:58px !important;
+  }
+}
+@media(max-width:560px){
+  .image-row{
+    height:52px !important;
+  }
+  .header-image,
+  .header-image.logo-img{
+    width:46px !important;
+    height:46px !important;
+  }
+}
+
+
+/* =========================================================
+   FIX: METRIC CARD ALIGNMENT
+   The current HTML uses plain <article> elements inside .cards.
+   Style them directly so labels, values and subtitles align
+   exactly like the original dashboard cards.
+========================================================= */
+.cards > article{
+  display:block !important;
+  min-width:0 !important;
+  padding:18px !important;
+  background:#fff !important;
+  border:1px solid rgba(208,221,239,.95) !important;
+  border-radius:17px !important;
+  box-shadow:var(--shadow) !important;
+}
+.cards > article > span{
+  display:block !important;
+  color:#566b8f !important;
+  font-size:12px !important;
+  line-height:1.25 !important;
+  margin:0 !important;
+}
+.cards > article > strong{
+  display:block !important;
+  color:#1748a7 !important;
+  font-size:29px !important;
+  line-height:1.1 !important;
+  margin:9px 0 5px !important;
+  white-space:nowrap !important;
+}
+.cards > article > small{
+  display:block !important;
+  color:#74839c !important;
+  font-size:11px !important;
+  line-height:1.3 !important;
+  margin:0 !important;
+}
