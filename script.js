@@ -1,7 +1,6 @@
 /* ============================================================
    CHITTOOR POLICE - E-OFFICE PERFORMANCE DASHBOARD
    FINAL STABLE SCRIPT
-   Uses current index.html IDs + current data.json structure
    ============================================================ */
 
 let DATA = null;
@@ -25,7 +24,7 @@ const esc = s =>
 
 
 /* ============================================================
-   SCORE
+   PERFORMANCE SCORE
    ============================================================ */
 
 function score(r) {
@@ -43,13 +42,20 @@ function score(r) {
 
   const disposalRate =
     available > 0
-      ? Math.min(100, disposed / available * 100)
+      ? Math.min(
+          100,
+          disposed / available * 100
+        )
       : 0;
 
   const pendPenalty =
     Math.min(
       35,
-      pend / Math.max(1, disposed + pend) * 100
+      pend /
+      Math.max(
+        1,
+        disposed + pend
+      ) * 100
     );
 
   return Math.max(
@@ -64,12 +70,15 @@ function score(r) {
 
 
 /* ============================================================
-   ENRICH DATA
+   ENRICH RECORDS
    ============================================================ */
 
 function enriched() {
 
-  if (!DATA || !Array.isArray(DATA.records)) {
+  if (
+    !DATA ||
+    !Array.isArray(DATA.records)
+  ) {
     return [];
   }
 
@@ -81,27 +90,70 @@ function enriched() {
 
 
 /* ============================================================
-   WEIGHTED AVG
+   ⭐ PERMANENT DISTRICT AVERAGE PENDING DAYS
+   BUCKET-WEIGHTED CALCULATION
    ============================================================ */
 
-function avgWeighted(records) {
+function calculateDistrictAvgPending(t) {
 
-  const totalPend =
-    records.reduce(
-      (a, r) =>
-        a + (Number(r.total_pendency) || 0),
-      0
-    );
+  const b0_7 =
+    Number(t.pendency_0_7_days) || 0;
 
-  if (!totalPend) return 0;
+  const b8_15 =
+    Number(t.pendency_8_15_days) || 0;
 
-  return records.reduce(
-    (a, r) =>
-      a +
-      (Number(r.average_pending_days) || 0) *
-      (Number(r.total_pendency) || 0),
-    0
-  ) / totalPend;
+  const b16_30 =
+    Number(t.pendency_16_30_days) || 0;
+
+  const b31_60 =
+    Number(t.pendency_31_60_days) || 0;
+
+  const b60plus =
+    Number(t.pendency_over_60_days) || 0;
+
+
+  const total =
+    b0_7 +
+    b8_15 +
+    b16_30 +
+    b31_60 +
+    b60plus;
+
+
+  if (total === 0) {
+    return 0;
+  }
+
+
+  /*
+     Bucket midpoints:
+
+     0–7 Days     = 3.5
+     8–15 Days    = 11.5
+     16–30 Days   = 23
+     31–60 Days   = 45
+     >60 Days     = 75
+
+     IMPORTANT:
+     Do NOT use t.average_pending_days.
+     The source JSON contains an incorrect
+     aggregate value for this dashboard.
+  */
+
+  const weightedDays =
+
+    (b0_7 * 3.5) +
+
+    (b8_15 * 11.5) +
+
+    (b16_30 * 23) +
+
+    (b31_60 * 45) +
+
+    (b60plus * 75);
+
+
+  return weightedDays / total;
 }
 
 
@@ -125,40 +177,58 @@ function nameOf(r) {
 
 function setupTabs() {
 
-  document.querySelectorAll(".tab").forEach(btn => {
+  document
+    .querySelectorAll(".tab")
+    .forEach(btn => {
 
-    btn.addEventListener("click", () => {
+      btn.addEventListener(
+        "click",
+        () => {
 
-      const target =
-        btn.getAttribute("data-target");
+          const target =
+            btn.getAttribute(
+              "data-target"
+            );
 
-      if (!target) return;
+          if (!target) return;
 
-      document
-        .querySelectorAll(".tab")
-        .forEach(b =>
-          b.classList.remove("active")
-        );
 
-      document
-        .querySelectorAll(".section")
-        .forEach(s =>
-          s.classList.remove("active-section")
-        );
+          document
+            .querySelectorAll(".tab")
+            .forEach(b =>
+              b.classList.remove(
+                "active"
+              )
+            );
 
-      btn.classList.add("active");
 
-      const section = $(target);
+          document
+            .querySelectorAll(".section")
+            .forEach(s =>
+              s.classList.remove(
+                "active-section"
+              )
+            );
 
-      if (section) {
-        section.classList.add(
-          "active-section"
-        );
-      }
+
+          btn.classList.add("active");
+
+
+          const section =
+            $(target);
+
+          if (section) {
+
+            section.classList.add(
+              "active-section"
+            );
+
+          }
+
+        }
+      );
 
     });
-
-  });
 
 }
 
@@ -171,72 +241,119 @@ function render() {
 
   if (!DATA) return;
 
-  const rows = enriched();
 
-  const t = DATA.district_total || {};
+  const rows =
+    enriched();
 
-  /* HEADER */
+  const t =
+    DATA.district_total || {};
+
+
+  /* ----------------------------------------------------------
+     HEADER
+     ---------------------------------------------------------- */
 
   if ($("period")) {
+
     $("period").textContent =
       "Reporting Period: " +
-      (DATA.reporting_period || "");
+      (
+        DATA.reporting_period ||
+        ""
+      );
+
   }
 
+
   if ($("unitCount")) {
+
     $("unitCount").textContent =
       fmt(
         DATA.record_count ||
         rows.length
       );
+
   }
+
 
   if ($("disposedHero")) {
+
     $("disposedHero").textContent =
-      fmt(t.disposed_total);
+      fmt(
+        t.disposed_total
+      );
+
   }
+
 
   if ($("pendencyHero")) {
+
     $("pendencyHero").textContent =
-      fmt(t.total_pendency);
+      fmt(
+        t.total_pendency
+      );
+
   }
 
 
-  /* MAIN CARDS */
+  /* ----------------------------------------------------------
+     MAIN CARDS
+     ---------------------------------------------------------- */
 
   if ($("disposedTotal")) {
+
     $("disposedTotal").textContent =
-      fmt(t.disposed_total);
+      fmt(
+        t.disposed_total
+      );
+
   }
 
+
   if ($("receivedTotal")) {
+
     $("receivedTotal").textContent =
       fmt(
         (Number(t.created) || 0) +
         (Number(t.received) || 0)
       );
+
   }
+
 
   if ($("pendencyTotal")) {
+
     $("pendencyTotal").textContent =
-      fmt(t.total_pendency);
+      fmt(
+        t.total_pendency
+      );
+
   }
+
+
+  /* ⭐ CORRECT AVG PENDING DAYS */
 
   if ($("avgPending")) {
+
     $("avgPending").textContent =
-      Number(
-        t.average_pending_days ||
-        avgWeighted(rows)
-      ).toFixed(2);
+      calculateDistrictAvgPending(t)
+        .toFixed(2);
+
   }
+
 
   if ($("chartNote")) {
+
     $("chartNote").textContent =
-      rows.length + " records";
+      rows.length +
+      " records";
+
   }
 
 
-  /* ALL SECTIONS */
+  /* ----------------------------------------------------------
+     RENDER SECTIONS
+     ---------------------------------------------------------- */
 
   renderRankings(rows);
 
@@ -265,49 +382,90 @@ function renderRankings(rows) {
 
   const sorted =
     [...rows].sort(
-      (a, b) => b.score - a.score
+      (a, b) =>
+        b.score - a.score
     );
 
 
-  function item(r, i, bottom = false) {
+  function item(
+    r,
+    i,
+    bottom = false
+  ) {
 
     return `
+
       <div class="rank-item">
 
         <div class="rank-num">
+
           ${
             bottom
-              ? "#" + (rows.length - i)
-              : "🏅 " + (i + 1)
+              ? "#" +
+                (
+                  rows.length -
+                  i
+                )
+              : "🏅 " +
+                (
+                  i + 1
+                )
           }
+
         </div>
+
 
         <div>
 
           <div class="rank-name">
-            ${esc(nameOf(r))}
+
+            ${esc(
+              nameOf(r)
+            )}
+
           </div>
 
+
           <div class="rank-meta">
-            ${esc(r.employee)}
+
+            ${esc(
+              r.employee
+            )}
+
           </div>
 
         </div>
 
-        <span class="badge ${bottom ? "red" : ""}">
+
+        <span
+          class="badge ${
+            bottom
+              ? "red"
+              : ""
+          }">
+
           ${
             bottom
-              ? "Pend. " + fmt(r.total_pendency)
+              ? "Pend. " +
+                fmt(
+                  r.total_pendency
+                )
               : "Score"
           }
+
         </span>
 
+
         <div class="score">
+
           ${r.score.toFixed(1)}
+
         </div>
 
       </div>
+
     `;
+
   }
 
 
@@ -316,7 +474,10 @@ function renderRankings(rows) {
     $("topList").innerHTML =
       sorted
         .slice(0, 5)
-        .map((r, i) => item(r, i))
+        .map(
+          (r, i) =>
+            item(r, i)
+        )
         .join("");
 
   }
@@ -329,10 +490,16 @@ function renderRankings(rows) {
         .slice(-5)
         .reverse();
 
+
     $("bottomList").innerHTML =
       bottom
-        .map((r, i) =>
-          item(r, i, true)
+        .map(
+          (r, i) =>
+            item(
+              r,
+              i,
+              true
+            )
         )
         .join("");
 
@@ -342,54 +509,79 @@ function renderRankings(rows) {
 
 
 /* ============================================================
-   COMPOSITE BAR CHART
+   BAR CHART
    ============================================================ */
 
 function renderChart(rows) {
 
-  const el = $("barChart");
+  const el =
+    $("barChart");
 
   if (!el) return;
 
+
   const sorted =
     [...rows].sort(
-      (a, b) => b.score - a.score
+      (a, b) =>
+        b.score - a.score
     );
+
 
   const max =
     Math.max(
-      ...sorted.map(r => r.score),
+      ...sorted.map(
+        r => r.score
+      ),
       1
     );
 
 
   el.innerHTML =
-    sorted.map(r => {
+    sorted
+      .map(r => {
 
-      const h =
-        Math.max(
-          8,
-          r.score / max * 220
-        );
+        const h =
+          Math.max(
+            8,
+            r.score /
+            max *
+            220
+          );
 
-      return `
-        <div
-          class="bar"
-          style="height:${h}px"
-          title="${esc(nameOf(r))}: ${r.score.toFixed(1)}">
 
-          <span>
-            ${r.score.toFixed(0)}
-          </span>
+        return `
 
-          <label>
-            ${esc(nameOf(r))}
-          </label>
+          <div
+            class="bar"
+            style="
+              height:${h}px
+            "
+            title="${
+              esc(nameOf(r))
+            }: ${
+              r.score.toFixed(1)
+            }">
 
-        </div>
-      `;
+            <span>
+              ${
+                r.score.toFixed(0)
+              }
+            </span>
 
-    }).join("");
+            <label>
+              ${
+                esc(
+                  nameOf(r)
+                )
+              }
+            </label>
+
+          </div>
+
+        `;
+
+      })
+      .join("");
 
 }
 
@@ -405,63 +597,181 @@ function renderPerformance(rows) {
 
   if (!el) return;
 
+
   const sorted =
     [...rows].sort(
-      (a, b) => b.score - a.score
+      (a, b) =>
+        b.score - a.score
     );
 
 
   el.innerHTML =
-    sorted.map(r => {
+    sorted
+      .map(r => {
 
-      const available =
-        (Number(r.opening_balance) || 0) +
-        (Number(r.created) || 0) +
-        (Number(r.received) || 0);
+        const available =
 
-      const rate =
-        available
-          ? Math.min(
-              100,
-              Number(r.disposed_total || 0) /
-              available * 100
-            )
-          : 0;
+          (Number(
+            r.opening_balance
+          ) || 0) +
 
-      return `
-        <div class="perf">
+          (Number(
+            r.created
+          ) || 0) +
 
-          <div class="perf-head">
+          (Number(
+            r.received
+          ) || 0);
 
-            <span>
-              ${esc(nameOf(r))}
-            </span>
 
-            <b>
-              ${r.score.toFixed(1)}
-            </b>
+        const rate =
+          available
+            ? Math.min(
+                100,
+                Number(
+                  r.disposed_total ||
+                  0
+                ) /
+                available *
+                100
+              )
+            : 0;
+
+
+        return `
+
+          <div class="perf">
+
+            <div
+              class="perf-head">
+
+              <span>
+
+                ${
+                  esc(
+                    nameOf(r)
+                  )
+                }
+
+              </span>
+
+              <b>
+
+                ${
+                  r.score.toFixed(1)
+                }
+
+              </b>
+
+            </div>
+
+
+            <div class="progress">
+
+              <i
+                style="
+                  width:${rate}%
+                ">
+              </i>
+
+            </div>
+
+
+            <small>
+
+              Disposal rate:
+              ${
+                rate.toFixed(1)
+              }%
+
+              • Pending:
+              ${
+                fmt(
+                  r.total_pendency
+                )
+              }
+
+              • Avg days:
+              ${
+                Number(
+                  r.average_pending_days ||
+                  0
+                ).toFixed(2)
+              }
+
+            </small>
 
           </div>
 
-          <div class="progress">
-            <i style="width:${rate}%"></i>
+        `;
+
+      })
+      .join("");
+
+}
+
+
+/* ============================================================
+   TREND BAR ROWS
+   ============================================================ */
+
+function barRows(items) {
+
+  const max =
+    Math.max(
+      ...items.map(
+        x => x.v
+      ),
+      1
+    );
+
+
+  return items
+    .map(
+      x => `
+
+        <div
+          class="summary-row">
+
+          <span>
+            ${
+              esc(x.k)
+            }
+          </span>
+
+
+          <div
+            class="track">
+
+            <i
+              style="
+                width:${
+                  Math.max(
+                    2,
+                    x.v /
+                    max *
+                    100
+                  )
+                }%
+              ">
+            </i>
+
           </div>
 
-          <small>
-            Disposal rate:
-            ${rate.toFixed(1)}%
-            • Pending:
-            ${fmt(r.total_pendency)}
-            • Avg days:
-            ${Number(
-              r.average_pending_days || 0
-            ).toFixed(2)}
-          </small>
+
+          <strong>
+
+            ${
+              fmt(x.v)
+            }
+
+          </strong>
 
         </div>
-      `;
 
-    }).join("");
+      `
+    )
+    .join("");
 
 }
 
@@ -469,43 +779,6 @@ function renderPerformance(rows) {
 /* ============================================================
    TRENDS
    ============================================================ */
-
-function barRows(items) {
-
-  const max =
-    Math.max(
-      ...items.map(x => x.v),
-      1
-    );
-
-  return items.map(x => `
-
-    <div class="summary-row">
-
-      <span>
-        ${esc(x.k)}
-      </span>
-
-      <div class="track">
-
-        <i style="
-          width:${Math.max(
-            2,
-            x.v / max * 100
-          )}%
-        "></i>
-
-      </div>
-
-      <strong>
-        ${fmt(x.v)}
-      </strong>
-
-    </div>
-
-  `).join("");
-}
-
 
 function renderTrends(t) {
 
@@ -515,33 +788,63 @@ function renderTrends(t) {
       barRows([
 
         {
-          k: "Opening Balance",
-          v: Number(t.opening_balance) || 0
+          k:
+            "Opening Balance",
+
+          v:
+            Number(
+              t.opening_balance
+            ) || 0
         },
 
         {
-          k: "Created",
-          v: Number(t.created) || 0
+          k:
+            "Created",
+
+          v:
+            Number(
+              t.created
+            ) || 0
         },
 
         {
-          k: "Received",
-          v: Number(t.received) || 0
+          k:
+            "Received",
+
+          v:
+            Number(
+              t.received
+            ) || 0
         },
 
         {
-          k: "Disposed",
-          v: Number(t.disposed_total) || 0
+          k:
+            "Disposed",
+
+          v:
+            Number(
+              t.disposed_total
+            ) || 0
         },
 
         {
-          k: "Parked",
-          v: Number(t.parked) || 0
+          k:
+            "Parked",
+
+          v:
+            Number(
+              t.parked
+            ) || 0
         },
 
         {
-          k: "Merged",
-          v: Number(t.merged) || 0
+          k:
+            "Merged",
+
+          v:
+            Number(
+              t.merged
+            ) || 0
         }
 
       ]);
@@ -555,28 +858,53 @@ function renderTrends(t) {
       barRows([
 
         {
-          k: "0–7 Days",
-          v: Number(t.pendency_0_7_days) || 0
+          k:
+            "0–7 Days",
+
+          v:
+            Number(
+              t.pendency_0_7_days
+            ) || 0
         },
 
         {
-          k: "8–15 Days",
-          v: Number(t.pendency_8_15_days) || 0
+          k:
+            "8–15 Days",
+
+          v:
+            Number(
+              t.pendency_8_15_days
+            ) || 0
         },
 
         {
-          k: "16–30 Days",
-          v: Number(t.pendency_16_30_days) || 0
+          k:
+            "16–30 Days",
+
+          v:
+            Number(
+              t.pendency_16_30_days
+            ) || 0
         },
 
         {
-          k: "31–60 Days",
-          v: Number(t.pendency_31_60_days) || 0
+          k:
+            "31–60 Days",
+
+          v:
+            Number(
+              t.pendency_31_60_days
+            ) || 0
         },
 
         {
-          k: ">60 Days",
-          v: Number(t.pendency_over_60_days) || 0
+          k:
+            ">60 Days",
+
+          v:
+            Number(
+              t.pendency_over_60_days
+            ) || 0
         }
 
       ]);
@@ -588,7 +916,6 @@ function renderTrends(t) {
 
 /* ============================================================
    ⭐ EMPLOYEE / UNIT DETAIL
-   THIS MATCHES YOUR CURRENT index.html
    ============================================================ */
 
 function renderEmployeeDetail(
@@ -609,26 +936,29 @@ function renderEmployeeDetail(
 
 
   const list =
-    rows
-      .filter(r => {
+    rows.filter(r => {
 
-        const searchText = [
+      const searchText = [
 
-          r.employee,
-          r.unit_designation
+        r.employee,
 
-        ]
-          .join(" ")
-          .toLowerCase();
+        r.unit_designation
 
-        return searchText.includes(q);
+      ]
+        .join(" ")
+        .toLowerCase();
 
-      });
+
+      return searchText
+        .includes(q);
+
+    });
 
 
   if (!list.length) {
 
     tbody.innerHTML = `
+
       <tr>
 
         <td
@@ -640,11 +970,13 @@ function renderEmployeeDetail(
             font-weight:600;
           ">
 
-          No matching employee / unit record found.
+          No matching employee /
+          unit record found.
 
         </td>
 
       </tr>
+
     `;
 
     return;
@@ -652,77 +984,155 @@ function renderEmployeeDetail(
 
 
   tbody.innerHTML =
-    list.map((r, i) => `
+    list
+      .map(
+        (r, i) => `
 
-      <tr>
+          <tr>
 
-        <td>
-          ${i + 1}
-        </td>
+            <td>
+              ${i + 1}
+            </td>
 
-        <td>
-          <strong>
-            ${esc(r.employee)}
-          </strong>
-        </td>
 
-        <td>
-          ${esc(r.unit_designation)}
-        </td>
+            <td>
 
-        <td>
-          ${fmt(r.opening_balance)}
-        </td>
+              <strong>
+                ${
+                  esc(
+                    r.employee
+                  )
+                }
+              </strong>
 
-        <td>
-          ${fmt(r.created)}
-        </td>
+            </td>
 
-        <td>
-          ${fmt(r.received)}
-        </td>
 
-        <td>
-          ${fmt(r.disposed_closed)}
-        </td>
+            <td>
 
-        <td>
-          ${fmt(r.disposed_forwarded)}
-        </td>
+              ${
+                esc(
+                  r.unit_designation
+                )
+              }
 
-        <td>
-          <strong>
-            ${fmt(r.disposed_total)}
-          </strong>
-        </td>
+            </td>
 
-        <td>
-          ${fmt(r.parked)}
-        </td>
 
-        <td>
-          ${fmt(r.merged)}
-        </td>
+            <td>
+              ${
+                fmt(
+                  r.opening_balance
+                )
+              }
+            </td>
 
-        <td>
-          <strong>
-            ${fmt(r.total_pendency)}
-          </strong>
-        </td>
 
-        <td>
-          ${Number(
-            r.average_pending_days || 0
-          ).toFixed(2)}
-        </td>
+            <td>
+              ${
+                fmt(
+                  r.created
+                )
+              }
+            </td>
 
-        <td>
-          ${r.score.toFixed(1)}
-        </td>
 
-      </tr>
+            <td>
+              ${
+                fmt(
+                  r.received
+                )
+              }
+            </td>
 
-    `).join("");
+
+            <td>
+              ${
+                fmt(
+                  r.disposed_closed
+                )
+              }
+            </td>
+
+
+            <td>
+              ${
+                fmt(
+                  r.disposed_forwarded
+                )
+              }
+            </td>
+
+
+            <td>
+
+              <strong>
+                ${
+                  fmt(
+                    r.disposed_total
+                  )
+                }
+              </strong>
+
+            </td>
+
+
+            <td>
+              ${
+                fmt(
+                  r.parked
+                )
+              }
+            </td>
+
+
+            <td>
+              ${
+                fmt(
+                  r.merged
+                )
+              }
+            </td>
+
+
+            <td>
+
+              <strong>
+                ${
+                  fmt(
+                    r.total_pendency
+                  )
+                }
+              </strong>
+
+            </td>
+
+
+            <td>
+
+              ${
+                Number(
+                  r.average_pending_days ||
+                  0
+                ).toFixed(2)
+              }
+
+            </td>
+
+
+            <td>
+
+              ${
+                r.score.toFixed(1)
+              }
+
+            </td>
+
+          </tr>
+
+        `
+      )
+      .join("");
 
 }
 
@@ -742,14 +1152,16 @@ function renderOrganisation(rows) {
   if ($("tableCount")) {
 
     $("tableCount").textContent =
-      rows.length + " records";
+      rows.length +
+      " records";
 
   }
 
 
   if (!rows.length) {
 
-    container.innerHTML = "";
+    container.innerHTML =
+      "";
 
     return;
 
@@ -765,9 +1177,13 @@ function renderOrganisation(rows) {
       r.unit_designation ||
       "Other";
 
+
     if (!groups[key]) {
+
       groups[key] = [];
+
     }
+
 
     groups[key].push(r);
 
@@ -777,26 +1193,35 @@ function renderOrganisation(rows) {
   let html = "";
 
 
-  Object.keys(groups)
+  Object
+    .keys(groups)
     .sort()
     .forEach(key => {
 
       const group =
         groups[key];
 
+
       const disposed =
         group.reduce(
           (a, r) =>
             a +
-            Number(r.disposed_total || 0),
+            Number(
+              r.disposed_total ||
+              0
+            ),
           0
         );
+
 
       const pending =
         group.reduce(
           (a, r) =>
             a +
-            Number(r.total_pendency || 0),
+            Number(
+              r.total_pendency ||
+              0
+            ),
           0
         );
 
@@ -805,38 +1230,64 @@ function renderOrganisation(rows) {
 
         <div class="org-row">
 
-          <div class="org-name">
+          <div
+            class="org-name">
 
             <strong>
-              ${esc(key)}
+
+              ${
+                esc(key)
+              }
+
             </strong>
 
             <small>
-              ${group.length} record(s)
+
+              ${
+                group.length
+              }
+              record(s)
+
             </small>
 
           </div>
 
-          <div class="org-number">
+
+          <div
+            class="org-number">
 
             <span>
               Disposed
             </span>
 
             <strong>
-              ${fmt(disposed)}
+
+              ${
+                fmt(
+                  disposed
+                )
+              }
+
             </strong>
 
           </div>
 
-          <div class="org-number">
+
+          <div
+            class="org-number">
 
             <span>
               Pending
             </span>
 
             <strong>
-              ${fmt(pending)}
+
+              ${
+                fmt(
+                  pending
+                )
+              }
+
             </strong>
 
           </div>
@@ -855,7 +1306,7 @@ function renderOrganisation(rows) {
 
 
 /* ============================================================
-   REPORTS
+   ⭐ REPORTS
    ============================================================ */
 
 function renderReports(t) {
@@ -864,6 +1315,10 @@ function renderReports(t) {
     $("reportCards");
 
   if (!el) return;
+
+
+  const avgDays =
+    calculateDistrictAvgPending(t);
 
 
   const items = [
@@ -940,40 +1395,50 @@ function renderReports(t) {
 
     [
       "Average Pending Days",
-      Number(
-        t.average_pending_days || 0
-      ).toFixed(2)
+      avgDays.toFixed(2)
     ]
 
   ];
 
 
   el.innerHTML =
-    items.map(x => `
+    items
+      .map(
+        x => `
 
-      <article>
+          <article>
 
-        <span>
-          ${esc(x[0])}
-        </span>
+            <span>
+              ${
+                esc(x[0])
+              }
+            </span>
 
-        <strong>
-          ${
-            typeof x[1] === "number"
-              ? fmt(x[1])
-              : x[1]
-          }
-        </strong>
+            <strong>
 
-      </article>
+              ${
+                typeof x[1] ===
+                "number"
 
-    `).join("");
+                  ? fmt(x[1])
+
+                  : x[1]
+
+              }
+
+            </strong>
+
+          </article>
+
+        `
+      )
+      .join("");
 
 }
 
 
 /* ============================================================
-   SEARCH - RANKINGS
+   SEARCH - ORGANISATION
    ============================================================ */
 
 function setupRankSearch(rows) {
@@ -1057,14 +1522,18 @@ function setupRefresh() {
 
   btn.addEventListener(
     "click",
-    load
+    () => {
+
+      load();
+
+    }
   );
 
 }
 
 
 /* ============================================================
-   LOAD DATA.JSON
+   LOAD DATA
    ============================================================ */
 
 async function load() {
@@ -1076,7 +1545,8 @@ async function load() {
         "data.json?v=" +
         Date.now(),
         {
-          cache: "no-store"
+          cache:
+            "no-store"
         }
       );
 
@@ -1096,28 +1566,20 @@ async function load() {
 
 
     console.log(
-      "Chittoor E-Office DATA:",
+      "Chittoor E-Office DATA loaded:",
       DATA
     );
 
 
     console.log(
-      "Records:",
-      DATA.records?.length
+      "Employee records:",
+      DATA.records
+        ? DATA.records.length
+        : 0
     );
 
 
     render();
-
-
-    const rows =
-      enriched();
-
-    setupRankSearch(rows);
-
-    setupDetailSearch(rows);
-
-    setupRefresh();
 
 
   } catch (error) {
@@ -1129,14 +1591,17 @@ async function load() {
 
 
     if ($("period")) {
+
       $("period").textContent =
         "Data loading error";
+
     }
 
 
     if ($("detailTable")) {
 
       $("detailTable").innerHTML = `
+
         <tr>
 
           <td
@@ -1152,12 +1617,19 @@ async function load() {
             <br><br>
 
             <small>
-              ${esc(error.message)}
+
+              ${
+                esc(
+                  error.message
+                )
+              }
+
             </small>
 
           </td>
 
         </tr>
+
       `;
 
     }
@@ -1168,7 +1640,24 @@ async function load() {
 
 
 /* ============================================================
-   START
+   LAST LOADED
+   ============================================================ */
+
+function updateLastLoaded() {
+
+  if (!$("lastLoaded")) return;
+
+
+  $("lastLoaded").textContent =
+    "Last loaded: " +
+    new Date()
+      .toLocaleString("en-IN");
+
+}
+
+
+/* ============================================================
+   START DASHBOARD
    ============================================================ */
 
 document.addEventListener(
