@@ -1,946 +1,589 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Chittoor Police - E-Office Performance</title>
-
-<style>
-
-*{
-    box-sizing:border-box;
-}
-
-body{
-    margin:0;
-    padding:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background:#eef4fc;
-    color:#172033;
-}
-
-/* MAIN CONTAINER */
-
-.container{
-    width:96%;
-    margin:20px auto;
-}
-
-/* CARD */
-
-.card{
-    background:#ffffff;
-    border-radius:14px;
-    box-shadow:0 3px 15px rgba(0,0,0,0.08);
-    overflow:hidden;
-}
-
-/* TITLE */
-
-.title-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:18px 22px;
-    border-bottom:1px solid #e4e8ef;
-}
-
-.title{
-    font-size:18px;
-    font-weight:700;
-    color:#172033;
-}
-
-.title span{
-    font-size:13px;
-    color:#718096;
-    font-weight:400;
-}
-
-/* SEARCH */
-
-.controls{
-    display:flex;
-    gap:10px;
-    padding:12px;
-    align-items:center;
-}
-
-.search-box{
-    flex:1;
-    height:42px;
-    border:1px solid #d4dce8;
-    border-radius:10px;
-    padding:0 16px;
-    font-size:14px;
-    outline:none;
-    background:#fff;
-}
-
-.search-box:focus{
-    border-color:#24459c;
-    box-shadow:0 0 0 2px rgba(36,69,156,0.10);
-}
-
-.refresh-btn{
-    height:42px;
-    padding:0 20px;
-    border:0;
-    border-radius:10px;
-    background:#2854b5;
-    color:white;
-    font-size:14px;
-    font-weight:700;
-    cursor:pointer;
-}
-
-.refresh-btn:hover{
-    background:#193e91;
-}
-
-/* TABLE WRAPPER */
-
-.table-wrapper{
-    width:100%;
-    overflow-x:auto;
-}
-
-/* TABLE */
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    min-width:1250px;
-}
-
-/* HEADER */
-
-thead th{
-    background:#183c91;
-    color:#ffffff;
-    font-size:10px;
-    font-weight:700;
-    padding:9px 7px;
-    text-align:center;
-    white-space:nowrap;
-    border-right:1px solid rgba(255,255,255,0.18);
-}
-
-thead th:first-child{
-    text-align:center;
-}
-
-/* BODY */
-
-tbody td{
-    font-size:11px;
-    padding:8px 7px;
-    text-align:center;
-    border-bottom:1px solid #dfe5ed;
-    border-right:1px solid #edf0f5;
-    white-space:nowrap;
-    font-weight:500;
-}
-
-/* FIRST COLUMNS */
-
-tbody td:nth-child(2),
-tbody td:nth-child(3){
-    text-align:left;
-    font-weight:700;
-}
-
-/* SERIAL NUMBER */
-
-.serial{
-    color:#183c91;
-    font-weight:700;
-}
-
-/* =========================================================
-   SMART POLICING COLOURS
-   ========================================================= */
-
-/* GREEN */
-
-.good{
-    background:#b7e4cf !important;
-    color:#111827;
-}
-
-/* YELLOW */
-
-.medium{
-    background:#f5e6b8 !important;
-    color:#111827;
-}
-
-/* RED / PINK */
-
-.bad{
-    background:#f3c2bd !important;
-    color:#111827;
-}
-
-/* ZERO / EMPTY */
-
-.zero{
-    background:#b7e4cf !important;
-    color:#111827;
-}
-
-/* PENDENCY ZERO */
-
-.pending-zero{
-    background:#b7e4cf !important;
-}
-
-/* PENDENCY LOW */
-
-.pending-low{
-    background:#f5e6b8 !important;
-}
-
-/* PENDENCY HIGH */
-
-.pending-high{
-    background:#f3c2bd !important;
-}
-
-/* ROW HOVER */
-
-tbody tr:hover td{
-    filter:brightness(0.98);
-}
-
-/* LOADING */
-
-.loading{
-    padding:30px;
-    text-align:center;
-    color:#596579;
-    font-size:14px;
-}
-
-/* ERROR */
-
-.error{
-    padding:30px;
-    text-align:center;
-    color:#b42318;
-    font-weight:700;
-}
-
-/* NO DATA */
-
-.no-data{
-    padding:30px;
-    text-align:center;
-    color:#687386;
-}
-
-/* MOBILE */
-
-@media(max-width:700px){
-
-    .container{
-        width:99%;
-        margin:8px auto;
-    }
-
-    .title-row{
-        padding:14px;
-    }
-
-    .controls{
-        flex-direction:column;
-    }
-
-    .search-box{
-        width:100%;
-    }
-
-    .refresh-btn{
-        width:100%;
-    }
-}
-
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chittoor Police — E-Office Performance Dashboard</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
-<div class="container">
+<div class="page">
 
-<div class="card">
+<header class="hero">
 
-    <!-- TITLE -->
+<div class="brand">
 
-    <div class="title-row">
+<div class="image-row">
 
-        <div class="title">
-            📊 Full E-Office Data
-            <span id="recordCount">0 records</span>
-        </div>
+<div class="header-image logo-img">
+<img src="2222.png" alt="AP Police">
+</div>
 
-    </div>
+<div class="header-image officer">
+<img src="3333.png" alt="SP">
+</div>
 
+<div class="header-image officer">
+<img src="4444.png" alt="DGP">
+</div>
 
-    <!-- SEARCH -->
+</div>
 
-    <div class="controls">
+<div class="title-block">
 
-        <input
-            type="text"
-            id="searchInput"
-            class="search-box"
-            placeholder="🔎 Search employee, police station or designation..."
-            autocomplete="off"
-        >
+<div class="eyebrow">
+ANDHRA PRADESH POLICE
+</div>
 
-        <button
-            class="refresh-btn"
-            onclick="loadData()">
-            ↻ Refresh
-        </button>
+<h1>
+Chittoor Police — E-Office Performance Dashboard
+</h1>
 
-    </div>
+<p>
+E-Office Files • Disposal Monitoring • Pendency • Response Performance
+</p>
 
-
-    <!-- TABLE -->
-
-    <div class="table-wrapper">
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>S.No</th>
-                    <th>Employee</th>
-                    <th>Police Station / Designation</th>
-
-                    <th>Opening</th>
-                    <th>Created</th>
-                    <th>Received</th>
-                    <th>Closed</th>
-                    <th>Forwarded</th>
-                    <th>Disposed</th>
-                    <th>Parked</th>
-                    <th>Merged</th>
-
-                    <th>0–7 Days</th>
-                    <th>8–15 Days</th>
-                    <th>16–30 Days</th>
-                    <th>31–60 Days</th>
-                    <th>&gt;60 Days</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody id="tableBody">
-
-                <tr>
-                    <td colspan="16" class="loading">
-                        Loading E-Office data...
-                    </td>
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    </div>
+<span class="period" id="period">
+Loading...
+</span>
 
 </div>
 
 </div>
 
 
-<script>
+<div class="hero-stats">
 
-/* =========================================================
-   JSON FILE
-   =========================================================
+<div>
+<strong id="unitCount">0</strong>
+<span>RECORDS</span>
+</div>
 
-   IMPORTANT:
+<div>
+<strong id="disposedHero">0</strong>
+<span>DISPOSED</span>
+</div>
 
-   If your JSON file has another name, change only this line.
+<div>
+<strong id="pendencyHero">0</strong>
+<span>PENDING</span>
+</div>
 
-   Example:
-   data.json
-   eoffice.json
-   eoffice-data.json
+</div>
 
-========================================================= */
+</header>
 
-const DATA_URL = "data.json";
 
+<nav class="tabs">
 
-/* =========================================================
-   GLOBAL DATA
-========================================================= */
+<button class="tab active" data-target="rankings">
+🏆 Rankings
+</button>
 
-let allData = [];
+<button class="tab" data-target="performance">
+🔥 Performance
+</button>
 
+<button class="tab" data-target="trends">
+📈 Trends
+</button>
 
-/* =========================================================
-   NUMBER CONVERSION
-========================================================= */
+<button class="tab" data-target="details">
+🔎 Police Station / Employee Detail
+</button>
 
-function num(value){
+<button class="tab" data-target="reports">
+📋 Reports
+</button>
 
-    if(value === null || value === undefined || value === ""){
-        return 0;
-    }
+<button class="tab"
+onclick="location.href='subdivision.html'">
+🏛️ Sub-Division Performance
+</button>
 
-    let cleaned = String(value)
-        .replace(/,/g,"")
-        .replace(/%/g,"")
-        .trim();
+<button class="tab"
+onclick="location.href='quicklinks.html'">
+🔗 Quick Access
+</button>
 
-    let n = parseFloat(cleaned);
+</nav>
 
-    return isNaN(n) ? 0 : n;
-}
 
+<main>
 
-/* =========================================================
-   NORMALIZE COLUMN NAME
-========================================================= */
 
-function normalizeKey(key){
+<!-- ================= RANKINGS ================= -->
 
-    return String(key)
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g,"");
+<section id="rankings" class="section active">
 
-}
+<div class="section-title">
 
+<h2>
+🏆 Rankings
+</h2>
 
-/* =========================================================
-   GET VALUE FROM DIFFERENT POSSIBLE COLUMN NAMES
-========================================================= */
+<span>
+Composite E-Office performance based on disposal and pendency indicators
+</span>
 
-function getValue(row, names){
+</div>
 
-    const keys = Object.keys(row);
 
-    for(let wanted of names){
+<div class="cards">
 
-        const wantedNorm = normalizeKey(wanted);
+<article>
 
-        for(let key of keys){
+<span>
+📁 Total Files Disposed
+</span>
 
-            if(normalizeKey(key) === wantedNorm){
+<strong id="disposedTotal">
+0
+</strong>
 
-                return row[key];
+<small>
+Closed + Forwarded
+</small>
 
-            }
+</article>
 
-        }
 
-    }
+<article>
 
-    return "";
+<span>
+📥 Total Files Received
+</span>
 
-}
+<strong id="receivedTotal">
+0
+</strong>
 
+<small>
+Created + received during period
+</small>
 
-/* =========================================================
-   GET EMPLOYEE
-========================================================= */
+</article>
 
-function getEmployee(row){
 
-    return getValue(row,[
+<article>
 
-        "Employee",
-        "Employee Name",
-        "Name",
-        "EMPLOYEE",
-        "EMPLOYEE NAME"
+<span>
+⏳ Total Pendency
+</span>
 
-    ]);
+<strong id="pendencyTotal">
+0
+</strong>
 
-}
+<small>
+At the end of the reporting period
+</small>
 
+</article>
 
-/* =========================================================
-   GET POLICE STATION / DESIGNATION
-========================================================= */
 
-function getStation(row){
+<article>
 
-    return getValue(row,[
+<span>
+🕐 Avg. Pending Days
+</span>
 
-        "Police Station / Designation",
-        "Police Station/Designation",
-        "Police Station",
-        "Designation",
-        "PS Name",
-        "PS"
+<strong id="avgPending">
+0.00
+</strong>
 
-    ]);
+<small>
+Weighted by current pendency
+</small>
 
-}
+</article>
 
+</div>
 
-/* =========================================================
-   NORMAL PERFORMANCE COLOUR
-=========================================================
 
-   80–100  = GREEN
-   50–79   = YELLOW
-   0–49    = RED
+<div class="two-col">
 
-========================================================= */
+<div class="panel">
 
-function performanceClass(value){
+<div class="panel-head">
 
-    const n = num(value);
+<h3>
+🥇 Top 5 Performers
+</h3>
 
-    if(n >= 80){
-        return "good";
-    }
+<span>
+Higher score
+</span>
 
-    if(n >= 50){
-        return "medium";
-    }
+</div>
 
-    return "bad";
+<div id="topList"></div>
 
-}
+</div>
 
 
-/* =========================================================
-   PENDENCY COLOUR
-=========================================================
+<div class="panel">
 
-   LOWER IS BETTER
+<div class="panel-head">
 
-   0       = GREEN
-   1–5     = YELLOW
-   >5      = RED
+<h3>
+⚠️ Bottom 5 — Need Attention
+</h3>
 
-========================================================= */
+<span>
+Lower score
+</span>
 
-function pendingClass(value){
+</div>
 
-    const n = num(value);
+<div id="bottomList"></div>
 
-    if(n === 0){
-        return "pending-zero";
-    }
+</div>
 
-    if(n <= 5){
-        return "pending-low";
-    }
+</div>
 
-    return "pending-high";
 
-}
+<div class="panel chart-panel">
 
+<div class="panel-head">
 
-/* =========================================================
-   NORMAL DATA COLUMNS
-========================================================= */
+<h3>
+Composite Score — All E-Office Records
+</h3>
 
-const normalColumns = [
+<span id="chartNote"></span>
 
-    ["Opening",[
-        "Opening",
-        "opening"
-    ]],
+</div>
 
-    ["Created",[
-        "Created",
-        "created"
-    ]],
+<div class="chart-scroll">
 
-    ["Received",[
-        "Received",
-        "received"
-    ]],
+<div id="barChart"
+class="bar-chart">
+</div>
 
-    ["Closed",[
-        "Closed",
-        "closed"
-    ]],
+</div>
 
-    ["Forwarded",[
-        "Forwarded",
-        "forwarded"
-    ]],
+</div>
 
-    ["Disposed",[
-        "Disposed",
-        "disposed"
-    ]],
 
-    ["Parked",[
-        "Parked",
-        "parked"
-    ]],
+<!-- FULL E-OFFICE TABLE -->
 
-    ["Merged",[
-        "Merged",
-        "merged"
-    ]]
+<div class="panel">
 
-];
+<div class="panel-head">
 
+<h3>
+📊 Full E-Office Data
+</h3>
 
-/* =========================================================
-   PENDENCY COLUMNS
-========================================================= */
+<span id="tableCount">
+0 records
+</span>
 
-const pendingColumns = [
+</div>
 
-    ["0–7 Days",[
-        "0–7 Days",
-        "0-7 Days",
-        "0 7 Days",
-        "0-7",
-        "0–7"
-    ]],
 
-    ["8–15 Days",[
-        "8–15 Days",
-        "8-15 Days",
-        "8 15 Days",
-        "8-15",
-        "8–15"
-    ]],
+<div class="toolbar">
 
-    ["16–30 Days",[
-        "16–30 Days",
-        "16-30 Days",
-        "16 30 Days",
-        "16-30",
-        "16–30"
-    ]],
+<input
+id="searchRank"
+placeholder="🔎 Search employee, police station or designation..."
+>
 
-    ["31–60 Days",[
-        "31–60 Days",
-        "31-60 Days",
-        "31 60 Days",
-        "31-60",
-        "31–60"
-    ]],
+<button id="refresh"
+class="refresh">
+↻ Refresh
+</button>
 
-    [">60 Days",[
-        ">60 Days",
-        "> 60 Days",
-        "60+ Days",
-        ">60"
-    ]]
+</div>
 
-];
 
+<div class="table-wrap">
 
-/* =========================================================
-   CREATE ROW
-========================================================= */
+<table>
 
-function createRow(row,index){
+<thead>
 
-    let html = "";
+<tr>
 
-    /* S.NO */
+<th>S.No</th>
 
-    html += `
-        <td class="serial">
-            ${index + 1}
-        </td>
-    `;
+<th>Employee</th>
 
+<th>Police Station / Designation</th>
 
-    /* EMPLOYEE */
+<th>Opening</th>
 
-    html += `
-        <td>
-            ${escapeHTML(getEmployee(row))}
-        </td>
-    `;
+<th>Created</th>
 
+<th>Received</th>
 
-    /* STATION / DESIGNATION */
+<th>Closed</th>
 
-    html += `
-        <td>
-            ${escapeHTML(getStation(row))}
-        </td>
-    `;
+<th>Forwarded</th>
 
+<th>Disposed</th>
 
-    /* NORMAL COLUMNS */
+<th>Parked</th>
 
-    normalColumns.forEach(column => {
+<th>Merged</th>
 
-        const value = getValue(row,column[1]);
+<th>0–7 Days</th>
 
-        html += `
-            <td class="${performanceClass(value)}">
-                ${escapeHTML(value)}
-            </td>
-        `;
+<th>8–15 Days</th>
 
-    });
+<th>16–30 Days</th>
 
+<th>31–60 Days</th>
 
-    /* PENDENCY COLUMNS */
+<th>&gt;60 Days</th>
 
-    pendingColumns.forEach(column => {
+<th>Total Pendency</th>
 
-        const value = getValue(row,column[1]);
+<th>Avg. Pending Days</th>
 
-        html += `
-            <td class="${pendingClass(value)}">
-                ${escapeHTML(value)}
-            </td>
-        `;
+<th>Score</th>
 
-    });
+</tr>
 
+</thead>
 
-    return `<tr>${html}</tr>`;
 
-}
+<tbody id="rankingTable">
 
+</tbody>
 
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
+</table>
 
-function escapeHTML(value){
+</div>
 
-    if(value === null || value === undefined){
-        return "";
-    }
+</div>
 
-    return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+</section>
 
-}
 
+<!-- ================= PERFORMANCE ================= -->
 
-/* =========================================================
-   DISPLAY DATA
-========================================================= */
+<section id="performance" class="section">
 
-function displayData(data){
+<div class="section-title">
 
-    const tbody =
-        document.getElementById("tableBody");
+<h2>
+🔥 Performance
+</h2>
 
-    tbody.innerHTML = "";
+<span>
+Disposal and pendency indicators
+</span>
 
+</div>
 
-    if(!data || data.length === 0){
 
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="16" class="no-data">
-                    No E-Office data found
-                </td>
-            </tr>
-        `;
+<div class="panel">
 
-        document.getElementById("recordCount").textContent =
-            "0 records";
+<div class="toolbar">
 
-        return;
+<input
+id="perfSearch"
+placeholder="Search employee / designation / station"
+>
 
-    }
+</div>
 
+<div id="performanceGrid"
+class="performance-grid">
+</div>
 
-    data.forEach((row,index)=>{
+</div>
 
-        tbody.insertAdjacentHTML(
-            "beforeend",
-            createRow(row,index)
-        );
+</section>
 
-    });
 
+<!-- ================= TRENDS ================= -->
 
-    document.getElementById("recordCount").textContent =
-        `${data.length} records`;
+<section id="trends" class="section">
 
-}
+<div class="section-title">
 
+<h2>
+📈 Trends & Summary
+</h2>
 
-/* =========================================================
-   LOAD JSON
-========================================================= */
+<span>
+Reporting-period summary
+</span>
 
-async function loadData(){
+</div>
 
-    const tbody =
-        document.getElementById("tableBody");
 
-    tbody.innerHTML = `
-        <tr>
-            <td colspan="16" class="loading">
-                Loading E-Office data...
-            </td>
-        </tr>
-    `;
+<div class="two-col">
 
 
-    try{
+<div class="panel">
 
-        const response =
-            await fetch(DATA_URL + "?v=" + Date.now());
+<div class="panel-head">
 
+<h3>
+File Movement
+</h3>
 
-        if(!response.ok){
+</div>
 
-            throw new Error(
-                "JSON file could not be loaded"
-            );
+<div id="movementBars"
+class="simple-bars">
+</div>
 
-        }
+</div>
 
 
-        const result =
-            await response.json();
+<div class="panel">
 
+<div class="panel-head">
 
-        /*
+<h3>
+Pendency Age
+</h3>
 
-        Handles both:
+</div>
 
-        [
-            {...},
-            {...}
-        ]
+<div id="pendencyBars"
+class="simple-bars">
+</div>
 
-        and:
+</div>
 
-        {
-            "data":[
-                {...}
-            ]
-        }
 
-        */
+</div>
 
-        if(Array.isArray(result)){
+</section>
 
-            allData = result;
 
-        }
+<!-- ================= DETAILS ================= -->
 
-        else if(Array.isArray(result.data)){
+<section id="details" class="section">
 
-            allData = result.data;
+<div class="section-title">
 
-        }
+<h2>
+🔎 Police Station / Employee Detail
+</h2>
 
-        else if(Array.isArray(result.records)){
+<span>
+Search every E-Office record
+</span>
 
-            allData = result.records;
+</div>
 
-        }
 
-        else{
+<div class="panel">
 
-            throw new Error(
-                "Invalid JSON structure"
-            );
+<div class="toolbar">
 
-        }
+<input
+id="searchDetail"
+placeholder="🔎 Search employee, station or designation"
+>
 
+</div>
 
-        displayData(allData);
 
-    }
+<div class="table-wrap">
 
-    catch(error){
+<table>
 
-        console.error(error);
+<thead>
 
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="16" class="error">
-                    Unable to load E-Office data.
-                    <br>
-                    Please check the JSON file.
-                </td>
-            </tr>
-        `;
+<tr>
 
-        document.getElementById("recordCount")
-            .textContent = "Data error";
+<th>S.No</th>
 
-    }
+<th>Employee</th>
 
-}
+<th>Station / Designation</th>
 
+<th>Opening</th>
 
-/* =========================================================
-   SEARCH
-========================================================= */
+<th>Created</th>
 
-document
-.getElementById("searchInput")
-.addEventListener("input",function(){
+<th>Received</th>
 
-    const search =
-        this.value
-        .toLowerCase()
-        .trim();
+<th>Closed</th>
 
+<th>Forwarded</th>
 
-    if(search === ""){
+<th>Disposed</th>
 
-        displayData(allData);
+<th>Parked</th>
 
-        return;
+<th>Merged</th>
 
-    }
+<th>Pendency</th>
 
+<th>Avg Days</th>
 
-    const filtered =
-        allData.filter(row => {
+<th>Score</th>
 
-            const employee =
-                String(getEmployee(row))
-                .toLowerCase();
+</tr>
 
-            const station =
-                String(getStation(row))
-                .toLowerCase();
+</thead>
 
 
-            return employee.includes(search)
-                || station.includes(search);
+<tbody id="detailTable">
+</tbody>
 
-        });
+</table>
 
+</div>
 
-    displayData(filtered);
+</div>
 
-});
+</section>
 
 
-/* =========================================================
-   START
-========================================================= */
+<!-- ================= REPORTS ================= -->
 
-loadData();
+<section id="reports" class="section">
 
-</script>
+<div class="section-title">
+
+<h2>
+📋 Reports
+</h2>
+
+<span>
+District figures calculated from data.json
+</span>
+
+</div>
+
+
+<div class="cards"
+id="reportCards">
+</div>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<span>
+Chittoor District Police • E-Office Performance Dashboard
+</span>
+
+<span id="lastLoaded">
+</span>
+
+</footer>
+
+</div>
+
+
+<script src="script.js"></script>
 
 </body>
 </html>
