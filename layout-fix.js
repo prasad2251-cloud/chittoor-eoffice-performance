@@ -218,3 +218,213 @@
     if (tries>150) clearInterval(timer);
   },100);
 })();
+/* GROUP 3 — SHOW ALL DPO / OFFICE STAFF AS INDIVIDUAL BARS
+   Append this code at the VERY END of layout-fix.js.
+   It does not change Groups 1, 2 or 4.
+*/
+(function () {
+  'use strict';
+
+  const OFFICE_UNITS_25 = [
+    'AO',
+    'ADDL SP (ADMIN)',
+    'AAO',
+    'JR ASST',
+    'SP CTR',
+    'SR ASST',
+    'SUPDT',
+    'TYPIST'
+  ];
+
+  function clean(v) {
+    return String(v == null ? '' : v).replace(/\s+/g, ' ').trim();
+  }
+
+  function esc(v) {
+    return clean(v)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function getEmployee(r) {
+    if (typeof employee === 'function') return employee(r);
+    return clean(
+      r.employee_name || r.employee || r.name || r.NAME ||
+      r['Employee Name'] || r['EMPLOYEE NAME'] || ''
+    );
+  }
+
+  function getUnit(r) {
+    if (typeof unit === 'function') return unit(r);
+    return clean(
+      r.unit_designation || r.designation || r.post || r.section || ''
+    );
+  }
+
+  function getScore(r) {
+    if (typeof score === 'function') {
+      const v = Number(score(r));
+      return Number.isFinite(v) ? v : 0;
+    }
+    return 0;
+  }
+
+  function getOfficeRows() {
+    if (typeof DATA === 'undefined' || !DATA || !Array.isArray(DATA.records)) {
+      return [];
+    }
+
+    return DATA.records
+      .filter(function (r) {
+        const u = getUnit(r).toUpperCase();
+        const n = getEmployee(r).toUpperCase();
+
+        return OFFICE_UNITS_25.includes(u) &&
+               n !== 'V BHASKAR' &&
+               n !== 'J.MALLESH YADAV';
+      })
+      .sort(function (a, b) {
+        return getScore(b) - getScore(a);
+      });
+  }
+
+  function applyGroup3Bars() {
+    const group = Array.from(
+      document.querySelectorAll('.ap-final-group')
+    ).find(function (el) {
+      return /GROUP 3:\s*DPO\s*\/\s*OFFICE STAFF/i.test(
+        el.querySelector('h2')?.textContent || ''
+      );
+    });
+
+    if (!group) return false;
+
+    const chart = group.querySelector('.ap-final-chart');
+    const bars = group.querySelector('.ap-bars');
+
+    if (!chart || !bars) return false;
+
+    const rows = getOfficeRows();
+    if (!rows.length) return false;
+
+    /* 25 employees = 25 bars */
+    bars.innerHTML = rows.map(function (r, i) {
+      const value = getScore(r);
+
+      /* Same visual pattern as the Smart Policing screenshot:
+         1st = green, next 4 = blue, remaining = yellow. */
+      const cls =
+        i === 0 ? 'smart-green' :
+        i < 5  ? 'smart-blue' :
+                  'smart-yellow';
+
+      const name = getEmployee(r) || 'Employee';
+
+      return `
+        <div class="ap-bar-item" title="${esc(name)} — ${value.toFixed(1)}">
+          <div class="ap-bar-value">${value.toFixed(1)}</div>
+          <div class="ap-bar ${cls}" style="height:${Math.max(5, Math.min(100, value))}%"></div>
+          <div class="ap-bar-name" title="${esc(name)}">${esc(name)}</div>
+        </div>
+      `;
+    }).join('');
+
+    const headText = group.querySelector('.ap-final-head p');
+    if (headText) {
+      const designationCount = new Set(rows.map(getUnit)).size;
+      headText.textContent =
+        `${rows.length} Employees • ${designationCount} Designations • DPO / Office Staff-wise E-Office Performance`;
+    }
+
+    return true;
+  }
+
+  /* CSS only for Group 3 bars */
+  if (!document.getElementById('group3-25-bar-fix-style')) {
+    const style = document.createElement('style');
+    style.id = 'group3-25-bar-fix-style';
+    style.textContent = `
+      .ap-final-group .ap-final-chart{
+        height:310px !important;
+        overflow:hidden !important;
+        padding-bottom:8px !important;
+      }
+
+      .ap-final-group .ap-bars{
+        left:40px !important;
+        right:0 !important;
+        top:10px !important;
+        bottom:70px !important;
+        display:flex !important;
+        align-items:flex-end !important;
+        gap:2px !important;
+        overflow:hidden !important;
+      }
+
+      .ap-final-group .ap-bar-item{
+        flex:1 1 0 !important;
+        min-width:0 !important;
+        height:100% !important;
+        position:relative !important;
+      }
+
+      .ap-final-group .ap-bar{
+        width:70% !important;
+        max-width:24px !important;
+        min-width:7px !important;
+        margin:0 auto !important;
+      }
+
+      .ap-final-group .ap-bar-value{
+        font-size:8px !important;
+        white-space:nowrap !important;
+      }
+
+      .ap-final-group .ap-bar-name{
+        position:absolute !important;
+        left:50% !important;
+        bottom:-62px !important;
+        width:82px !important;
+        margin-left:-41px !important;
+        font-size:7px !important;
+        line-height:9px !important;
+        white-space:nowrap !important;
+        overflow:hidden !important;
+        text-overflow:ellipsis !important;
+        text-align:left !important;
+        transform:rotate(-45deg) !important;
+        transform-origin:center center !important;
+      }
+
+      .ap-final-group .ap-bar.smart-green{
+        background:#16b77e !important;
+      }
+
+      .ap-final-group .ap-bar.smart-blue{
+        background:#36afe3 !important;
+      }
+
+      .ap-final-group .ap-bar.smart-yellow{
+        background:#f5b820 !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  /* layout-fix.js renders after DATA is available. */
+  let tries = 0;
+  const timer = setInterval(function () {
+    tries++;
+    if (applyGroup3Bars() || tries >= 40) {
+      clearInterval(timer);
+    }
+  }, 250);
+
+  /* Re-apply if the dashboard re-renders. */
+  setTimeout(applyGroup3Bars, 1200);
+  setTimeout(applyGroup3Bars, 2500);
+})();
+
