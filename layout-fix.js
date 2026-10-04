@@ -541,4 +541,65 @@
   setTimeout(applyFullNamesV2, 1200);
   setTimeout(applyFullNamesV2, 2500);
 })();
+/* ALL GRAPHS — HOVER NAME FIX
+   Append this at the VERY END of layout-fix.js.
+
+   It makes the mouse-hover popup work on EVERY graph.
+   It does not change bars, scores, colours, tables or layout.
+*/
+(function () {
+  'use strict';
+
+  function applyHoverNames() {
+    const bars = document.querySelectorAll(
+      '.ap-final-group .ap-bar-item'
+    );
+
+    if (!bars.length) return;
+
+    bars.forEach(function (bar) {
+      const nameEl = bar.querySelector('.ap-bar-name');
+      const scoreEl = bar.querySelector('.ap-bar-value');
+
+      const name = nameEl
+        ? nameEl.textContent.trim()
+        : '';
+
+      const score = scoreEl
+        ? scoreEl.textContent.trim()
+        : '';
+
+      if (name) {
+        /* Native browser tooltip — same behaviour as Group 3 */
+        bar.setAttribute(
+          'title',
+          name + (score ? ' — ' + score : '')
+        );
+
+        /* Also make the bar itself carry the tooltip. */
+        const barEl = bar.querySelector('.ap-bar');
+        if (barEl) {
+          barEl.setAttribute(
+            'title',
+            name + (score ? ' — ' + score : '')
+          );
+        }
+      }
+    });
+  }
+
+  let count = 0;
+
+  const timer = setInterval(function () {
+    count++;
+    applyHoverNames();
+
+    if (count >= 40) {
+      clearInterval(timer);
+    }
+  }, 250);
+
+  setTimeout(applyHoverNames, 1200);
+  setTimeout(applyHoverNames, 2500);
+})();
 
