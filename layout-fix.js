@@ -427,4 +427,148 @@
   setTimeout(applyGroup3Bars, 1200);
   setTimeout(applyGroup3Bars, 2500);
 })();
+/* ============================================================
+   ALL GROUP GRAPHS — FULL EMPLOYEE NAMES DIAGONALLY
+   Append this code at the VERY END of layout-fix.js.
+   Keeps existing scores, bars, tables and grouping unchanged.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  function clean(v) {
+    return String(v == null ? '' : v).replace(/\s+/g, ' ').trim();
+  }
+
+  function esc(v) {
+    return clean(v)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function getName(r) {
+    if (typeof employee === 'function') return clean(employee(r));
+    return clean(
+      r.employee_name || r.employee || r.name || r.NAME ||
+      r['Employee Name'] || r['EMPLOYEE NAME'] || ''
+    );
+  }
+
+  /* Find the employee rows belonging to each displayed graph.
+     The existing graph already has the correct bars and ordering;
+     this patch only replaces the designation labels with employee names
+     where the underlying table contains individual employee records. */
+  function applyFullNames() {
+    const groups = Array.from(document.querySelectorAll('.ap-final-group'));
+    if (!groups.length) return false;
+
+    groups.forEach(function (group) {
+      const bars = Array.from(group.querySelectorAll('.ap-bars .ap-bar-item'));
+      if (!bars.length) return;
+
+      const tableRows = Array.from(
+        group.querySelectorAll('.ap-final-table tbody tr')
+      );
+
+      const names = tableRows.map(function (tr) {
+        const cells = Array.from(tr.querySelectorAll('td'));
+        if (!cells.length) return '';
+
+        /* Employee name is normally the first text cell in the
+           existing performance table. */
+        return clean(cells[0]?.textContent || '');
+      }).filter(Boolean);
+
+      /* Only relabel when we have exactly the same number of records
+         as bars. This prevents any existing group layout from being
+         disturbed. */
+      if (names.length !== bars.length) return;
+
+      bars.forEach(function (bar, i) {
+        const name = names[i];
+        if (!name) return;
+
+        let label = bar.querySelector('.ap-bar-name');
+
+        if (!label) {
+          label = document.createElement('div');
+          label.className = 'ap-bar-name';
+          bar.appendChild(label);
+        }
+
+        label.textContent = name;
+        label.title = name;
+      });
+    });
+
+    return true;
+  }
+
+  if (!document.getElementById('all-groups-full-name-style')) {
+    const style = document.createElement('style');
+    style.id = 'all-groups-full-name-style';
+
+    style.textContent = `
+      /* Full employee names under every graph */
+      .ap-final-group .ap-bars{
+        overflow: visible !important;
+        padding-bottom: 82px !important;
+      }
+
+      .ap-final-group .ap-final-chart{
+        height: 330px !important;
+        overflow: visible !important;
+      }
+
+      .ap-final-group .ap-bar-item{
+        position: relative !important;
+      }
+
+      .ap-final-group .ap-bar-name{
+        position: absolute !important;
+        left: 50% !important;
+        bottom: -76px !important;
+        width: 105px !important;
+        margin-left: -52px !important;
+
+        font-size: 8px !important;
+        line-height: 10px !important;
+        font-weight: 700 !important;
+
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+
+        text-align: left !important;
+        transform: rotate(-45deg) !important;
+        transform-origin: center center !important;
+
+        color: #243447 !important;
+        z-index: 20 !important;
+        pointer-events: auto !important;
+      }
+
+      /* Keep bars compact when there are many employees */
+      .ap-final-group .ap-bar{
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+    `;
+
+    document.head.appendChild(style);
+  }
+
+  let tries = 0;
+  const timer = setInterval(function () {
+    tries++;
+    applyFullNames();
+
+    if (tries >= 40) clearInterval(timer);
+  }, 250);
+
+  setTimeout(applyFullNames, 1200);
+  setTimeout(applyFullNames, 2500);
+})();
 
