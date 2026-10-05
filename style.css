@@ -534,3 +534,24 @@ footer{
     min-width:42px !important;
   }
 }
+/* ===== HEADER TEXT SIZE ===== */
+
+.title-block h1 {
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+}
+
+.title-block p {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+}
+
+.title-block .period {
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  padding: 7px 14px !important;
+  display: inline-block !important;
+  line-height: 1.2 !important;
+}
